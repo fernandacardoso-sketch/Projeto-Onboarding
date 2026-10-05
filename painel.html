@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel de Acompanhamento · New Business Hotmart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,900;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     Tokens — Hotmart · Design System de App
+     ============================================================ */
+  :root{
+    --orange:#FF4000; --black:#0D0D0D; --off-white:#F5F3EF;
+    --gray:#C3BFB8; --white:#FFFFFF; --yellow:#FFD450; --maroon:#3E0F1D;
+    --blue:#44D0FF;
+
+    --bg:var(--off-white);
+    --surface:var(--white);
+    --surface-sunken:#EFECE6;
+    --border:#E2DED7;
+    --border-strong:#D3CEC5;
+    --text:var(--black);
+    --text-muted:rgba(13,13,13,.60);
+    --accent:var(--orange);
+    --accent-weak:rgba(255,64,0,.10);
+    --orange-hover:#E63A00;
+    --success:#1E7A3D;
+
+    --font-sans:"DM Sans","Arial",sans-serif;
+    --font-mono:"DM Mono",ui-monospace,monospace;
+
+    --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px;
+    --sp-5:24px; --sp-6:32px; --sp-7:48px; --sp-8:64px;
+    --r-sm:6px; --r-md:10px; --r-lg:16px; --r-pill:999px;
+    --sh-sm:0 1px 2px rgba(13,13,13,.06);
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; min-height:100vh;
+    background:var(--bg); color:var(--text);
+    font-family:var(--font-sans); line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--orange); color:var(--white); }
+
+  /* ---------- Tipografia ---------- */
+  .eyebrow{
+    font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--orange); text-align:center; margin-bottom:10px;
+  }
+  h1{ font-size:clamp(28px,4vw,34px); font-weight:700; line-height:1.08; letter-spacing:-.015em; text-align:center; margin:0 0 var(--sp-2); }
+  .sub{ text-align:center; color:var(--text-muted); font-size:14px; margin:0 0 var(--sp-5); line-height:1.5; }
+
+  /* ---------- Card ---------- */
+  .card{
+    position:relative; overflow:hidden;
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--r-md); padding:var(--sp-5);
+  }
+  .card::before{ content:""; position:absolute; top:0; left:0; right:0; height:4px; background:var(--orange); }
+  .card > :first-child{ margin-top:var(--sp-1); }
+
+  /* ---------- Campos ---------- */
+  label{ display:block; font-size:13px; font-weight:600; color:var(--text); margin-bottom:6px; }
+  input[type="text"], input[type="email"], input[type="password"]{
+    width:100%; font-family:inherit; font-size:15px; color:var(--text);
+    background:var(--surface); border:1.5px solid var(--border-strong);
+    border-radius:var(--r-sm); padding:10px 12px; outline:none;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus{ border-color:var(--orange); box-shadow:0 0 0 3px var(--accent-weak); }
+  input::placeholder{ color:var(--text-muted); }
+  .hint{ font-size:12px; color:var(--text-muted); margin-top:6px; line-height:1.4; }
+  .error-msg{ font-size:13px; color:var(--maroon); font-weight:500; margin-top:10px; display:none; line-height:1.45; }
+  .error-msg.show{ display:block; }
+
+  /* ---------- Botões ---------- */
+  button{ font-family:inherit; cursor:pointer; border:none; }
+  button:focus-visible{ outline:3px solid rgba(255,64,0,.4); outline-offset:2px; }
+  .btn-primary{
+    width:100%; margin-top:var(--sp-4); background:var(--orange); color:var(--black);
+    font-size:15px; font-weight:600; padding:12px 20px; border-radius:var(--r-sm);
+    display:flex; align-items:center; justify-content:center; gap:8px; line-height:1;
+    transition:transform .06s, background .15s;
+  }
+  .btn-primary:hover{ background:var(--orange-hover); }
+  .btn-primary:active{ transform:translateY(1px); }
+  .btn-primary:disabled{ opacity:.4; cursor:not-allowed; }
+  .btn-primary.dark{ background:var(--black); color:var(--white); }
+  .btn-primary.dark:hover{ background:#262626; }
+  .btn-ghost{
+    width:100%; margin-top:10px; background:transparent; color:var(--text);
+    font-size:13px; font-weight:600; padding:9px 14px; border-radius:var(--r-sm);
+    border:1.5px solid var(--border-strong); transition:border-color .15s;
+  }
+  .btn-ghost:hover{ border-color:var(--black); }
+
+  .topbar{ display:flex; align-items:center; justify-content:space-between; gap:var(--sp-3); margin-bottom:var(--sp-5); }
+  .who{ font-family:var(--font-mono); font-size:12.5px; color:var(--text-muted); }
+  .who b{ color:var(--text); font-weight:500; }
+  .logout-link{
+    font-size:13px; font-weight:600; color:var(--text); background:none; padding:4px;
+    text-decoration:underline; text-underline-offset:3px;
+  }
+  .logout-link:hover{ color:var(--orange); }
+
+  .empty-note{ font-size:13px; color:var(--text-muted); padding:6px 2px; line-height:1.5; }
+  footer{ text-align:center; margin-top:var(--sp-5); font-size:12px; color:var(--text-muted); }
+
+  /* ============================================================
+     Painel de Acompanhamento
+     ============================================================ */
+  body{ padding:var(--sp-6) 20px 60px; }
+  .frame{ width:100%; max-width:980px; margin:0 auto; }
+  #loginScreen{ max-width:460px; margin:var(--sp-7) auto 0; }
+  .sub{ margin-bottom:var(--sp-2); }
+  .gerado-em{ text-align:center; font-family:var(--font-mono); font-size:12px; color:var(--text-muted); margin-bottom:var(--sp-5); }
+  .nav-link{ font-size:13px; font-weight:600; color:var(--text); text-decoration:underline; text-underline-offset:3px; }
+  .nav-link:hover{ color:var(--orange); }
+
+  /* ---------- Filtros ---------- */
+  .filter-row{ display:flex; flex-wrap:wrap; gap:var(--sp-2); margin-bottom:var(--sp-5); }
+  .filter-pill{
+    font-size:13px; font-weight:600; padding:8px 14px; border-radius:var(--r-pill);
+    border:1.5px solid var(--border-strong); background:var(--surface); color:var(--text);
+    transition:border-color .15s, background .15s;
+  }
+  .filter-pill:hover{ border-color:var(--black); }
+  .filter-pill.active{ background:var(--black); border-color:var(--black); color:var(--white); }
+
+  /* ---------- KPIs (stat card) ---------- */
+  .kpi-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:var(--sp-3); margin-bottom:var(--sp-5); }
+  .kpi-tile{
+    position:relative; background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--r-md); padding:var(--sp-4) var(--sp-4) var(--sp-4) var(--sp-5);
+  }
+  .kpi-tile::before{ content:""; position:absolute; left:0; top:14px; bottom:14px; width:4px; background:var(--orange); border-radius:0 3px 3px 0; }
+  .kpi-num{ font-size:36px; font-weight:700; letter-spacing:-.02em; line-height:1; color:var(--orange); }
+  .kpi-label{ font-size:13px; color:var(--text-muted); margin-top:var(--sp-2); line-height:1.35; }
+  @media (max-width:720px){ .kpi-row{ grid-template-columns:repeat(2,1fr); } }
+
+  /* ---------- Seções ---------- */
+  .section-title{ font-size:20px; font-weight:600; line-height:1.2; margin:var(--sp-6) 0 var(--sp-2); }
+  .section-sub{ font-size:13px; color:var(--text-muted); margin:0 0 var(--sp-4); line-height:1.6; }
+
+  /* ---------- Cards de onboarder ---------- */
+  .onboarder-list{ display:flex; flex-direction:column; gap:var(--sp-3); }
+  .onb-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md);
+    padding:var(--sp-4) var(--sp-5); display:grid; grid-template-columns:1.6fr .7fr 2fr .9fr; gap:var(--sp-4); align-items:center;
+  }
+  @media (max-width:720px){ .onb-card{ grid-template-columns:1fr; gap:var(--sp-2); } }
+  .onb-email{ font-size:14px; font-weight:600; word-break:break-word; }
+  .badge-row{ display:flex; gap:6px; margin-top:6px; }
+  .badge{
+    display:inline-flex; align-items:center; font-size:12px; font-weight:600; line-height:1;
+    padding:4px 10px; border-radius:var(--r-pill); border:1.5px solid var(--border-strong); color:var(--text);
+  }
+  .badge.pod{ background:var(--accent-weak); border-color:transparent; color:var(--orange); }
+  .onb-pre{ font-size:12px; color:var(--text-muted); text-align:center; }
+  .onb-pre b{ display:block; font-size:20px; font-weight:700; color:var(--text); }
+
+  .meter-wrap{ display:flex; flex-direction:column; gap:6px; }
+  .meter-track{ height:8px; border-radius:var(--r-pill); background:var(--surface-sunken); overflow:hidden; }
+  .meter-fill{ height:100%; border-radius:var(--r-pill); transition:width .3s ease; }
+  .meter-labels{ display:flex; justify-content:space-between; font-size:12px; color:var(--text-muted); }
+  .meter-labels b{ color:var(--text); font-weight:700; }
+
+  /* status: sem verde/âmbar decorativo — laranja = atenção, preto sólido = ok, maroon = limite */
+  .status-tag{
+    display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; line-height:1;
+    padding:5px 10px; border-radius:var(--r-pill); justify-self:end; white-space:nowrap;
+  }
+  .status-tag::before{ content:""; width:6px; height:6px; border-radius:50%; background:currentColor; }
+  .status-tranquilo{ background:rgba(30,122,61,.10); color:var(--success); }
+  .status-atencao{ background:var(--yellow); color:var(--black); }
+  .status-limite{ background:var(--maroon); color:var(--white); }
+  @media (max-width:720px){ .status-tag{ justify-self:start; } }
+
+  /* ---------- Tabela ---------- */
+  .table-wrap{ overflow-x:auto; border:1px solid var(--border); border-radius:var(--r-md); background:var(--surface); }
+  table{ width:100%; border-collapse:collapse; font-size:14px; min-width:680px; }
+  th{
+    text-align:left; font-size:12px; font-weight:600; letter-spacing:.06em; text-transform:uppercase;
+    background:var(--black); color:var(--white); padding:12px 14px;
+  }
+  td{ padding:12px 14px; border-top:1px solid var(--border); vertical-align:top; }
+  tbody tr:hover{ background:var(--accent-weak); }
+  .cell-muted{ color:var(--text-muted); font-size:13px; }
+  .cell-racional{ max-width:260px; color:var(--text-muted); font-size:13px; line-height:1.4; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+  /* ---------- Regras ---------- */
+  .rules-card{
+    position:relative; overflow:hidden; background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--r-md); padding:var(--sp-5); font-size:14px; line-height:1.6;
+  }
+  .rules-card::before{ content:""; position:absolute; top:0; left:0; right:0; height:4px; background:var(--orange); }
+  .rules-card h3{ font-size:16px; font-weight:600; margin:var(--sp-5) 0 var(--sp-2); }
+  .rules-card h3:first-child{ margin-top:var(--sp-1); }
+  .rules-card ol, .rules-card ul{ margin:6px 0; padding-left:20px; }
+  .rules-card li{ margin-bottom:4px; }
+  .rules-table{ width:100%; border-collapse:collapse; margin-top:var(--sp-2); font-size:13px; min-width:0; }
+  .rules-table th, .rules-table td{ border:1px solid var(--border); padding:8px 12px; text-align:left; }
+  .rules-table th{ background:var(--black); color:var(--white); font-size:12px; }
+  .pill-note{
+    display:inline-flex; font-size:12px; font-weight:600; line-height:1;
+    background:var(--accent-weak); color:var(--orange); padding:4px 10px; border-radius:var(--r-pill);
+  }
+
+  .empty-note{ text-align:center; padding:var(--sp-5); }
+  footer{ margin-top:var(--sp-6); }
+</style>
+
+</head>
+<body>
+  <div class="frame">
+
+    <!-- LOGIN -->
+    <section id="loginScreen">
+      <div class="eyebrow">New Business · Hotmart</div>
+      <h1>Painel de Acompanhamento</h1>
+      <p class="sub">Entre com seu e-mail @hotmart.com e sua senha pra ver a carteira em tempo real.</p>
+      <div class="card">
+        <label for="emailInput">Seu e-mail</label>
+        <input type="email" id="emailInput" placeholder="seunome@hotmart.com" autocomplete="email" />
+        <label for="passwordInput" style="margin-top:12px;display:block;">Senha</label>
+        <input type="password" id="passwordInput" placeholder="Sua senha" autocomplete="current-password" />
+        <div class="error-msg" id="loginError">E-mail ou senha inválidos.</div>
+        <button class="btn-primary" id="loginBtn">Entrar</button>
+      </div>
+    </section>
+
+    <!-- PAINEL -->
+    <section id="appScreen" style="display:none;">
+      <div class="topbar">
+        <div class="who">Logado como <b id="loggedEmail"></b> · <a class="nav-link" href="index-fer.html">Ir pro Fecha e Passa →</a></div>
+        <button class="logout-link" id="logoutBtn">sair</button>
+      </div>
+
+      <div class="eyebrow">New Business · Hotmart</div>
+      <h1>Painel de Acompanhamento</h1>
+      <p class="sub">Carteira, capacidade e últimas atribuições de cada Onboarder/Guardião, em tempo real.</p>
+      <p class="gerado-em" id="geradoEm">—</p>
+
+      <div class="filter-row" id="filterRow">
+        <button class="filter-pill active" data-level="todos">Todos</button>
+        <button class="filter-pill" data-level="N2-N3">N2-N3</button>
+        <button class="filter-pill" data-level="N4-N5">N4-N5</button>
+        <button class="filter-pill" data-level="N6+">N6+</button>
+        <button class="filter-pill" data-level="Guardian">Guardião</button>
+      </div>
+
+      <div class="kpi-row" id="kpiRow">
+        <div class="kpi-tile"><div class="kpi-num" id="kpiTotalOnb">—</div><div class="kpi-label">Onboarders/Guardiões visíveis</div></div>
+        <div class="kpi-tile"><div class="kpi-num" id="kpiCarteiraTotal">—</div><div class="kpi-label">Contratos ativos na carteira</div></div>
+        <div class="kpi-tile"><div class="kpi-num" id="kpiLivreTotal">—</div><div class="kpi-label">Vagas livres na carteira</div></div>
+        <div class="kpi-tile"><div class="kpi-num" id="kpiNoLimite">—</div><div class="kpi-label">No limite máximo</div></div>
+      </div>
+
+      <div class="section-title">Carteira por Onboarder</div>
+      <div class="section-sub">Capacidade consumida = carteira ativa / limite máximo do nível. <span class="status-tag status-tranquilo" style="padding:2px 8px;">tranquilo</span> &lt;70% · <span class="status-tag status-atencao" style="padding:2px 8px;">atenção</span> 70–99% · <span class="status-tag status-limite" style="padding:2px 8px;">no limite</span> 100%+</div>
+      <div class="onboarder-list" id="onboarderList">
+        <div class="empty-note">Carregando dados do painel…</div>
+      </div>
+
+      <div class="section-title">Últimas atribuições</div>
+      <div class="section-sub">As atribuições mais recentes registradas no histórico, mais recente primeiro.</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Cliente</th><th>Onboarder</th><th>Closer</th><th>Segmentação</th><th>Data</th><th>Racional</th></tr>
+          </thead>
+          <tbody id="histBody">
+            <tr><td colspan="6" class="empty-note">Carregando…</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Resumo das regras de atribuição</div>
+      <div class="rules-card">
+        <h3>Cascata de decisão (nunca cruza nível)</h3>
+        <ol>
+          <li><b>Mesmo POD</b> — onboarders do mesmo POD do Closer, com carteira abaixo do limite do nível.</li>
+          <li><b>Guardião</b> — só entra se o POD estiver no limite. Vale só pra <span class="pill-note">N2-N3</span> e <span class="pill-note">N4-N5</span> (nunca N6+). Escolhe o guardião com menor carteira, limite 150 contratos.</li>
+          <li><b>Outro POD, mesmo nível</b> — mesma lógica da etapa 1, mas em qualquer POD do mesmo nível do Closer.</li>
+          <li><b>Alerta ao coordenador</b> — se todo mundo do nível (incluindo guardiões) estiver no limite, dispara e-mail pro coordenador e nenhuma atribuição é feita.</li>
+        </ol>
+
+        <h3>Limite máximo de carteira por nível</h3>
+        <table class="rules-table">
+          <thead><tr><th>Nível</th><th>Limite total</th></tr></thead>
+          <tbody>
+            <tr><td>N2-N3</td><td>75 contratos</td></tr>
+            <tr><td>N4-N5</td><td>50 contratos</td></tr>
+            <tr><td>N6+</td><td>25 contratos</td></tr>
+            <tr><td>Guardian</td><td>150 contratos</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Segmentação por subgrupo de receita (12 meses)</h3>
+        <table class="rules-table">
+          <thead><tr><th>Nível</th><th>sg1</th><th>sg2</th><th>sg3</th></tr></thead>
+          <tbody>
+            <tr><td>N2-N3</td><td>&lt; R$300k</td><td>R$300k a &lt; R$600k</td><td>≥ R$600k</td></tr>
+            <tr><td>N4-N5</td><td>&lt; R$2M</td><td>R$2M a &lt; R$3M</td><td>≥ R$3M</td></tr>
+            <tr><td>N6+</td><td>&lt; R$10M</td><td>R$10M a &lt; R$15M</td><td>≥ R$15M</td></tr>
+          </tbody>
+        </table>
+        <p class="section-sub" style="margin-top:6px;">Limite inferior inclusive, superior exclusive — por isso não há valor repetido entre faixas vizinhas. sg1 não tem piso e sg3 não tem teto. Cada subgrupo tem limite de 10 contratos por onboarder; se todos do subgrupo estiverem no limite, o desempate cai pra menor carteira total.</p>
+
+        <h3>Critério de desempate</h3>
+        <ol>
+          <li>Menor carteira do subgrupo (ou, em modo fallback, menor carteira total)</li>
+          <li>Empate → menor número de pré-onboardings do subgrupo</li>
+          <li>Empate final → quem está há mais tempo sem receber uma atribuição nova</li>
+        </ol>
+      </div>
+
+      <footer>Sales Ops · New Business</footer>
+    </section>
+
+  </div>
+
+<script>
+  // ============================================================
+  const WEBHOOK_PAINEL_URL = "https://hotmart.app.n8n.cloud/webhook/painel-acompanhamento";
+  const WEBHOOK_LOGIN_URL = "https://hotmart.app.n8n.cloud/webhook/carteira-login";
+  // Sessão fica só na aba (sessionStorage) e expira em 8h; o token é validado pelo n8n em toda chamada.
+  const SESSION_KEY = "carteira_sessao";
+
+  function getSession(){
+    try {
+      const s = JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null');
+      if (s && s.token && new Date(s.expira_em) > new Date()) return s;
+    } catch (e) {}
+    sessionStorage.removeItem(SESSION_KEY);
+    return null;
+  }
+
+  // fetch com o token da sessão; se o servidor responder 401, volta pra tela de login
+  async function apiFetch(url, opts = {}){
+    const s = getSession();
+    if (!s) { showLogin(); throw new Error('Sessão expirada. Faça login novamente.'); }
+    const res = await fetch(url, { ...opts, headers: { ...(opts.headers || {}), 'Authorization': 'Bearer ' + s.token } });
+    if (res.status === 401) {
+      sessionStorage.removeItem(SESSION_KEY);
+      showLogin();
+      throw new Error('Sessão expirada. Faça login novamente.');
+    }
+    return res;
+  }
+  // ============================================================
+
+
+  const loginScreen = document.getElementById('loginScreen');
+  const appScreen    = document.getElementById('appScreen');
+  const emailInput   = document.getElementById('emailInput');
+  const passwordInput = document.getElementById('passwordInput');
+  const loginBtn     = document.getElementById('loginBtn');
+  const loginError   = document.getElementById('loginError');
+  const loggedEmail  = document.getElementById('loggedEmail');
+  const logoutBtn    = document.getElementById('logoutBtn');
+
+  const geradoEm       = document.getElementById('geradoEm');
+  const filterRow      = document.getElementById('filterRow');
+  const onboarderList  = document.getElementById('onboarderList');
+  const histBody       = document.getElementById('histBody');
+  const kpiTotalOnb     = document.getElementById('kpiTotalOnb');
+  const kpiCarteiraTotal = document.getElementById('kpiCarteiraTotal');
+  const kpiLivreTotal   = document.getElementById('kpiLivreTotal');
+  const kpiNoLimite     = document.getElementById('kpiNoLimite');
+
+  let painelData = { onboarders: [], ultimas_atribuicoes: [] };
+  let levelAtivo = 'todos';
+
+  function isValidHotmartEmail(email){
+    return /^[^\s@]+@hotmart\.com$/i.test(email.trim());
+  }
+
+  function showApp(email){
+    loginScreen.style.display = 'none';
+    appScreen.style.display = 'block';
+    loggedEmail.textContent = email;
+    carregarPainel();
+  }
+  function showLogin(){
+    appScreen.style.display = 'none';
+    loginScreen.style.display = 'block';
+    emailInput.value = '';
+    passwordInput.value = '';
+    loginError.classList.remove('show');
+  }
+
+  loginBtn.addEventListener('click', async () => {
+    const email = emailInput.value.trim().toLowerCase();
+    const password = passwordInput.value;
+    if (!isValidHotmartEmail(email) || !password){
+      loginError.textContent = 'Informe seu e-mail @hotmart.com e a senha.';
+      loginError.classList.add('show');
+      return;
+    }
+    loginError.classList.remove('show');
+    loginBtn.disabled = true;
+    try {
+      const res = await fetch(WEBHOOK_LOGIN_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      let data = {};
+      try { data = await res.json(); } catch (e) {}
+      if (!res.ok || !data.sucesso) {
+        loginError.textContent = data.mensagem || ('Não foi possível entrar (status ' + res.status + ').');
+        loginError.classList.add('show');
+        return;
+      }
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify({
+        token: data.token, email: data.email, nome: data.nome, papel: data.papel, expira_em: data.expira_em
+      }));
+      passwordInput.value = '';
+      showApp(data.email);
+    } catch (e) {
+      loginError.textContent = 'Falha de conexão. Tente novamente.';
+      loginError.classList.add('show');
+    } finally {
+      loginBtn.disabled = false;
+    }
+  });
+  emailInput.addEventListener('keydown', e => { if (e.key === 'Enter') passwordInput.focus(); });
+  passwordInput.addEventListener('keydown', e => { if (e.key === 'Enter') loginBtn.click(); });
+  logoutBtn.addEventListener('click', () => { sessionStorage.removeItem(SESSION_KEY); showLogin(); });
+
+  // ---------------------------------------------------------
+  // Carrega dados do webhook
+  // ---------------------------------------------------------
+  async function carregarPainel(){
+    onboarderList.innerHTML = '<div class="empty-note">Carregando dados do painel…</div>';
+    histBody.innerHTML = '<tr><td colspan="6" class="empty-note">Carregando…</td></tr>';
+    try {
+      const res = await apiFetch(WEBHOOK_PAINEL_URL, { method: 'GET' });
+      if (!res.ok) throw new Error('status ' + res.status);
+      painelData = await res.json();
+
+      geradoEm.textContent = painelData.gerado_em
+        ? 'Atualizado em tempo real · ' + new Date(painelData.gerado_em).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
+        : '';
+    } catch (err) {
+      if (!getSession()) return; // sessão expirou: apiFetch já levou pra tela de login
+      // Sem dado de fallback embutido: a página é pública, então só o webhook (com sessão) entrega dados.
+      painelData = { onboarders: [], ultimas_atribuicoes: [] };
+      geradoEm.textContent = '⚠ Erro de autenticação. Saia e entre de novo; se persistir, avise o time de Sales Ops.';
+      onboarderList.innerHTML = '<div class="empty-note">Erro de autenticação. Não foi possível carregar os dados do painel.</div>';
+      histBody.innerHTML = '<tr><td colspan="6" class="empty-note">Erro de autenticação.</td></tr>';
+      renderKpis();
+      return;
+    }
+    renderKpis();
+    renderOnboarders();
+    renderHist();
+  }
+
+  filterRow.addEventListener('click', (e) => {
+    const btn = e.target.closest('.filter-pill');
+    if (!btn) return;
+    levelAtivo = btn.dataset.level;
+    [...filterRow.children].forEach(b => b.classList.toggle('active', b === btn));
+    renderKpis();
+    renderOnboarders();
+  });
+
+  function onboardersFiltrados(){
+    if (levelAtivo === 'todos') return painelData.onboarders;
+    return painelData.onboarders.filter(o => o.level === levelAtivo);
+  }
+
+  function statusDe(pct){
+    if (pct === null || pct === undefined) return { classe: 'status-tranquilo', label: 'sem limite', cor: 'var(--success)' };
+    if (pct >= 100) return { classe: 'status-limite', label: 'no limite', cor: 'var(--maroon)' };
+    if (pct >= 70)  return { classe: 'status-atencao', label: 'atenção', cor: 'var(--orange)' };
+    return { classe: 'status-tranquilo', label: 'tranquilo', cor: 'var(--success)' };
+  }
+
+  function renderKpis(){
+    const lista = onboardersFiltrados();
+    kpiTotalOnb.textContent = lista.length;
+    kpiCarteiraTotal.textContent = lista.reduce((s, o) => s + (o.carteira_atual || 0), 0);
+    kpiLivreTotal.textContent = lista.reduce((s, o) => s + (o.capacidade_livre ?? 0), 0);
+    kpiNoLimite.textContent = lista.filter(o => (o.percentual_consumido ?? 0) >= 100).length;
+  }
+
+  function renderOnboarders(){
+    const lista = onboardersFiltrados();
+    if (!lista.length){
+      onboarderList.innerHTML = '<div class="empty-note">Nenhum onboarder encontrado pra esse filtro.</div>';
+      return;
+    }
+    onboarderList.innerHTML = '';
+    lista.forEach(o => {
+      const pct = o.percentual_consumido ?? 0;
+      const st = statusDe(o.percentual_consumido);
+      const card = document.createElement('div');
+      card.className = 'onb-card';
+      card.innerHTML = `
+        <div>
+          <div class="onb-email">${o.email ?? '—'}</div>
+          <div class="badge-row">
+            <span class="badge pod">POD ${o.pod ?? '—'}</span>
+            <span class="badge">${o.level ?? '—'}</span>
+          </div>
+        </div>
+        <div class="onb-pre">
+          <b>${o.pre_onboarding_atual ?? 0}</b>
+          pré-onboarding
+        </div>
+        <div class="meter-wrap">
+          <div class="meter-track"><div class="meter-fill" style="width:${Math.min(pct, 100)}%; background:${st.cor};"></div></div>
+          <div class="meter-labels">
+            <span><b>${o.carteira_atual ?? 0}</b> / ${o.capacidade_maxima ?? '—'} contratos</span>
+            <span><b>${o.capacidade_livre ?? '—'}</b> livres</span>
+          </div>
+        </div>
+        <span class="status-tag ${st.classe}">${pct}% · ${st.label}</span>
+      `;
+      onboarderList.appendChild(card);
+    });
+  }
+
+  function renderHist(){
+    const lista = painelData.ultimas_atribuicoes || [];
+    if (!lista.length){
+      const msg = 'Nenhuma atribuição registrada ainda.';
+      histBody.innerHTML = '<tr><td colspan="6" class="empty-note">' + msg + '</td></tr>';
+      return;
+    }
+    histBody.innerHTML = '';
+    lista.forEach(h => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${h.cliente || '—'}</td>
+        <td>${h.onboarder || '—'}</td>
+        <td class="cell-muted">${h.closer || '—'}</td>
+        <td class="cell-muted">${h.segmentacao || '—'}</td>
+        <td class="cell-muted">${h.data_atribuicao || '—'}</td>
+        <td class="cell-racional" title="${(h.racional || '').replace(/"/g, '&quot;')}">${h.racional || '—'}</td>
+      `;
+      histBody.appendChild(tr);
+    });
+  }
+
+  // Retoma a sessão da aba (mesmo SESSION_KEY do Fecha e Passa)
+  const savedSession = getSession();
+  if (savedSession && isValidHotmartEmail(savedSession.email)) showApp(savedSession.email);
+</script>
+</body>
+</html>

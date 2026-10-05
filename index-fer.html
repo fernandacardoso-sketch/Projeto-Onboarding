@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fecha e Passa · New Business Hotmart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,900;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     Tokens — Hotmart · Design System de App
+     ============================================================ */
+  :root{
+    --orange:#FF4000; --black:#0D0D0D; --off-white:#F5F3EF;
+    --gray:#C3BFB8; --white:#FFFFFF; --yellow:#FFD450; --maroon:#3E0F1D;
+    --blue:#44D0FF;
+
+    --bg:var(--off-white);
+    --surface:var(--white);
+    --surface-sunken:#EFECE6;
+    --border:#E2DED7;
+    --border-strong:#D3CEC5;
+    --text:var(--black);
+    --text-muted:rgba(13,13,13,.60);
+    --accent:var(--orange);
+    --accent-weak:rgba(255,64,0,.10);
+    --orange-hover:#E63A00;
+    --success:#1E7A3D;
+
+    --font-sans:"DM Sans","Arial",sans-serif;
+    --font-mono:"DM Mono",ui-monospace,monospace;
+
+    --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px;
+    --sp-5:24px; --sp-6:32px; --sp-7:48px; --sp-8:64px;
+    --r-sm:6px; --r-md:10px; --r-lg:16px; --r-pill:999px;
+    --sh-sm:0 1px 2px rgba(13,13,13,.06);
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; min-height:100vh;
+    background:var(--bg); color:var(--text);
+    font-family:var(--font-sans); line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--orange); color:var(--white); }
+
+  /* ---------- Tipografia ---------- */
+  .eyebrow{
+    font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--orange); text-align:center; margin-bottom:10px;
+  }
+  h1{ font-size:clamp(28px,4vw,34px); font-weight:700; line-height:1.08; letter-spacing:-.015em; text-align:center; margin:0 0 var(--sp-2); }
+  .sub{ text-align:center; color:var(--text-muted); font-size:14px; margin:0 0 var(--sp-5); line-height:1.5; }
+
+  /* ---------- Card ---------- */
+  .card{
+    position:relative; overflow:hidden;
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--r-md); padding:var(--sp-5);
+  }
+  .card::before{ content:""; position:absolute; top:0; left:0; right:0; height:4px; background:var(--orange); }
+  .card > :first-child{ margin-top:var(--sp-1); }
+
+  /* ---------- Campos ---------- */
+  label{ display:block; font-size:13px; font-weight:600; color:var(--text); margin-bottom:6px; }
+  input[type="text"], input[type="email"], input[type="password"]{
+    width:100%; font-family:inherit; font-size:15px; color:var(--text);
+    background:var(--surface); border:1.5px solid var(--border-strong);
+    border-radius:var(--r-sm); padding:10px 12px; outline:none;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus{ border-color:var(--orange); box-shadow:0 0 0 3px var(--accent-weak); }
+  input::placeholder{ color:var(--text-muted); }
+  .hint{ font-size:12px; color:var(--text-muted); margin-top:6px; line-height:1.4; }
+  .error-msg{ font-size:13px; color:var(--maroon); font-weight:500; margin-top:10px; display:none; line-height:1.45; }
+  .error-msg.show{ display:block; }
+
+  /* ---------- Botões ---------- */
+  button{ font-family:inherit; cursor:pointer; border:none; }
+  button:focus-visible{ outline:3px solid rgba(255,64,0,.4); outline-offset:2px; }
+  .btn-primary{
+    width:100%; margin-top:var(--sp-4); background:var(--orange); color:var(--black);
+    font-size:15px; font-weight:600; padding:12px 20px; border-radius:var(--r-sm);
+    display:flex; align-items:center; justify-content:center; gap:8px; line-height:1;
+    transition:transform .06s, background .15s;
+  }
+  .btn-primary:hover{ background:var(--orange-hover); }
+  .btn-primary:active{ transform:translateY(1px); }
+  .btn-primary:disabled{ opacity:.4; cursor:not-allowed; }
+  .btn-primary.dark{ background:var(--black); color:var(--white); }
+  .btn-primary.dark:hover{ background:#262626; }
+  .btn-ghost{
+    width:100%; margin-top:10px; background:transparent; color:var(--text);
+    font-size:13px; font-weight:600; padding:9px 14px; border-radius:var(--r-sm);
+    border:1.5px solid var(--border-strong); transition:border-color .15s;
+  }
+  .btn-ghost:hover{ border-color:var(--black); }
+
+  .topbar{ display:flex; align-items:center; justify-content:space-between; gap:var(--sp-3); margin-bottom:var(--sp-5); }
+  .who{ font-family:var(--font-mono); font-size:12.5px; color:var(--text-muted); }
+  .who b{ color:var(--text); font-weight:500; }
+  .logout-link{
+    font-size:13px; font-weight:600; color:var(--text); background:none; padding:4px;
+    text-decoration:underline; text-underline-offset:3px;
+  }
+  .logout-link:hover{ color:var(--orange); }
+
+  .empty-note{ font-size:13px; color:var(--text-muted); padding:6px 2px; line-height:1.5; }
+  footer{ text-align:center; margin-top:var(--sp-5); font-size:12px; color:var(--text-muted); }
+
+  /* ============================================================
+     Fecha e Passa
+     ============================================================ */
+  body{ display:flex; align-items:center; justify-content:center; padding:var(--sp-6) 20px; }
+  .frame{ width:100%; max-width:460px; }
+  .card + .card{ margin-top:var(--sp-4); }
+
+  .back-link{
+    display:block; font-size:13px; font-weight:600; color:var(--text-muted);
+    background:none; padding:0; margin-bottom:var(--sp-3);
+  }
+  .back-link:hover{ color:var(--orange); }
+
+  .pod-badge{
+    display:inline-flex; align-items:center; font-size:12px; font-weight:600;
+    background:var(--accent-weak); color:var(--orange);
+    padding:4px 10px; border-radius:var(--r-pill); line-height:1; margin-bottom:var(--sp-4);
+  }
+
+  /* ---------- Stepper ---------- */
+  .stepper{ display:flex; align-items:center; gap:6px; margin-bottom:var(--sp-3); }
+  .step-dot{ flex:1; height:6px; border-radius:var(--r-pill); background:var(--border-strong); transition:background .25s; }
+  .step-dot.active{ background:var(--orange); }
+  .step-dot.done{ background:var(--black); }
+  .step-labels{ display:flex; justify-content:space-between; font-size:12px; font-weight:600; color:var(--text-muted); margin-bottom:var(--sp-4); }
+  .step-labels span{ flex:1; text-align:center; }
+  .step-labels span:first-child{ text-align:left; }
+  .step-labels span:last-child{ text-align:right; }
+
+  .fields{ display:flex; flex-direction:column; gap:var(--sp-4); margin-bottom:var(--sp-2); }
+
+  /* ---------- Resultado ---------- */
+  .section-gap{ margin-top:var(--sp-5); padding-top:var(--sp-5); border-top:1px solid var(--border); }
+  .result-label{ font-size:12px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--text-muted); margin-bottom:var(--sp-2); }
+  .result-level{ font-size:13px; color:var(--text-muted); margin-bottom:var(--sp-4); }
+
+  .assign-summary, .chosen-slot, .alert-box{
+    position:relative; background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--r-md); padding:var(--sp-4) var(--sp-5); font-size:14px; line-height:1.55;
+  }
+  .assign-summary::before, .chosen-slot::before, .alert-box::before, .tally::before{
+    content:""; position:absolute; left:0; top:12px; bottom:12px; width:4px;
+    background:var(--orange); border-radius:0 3px 3px 0;
+  }
+  .assign-summary{ margin-bottom:var(--sp-3); }
+  .assign-summary b, .chosen-slot b, .cw-summary b{ font-weight:700; color:var(--text); }
+  .alert-box{ color:var(--text); }
+  .alert-box::before{ background:var(--yellow); }
+
+  .tally{
+    position:relative; display:flex; align-items:center; gap:var(--sp-4);
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md);
+    padding:var(--sp-4) var(--sp-5) var(--sp-4) var(--sp-6);
+  }
+  .tally::before{ left:0; }
+  .tally-num{ font-size:40px; font-weight:700; letter-spacing:-.02em; line-height:1; color:var(--orange); display:flex; align-items:baseline; gap:var(--sp-2); }
+  .tally-num .arrow{ font-size:20px; color:var(--text-muted); font-weight:400; }
+  .tally-text{ font-size:13px; color:var(--text-muted); line-height:1.4; }
+  .tally-text b{ color:var(--text); }
+  .tiebreak-note{ margin-top:var(--sp-3); font-size:12px; color:var(--text-muted); background:var(--surface-sunken); border-radius:var(--r-sm); padding:var(--sp-2) var(--sp-3); line-height:1.5; }
+  .tiebreak-note b{ color:var(--text); }
+
+  /* ---------- Horários ---------- */
+  .slots-wrap{ max-height:260px; overflow-y:auto; padding-right:2px; }
+  .slot-day{ margin-bottom:var(--sp-4); }
+  .slot-day-label{ font-size:12px; font-weight:600; color:var(--text-muted); text-transform:capitalize; margin-bottom:var(--sp-2); }
+  .slot-grid{ display:flex; flex-wrap:wrap; gap:var(--sp-2); }
+  .slot-pill{
+    font-family:var(--font-mono); font-size:13px; font-weight:500;
+    padding:8px 12px; border-radius:var(--r-sm); border:1.5px solid var(--border-strong);
+    background:var(--surface); color:var(--text); transition:border-color .15s, background .15s;
+  }
+  .slot-pill:hover{ border-color:var(--black); }
+  .slot-pill.selected{ background:var(--orange); border-color:var(--orange); color:var(--black); }
+  .chosen-slot{ display:flex; align-items:center; gap:10px; margin:var(--sp-4) 0 0; }
+
+  /* ---------- Closed Won ---------- */
+  .cw-summary{
+    background:var(--surface-sunken); border-radius:var(--r-md); padding:var(--sp-4) var(--sp-5);
+    font-size:14px; color:var(--text); line-height:1.6; margin-bottom:var(--sp-2);
+  }
+
+  .done-box{ text-align:center; padding:var(--sp-2) 0 var(--sp-1); }
+  .done-icon{ width:40px; height:40px; border-radius:50%; background:var(--orange); margin:0 auto var(--sp-3); }
+  .done-title{ font-size:20px; font-weight:700; margin-bottom:var(--sp-1); }
+  .done-sub{ font-size:14px; color:var(--text-muted); line-height:1.5; }
+
+  .spinner{ width:16px; height:16px; border-radius:50%; border:2px solid rgba(13,13,13,.25); border-top-color:var(--black); animation:spin .7s linear infinite; display:none; }
+  .btn-primary.dark .spinner{ border-color:rgba(255,255,255,.35); border-top-color:var(--white); }
+  .spinner.show{ display:inline-block; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  @keyframes rise{ from{ opacity:0; transform:translateY(6px); } to{ opacity:1; transform:translateY(0); } }
+  .rise{ animation:rise .3s ease; }
+
+  @media (prefers-reduced-motion: reduce){
+    .rise, .spinner{ animation:none !important; }
+  }
+
+  /* ---------- Funil do Closer (lista de oportunidades) ---------- */
+  .opp-filters{ display:flex; gap:var(--sp-2); flex-wrap:wrap; margin-bottom:var(--sp-2); }
+  .opp-filters input[type="text"]{ flex:1 1 200px; width:auto; }
+  .opp-filters select{
+    flex:0 1 190px; font-family:inherit; font-size:14px; color:var(--text);
+    background:var(--surface); border:1.5px solid var(--border-strong);
+    border-radius:var(--r-sm); padding:10px 12px; outline:none;
+  }
+  .opp-filters select:focus{ border-color:var(--orange); box-shadow:0 0 0 3px var(--accent-weak); }
+  .opp-list{
+    border:1.5px solid var(--border-strong); border-radius:var(--r-sm);
+    max-height:320px; overflow-y:auto; background:var(--surface);
+  }
+  .opp-row{
+    display:grid; grid-template-columns:90px 1fr auto auto; gap:var(--sp-3); align-items:center;
+    width:100%; text-align:left; font-family:inherit; font-size:13.5px; color:var(--text);
+    background:transparent; border:0; border-bottom:1px solid var(--border);
+    padding:10px 12px; cursor:pointer;
+  }
+  .opp-row:last-child{ border-bottom:0; }
+  .opp-row:hover:not(:disabled){ background:var(--accent-weak); }
+  .opp-row:focus-visible{ outline:2px solid var(--orange); outline-offset:-2px; }
+  .opp-row.selected{ background:var(--accent-weak); box-shadow:inset 3px 0 0 var(--orange); }
+  .opp-row:disabled{ cursor:not-allowed; color:var(--text-muted); }
+  .opp-hid{ font-family:var(--font-mono); font-size:12px; color:var(--text-muted); }
+  .opp-nome{ font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .opp-stage{ font-size:12px; font-weight:600; padding:2px 8px; border-radius:var(--r-pill); border:1px solid var(--border-strong); white-space:nowrap; }
+  .opp-amount{ font-family:var(--font-mono); font-size:12.5px; text-align:right; white-space:nowrap; min-width:92px; }
+  .opp-note{ grid-column:2 / -1; font-size:12px; color:var(--text-muted); margin-top:-4px; }
+  .opp-empty{ padding:var(--sp-4); font-size:13px; color:var(--text-muted); text-align:center; }
+  .opp-selected{ margin-top:var(--sp-2); font-size:13px; font-weight:600; }
+  .opp-manual{ margin-top:var(--sp-3); font-size:13px; }
+  .opp-manual summary{ cursor:pointer; color:var(--text-muted); }
+  .opp-manual input{ margin-top:var(--sp-2); }
+  @media (max-width:560px){ .opp-row{ grid-template-columns:1fr auto; } .opp-hid{ grid-column:1 / -1; } .opp-note{ grid-column:1 / -1; } }
+</style>
+
+</head>
+<body>
+  <div class="frame">
+
+    <!-- LOGIN -->
+    <section id="loginScreen">
+      <div class="eyebrow">New Business · Hotmart</div>
+      <h1>Fecha e Passa</h1>
+      <p class="sub">Entre com seu e-mail @hotmart.com e sua senha. Daqui você atribui o onboarder, marca o welcome e fecha a Oportunidade.</p>
+      <div class="card">
+        <label for="emailInput">Seu e-mail</label>
+        <input type="email" id="emailInput" placeholder="seunome@hotmart.com" autocomplete="email" />
+        <label for="passwordInput" style="margin-top:12px;display:block;">Senha</label>
+        <input type="password" id="passwordInput" placeholder="Sua senha" autocomplete="current-password" />
+        <div class="error-msg" id="loginError">E-mail ou senha inválidos.</div>
+        <button class="btn-primary" id="loginBtn">Entrar</button>
+      </div>
+    </section>
+
+    <!-- APP -->
+    <section id="appScreen" style="display:none;">
+      <div class="topbar">
+        <div class="who">Logado como <b id="loggedEmail"></b></div>
+        <button class="logout-link" id="logoutBtn">sair</button>
+      </div>
+
+      <div class="stepper">
+        <div class="step-dot" id="dot1"></div>
+        <div class="step-dot" id="dot2"></div>
+        <div class="step-dot" id="dot3"></div>
+      </div>
+      <div class="step-labels">
+        <span>Atribuir</span>
+        <span>Agendar welcome</span>
+        <span>Closed Won</span>
+      </div>
+
+      <!-- ===== STEP 1 — ATRIBUIÇÃO ===== -->
+      <div class="card" id="step1Card">
+        <span class="pod-badge" id="podBadge">POD —</span>
+
+        <div id="assignFormWrap">
+          <div id="oppPicker" style="margin-bottom:var(--sp-4);">
+            <label for="oppSearch">Suas oportunidades no Salesforce</label>
+            <div class="opp-filters">
+              <input type="text" id="oppSearch" placeholder="Buscar por nome ou Hotmart ID" autocomplete="off" />
+              <select id="oppStageFilter" aria-label="Filtrar por estágio">
+                <option value="">Todos os estágios</option>
+                <option>Issues Identified</option>
+                <option>SQL</option>
+                <option>Offer Presented</option>
+                <option>Contract Sent</option>
+                <option>Closed Won</option>
+                <option>Lost Deals</option>
+              </select>
+              <button type="button" class="btn-ghost" id="oppRefreshBtn">Atualizar</button>
+            </div>
+            <div class="opp-list" id="oppList"></div>
+            <div class="hint" id="oppStatus"></div>
+            <input type="hidden" id="oppIdInput" />
+            <div class="opp-selected" id="oppSelected" style="display:none;"></div>
+            <details class="opp-manual">
+              <summary>Não achou? Informar o ID da Opportunity manualmente</summary>
+              <input type="text" id="oppIdManual" placeholder="Ex: 006SG00000fKjnlYAC" />
+            </details>
+          </div>
+
+          <div class="fields">
+            <div>
+              <label for="clienteEmailInput">E-mail do cliente</label>
+              <input type="email" id="clienteEmailInput" placeholder="cliente@empresa.com" required />
+              <div class="hint">Usado pra convidar o cliente na reunião de welcome.</div>
+            </div>
+          </div>
+
+          <button class="btn-primary" id="assignBtn">
+            <span class="spinner" id="assignSpinner"></span>
+            <span id="assignBtnText">Atribuir próximo contrato</span>
+          </button>
+          <div class="error-msg" id="assignError"></div>
+        </div>
+
+        <!-- Resultado da atribuição -->
+        <div class="section-gap rise" id="resultBox" style="display:none;">
+          <button class="back-link" id="editOppBtn">← Voltar</button>
+          <div class="result-label" id="resultOppLabel">Opportunity —</div>
+          <div class="assign-summary" id="assignSummary">—</div>
+          <div class="result-level" id="resultLevel">—</div>
+          <div class="tally">
+            <div class="tally-num">
+              <span id="tallyBefore">0</span>
+              <span class="arrow">→</span>
+              <span id="tallyAfter">0</span>
+            </div>
+            <div class="tally-text">contratos na carteira ativa <b>do onboarder</b><br>antes e depois desta atribuição</div>
+          </div>
+          <div class="tiebreak-note" id="tiebreakNote" style="display:none;"></div>
+          <button class="btn-primary" id="continueToStep2Btn" style="display:none;">Continuar para o agendamento →</button>
+        </div>
+
+        <!-- Alerta de capacidade máxima -->
+        <div class="section-gap rise" id="alertWrap" style="display:none;">
+          <div class="alert-box">
+            <strong>Capacidade máxima atingida</strong><br>
+            <span id="alertMsg"></span>
+          </div>
+          <button class="btn-ghost" id="assignAgainBtn">Tentar outro contrato</button>
+        </div>
+      </div>
+
+      <!-- ===== STEP 2 — AGENDAMENTO ===== -->
+      <div class="card" id="step2Card" style="display:none;">
+        <button class="back-link" id="backToStep1Btn">← Voltar</button>
+        <div class="result-label">Agendar reunião de welcome</div>
+        <p class="sub" style="margin:0 0 16px; text-align:left;">Horários livres na agenda de <b id="onboarderNameLabel" style="color:var(--text);"></b> nos próximos 30 dias, em horário comercial.</p>
+
+        <div class="slots-wrap" id="slotsWrap">
+          <div class="empty-note">Carregando horários…</div>
+        </div>
+
+        <div class="chosen-slot rise" id="chosenSlotBox" style="display:none;">
+          Horário escolhido: <b id="chosenSlotText">—</b>
+        </div>
+
+        <button class="btn-primary dark" id="confirmMeetingBtn" disabled>
+          <span class="spinner" id="confirmSpinner"></span>
+          <span id="confirmBtnText">Confirmar reunião</span>
+        </button>
+        <div class="error-msg" id="confirmError"></div>
+      </div>
+
+      <!-- ===== STEP 3 — CLOSED WON ===== -->
+      <div class="card" id="step3Card" style="display:none;">
+        <button class="back-link" id="backToStep2Btn">← Voltar</button>
+        <div class="result-label">Fechar contrato</div>
+        <div class="cw-summary">
+          Onboarder <b id="cwOnboarder">—</b> atribuído e reunião de welcome agendada para <b id="cwWhen">—</b>.<br>
+          Ao confirmar, o Stage da Opportunity <b id="cwOppId">—</b> no Salesforce vai virar <b>Closed Won</b>.
+        </div>
+
+        <button class="btn-primary" id="closedWonBtn">
+          <span class="spinner" id="cwSpinner"></span>
+          <span id="cwBtnText">Marcar como Closed Won</span>
+        </button>
+        <div class="error-msg" id="cwError"></div>
+      </div>
+
+      <!-- ===== CONCLUÍDO ===== -->
+      <div class="card rise" id="doneCard" style="display:none;">
+        <div class="done-box">
+          <div class="done-icon"></div>
+          <div class="done-title">Tudo certo!</div>
+          <div class="done-sub">Onboarder atribuído, reunião de welcome agendada e contrato marcado como Closed Won.</div>
+        </div>
+        <button class="btn-ghost" id="restartBtn">Atribuir outro contrato</button>
+      </div>
+
+      <footer>Sales Ops · New Business</footer>
+    </section>
+
+  </div>
+
+<script>
+  // ============================================================
+  // CONFIGURAÇÃO
+  // ============================================================
+  const WEBHOOK_ASSIGN_URL   = "https://hotmart.app.n8n.cloud/webhook/atribuicao-onboarder";
+  const WEBHOOK_CONFIRM_URL  = "https://hotmart.app.n8n.cloud/webhook/confirmar-reuniao-onboarding";
+  const WEBHOOK_CLOSEDWON_URL = "https://hotmart.app.n8n.cloud/webhook/closed-won-onboarding";
+  const WEBHOOK_LOGIN_URL = "https://hotmart.app.n8n.cloud/webhook/carteira-login";
+  // Sessão fica só na aba (sessionStorage) e expira em 8h; o token é validado pelo n8n em toda chamada.
+  const SESSION_KEY = "carteira_sessao";
+
+  function getSession(){
+    try {
+      const s = JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null');
+      if (s && s.token && new Date(s.expira_em) > new Date()) return s;
+    } catch (e) {}
+    sessionStorage.removeItem(SESSION_KEY);
+    return null;
+  }
+
+  // fetch com o token da sessão; se o servidor responder 401, volta pra tela de login
+  async function apiFetch(url, opts = {}){
+    const s = getSession();
+    if (!s) { showLogin(); throw new Error('Sessão expirada. Faça login novamente.'); }
+    const res = await fetch(url, { ...opts, headers: { ...(opts.headers || {}), 'Authorization': 'Bearer ' + s.token } });
+    if (res.status === 401) {
+      sessionStorage.removeItem(SESSION_KEY);
+      showLogin();
+      throw new Error('Sessão expirada. Faça login novamente.');
+    }
+    return res;
+  }
+  // ============================================================
+
+  const loginScreen   = document.getElementById('loginScreen');
+  const appScreen     = document.getElementById('appScreen');
+  const emailInput    = document.getElementById('emailInput');
+  const passwordInput = document.getElementById('passwordInput');
+  const loginBtn      = document.getElementById('loginBtn');
+  const loginError    = document.getElementById('loginError');
+  const loggedEmail   = document.getElementById('loggedEmail');
+  const logoutBtn     = document.getElementById('logoutBtn');
+  const podBadge      = document.getElementById('podBadge');
+
+  const dot1 = document.getElementById('dot1');
+  const dot2 = document.getElementById('dot2');
+  const dot3 = document.getElementById('dot3');
+
+  // Step 1
+  const step1Card      = document.getElementById('step1Card');
+  const assignFormWrap  = document.getElementById('assignFormWrap');
+  const resultOppLabel  = document.getElementById('resultOppLabel');
+  const oppIdInput      = document.getElementById('oppIdInput');
+  const clienteEmailInput = document.getElementById('clienteEmailInput');
+  const assignBtn       = document.getElementById('assignBtn');
+  const assignBtnText   = document.getElementById('assignBtnText');
+  const assignSpinner   = document.getElementById('assignSpinner');
+  const assignError     = document.getElementById('assignError');
+  const resultBox       = document.getElementById('resultBox');
+  const assignSummary   = document.getElementById('assignSummary');
+  const resultLevel     = document.getElementById('resultLevel');
+  const tallyBefore     = document.getElementById('tallyBefore');
+  const tallyAfter      = document.getElementById('tallyAfter');
+  const tiebreakNote    = document.getElementById('tiebreakNote');
+  const continueToStep2Btn = document.getElementById('continueToStep2Btn');
+  const alertWrap       = document.getElementById('alertWrap');
+  const alertMsg        = document.getElementById('alertMsg');
+  const assignAgainBtn  = document.getElementById('assignAgainBtn');
+
+  // Step 2
+  const step2Card         = document.getElementById('step2Card');
+  const onboarderNameLabel = document.getElementById('onboarderNameLabel');
+  const slotsWrap         = document.getElementById('slotsWrap');
+  const chosenSlotBox     = document.getElementById('chosenSlotBox');
+  const chosenSlotText    = document.getElementById('chosenSlotText');
+  const confirmMeetingBtn = document.getElementById('confirmMeetingBtn');
+  const confirmBtnText    = document.getElementById('confirmBtnText');
+  const confirmSpinner    = document.getElementById('confirmSpinner');
+  const confirmError      = document.getElementById('confirmError');
+
+  // Step 3
+  const step3Card    = document.getElementById('step3Card');
+  const cwOnboarder  = document.getElementById('cwOnboarder');
+  const cwWhen       = document.getElementById('cwWhen');
+  const cwOppId      = document.getElementById('cwOppId');
+  const closedWonBtn = document.getElementById('closedWonBtn');
+  const cwBtnText    = document.getElementById('cwBtnText');
+  const cwSpinner    = document.getElementById('cwSpinner');
+  const cwError      = document.getElementById('cwError');
+
+  const doneCard   = document.getElementById('doneCard');
+  const restartBtn = document.getElementById('restartBtn');
+
+  // Estado da sessão de atribuição em andamento
+  let flow = {
+    oppId: '', cliente: '', clienteEmail: '',
+    onboarderEmail: '', chosenSlot: null
+  };
+
+  function isValidHotmartEmail(email){
+    return /^[^\s@]+@hotmart\.com$/i.test(email.trim());
+  }
+
+  function setStep(n){
+    dot1.className = 'step-dot' + (n === 1 ? ' active' : n > 1 ? ' done' : '');
+    dot2.className = 'step-dot' + (n === 2 ? ' active' : n > 2 ? ' done' : '');
+    dot3.className = 'step-dot' + (n === 3 ? ' active' : n > 3 ? ' done' : '');
+    step1Card.style.display = (n === 1) ? 'block' : 'none';
+    step2Card.style.display = (n === 2) ? 'block' : 'none';
+    step3Card.style.display = (n === 3) ? 'block' : 'none';
+    doneCard.style.display  = (n === 4) ? 'block' : 'none';
+  }
+
+  function showApp(email){
+    loginScreen.style.display = 'none';
+    appScreen.style.display = 'block';
+    loggedEmail.textContent = email;
+    resetFlow();
+  }
+
+  function showLogin(){
+    appScreen.style.display = 'none';
+    loginScreen.style.display = 'block';
+    emailInput.value = '';
+    passwordInput.value = '';
+    loginError.classList.remove('show');
+  }
+
+  function resetFlow(){
+    flow = { oppId:'', cliente:'', clienteEmail:'', onboarderEmail:'', chosenSlot:null };
+    oppIdInput.value = '';
+    oppIdManual.value = '';
+    oppEscolhida = null;
+    renderSelecao();
+    clienteEmailInput.value = '';
+    podBadge.textContent = 'POD —';
+    assignFormWrap.style.display = 'block';
+    resultBox.style.display = 'none';
+    continueToStep2Btn.style.display = 'none';
+    alertWrap.style.display = 'none';
+    assignError.classList.remove('show');
+    confirmError.classList.remove('show');
+    cwError.classList.remove('show');
+    setStep(1);
+    carregarOportunidades();
+  }
+
+  loginBtn.addEventListener('click', async () => {
+    const email = emailInput.value.trim().toLowerCase();
+    const password = passwordInput.value;
+    if (!isValidHotmartEmail(email) || !password){
+      loginError.textContent = 'Informe seu e-mail @hotmart.com e a senha.';
+      loginError.classList.add('show');
+      return;
+    }
+    loginError.classList.remove('show');
+    loginBtn.disabled = true;
+    try {
+      const res = await fetch(WEBHOOK_LOGIN_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      let data = {};
+      try { data = await res.json(); } catch (e) {}
+      if (!res.ok || !data.sucesso) {
+        loginError.textContent = data.mensagem || ('Não foi possível entrar (status ' + res.status + ').');
+        loginError.classList.add('show');
+        return;
+      }
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify({
+        token: data.token, email: data.email, nome: data.nome, papel: data.papel, expira_em: data.expira_em
+      }));
+      passwordInput.value = '';
+      showApp(data.email);
+    } catch (e) {
+      loginError.textContent = 'Falha de conexão. Tente novamente.';
+      loginError.classList.add('show');
+    } finally {
+      loginBtn.disabled = false;
+    }
+  });
+  emailInput.addEventListener('keydown', e => { if (e.key === 'Enter') passwordInput.focus(); });
+  passwordInput.addEventListener('keydown', e => { if (e.key === 'Enter') loginBtn.click(); });
+  logoutBtn.addEventListener('click', () => { sessionStorage.removeItem(SESSION_KEY); showLogin(); });
+  restartBtn.addEventListener('click', resetFlow);
+  assignAgainBtn.addEventListener('click', resetFlow);
+  continueToStep2Btn.addEventListener('click', () => setStep(2));
+  document.getElementById('backToStep1Btn').addEventListener('click', () => setStep(1));
+  document.getElementById('backToStep2Btn').addEventListener('click', () => setStep(2));
+  document.getElementById('editOppBtn').addEventListener('click', () => {
+    assignFormWrap.style.display = 'block';
+    resultBox.style.display = 'none';
+  });
+
+  // ---------------------------------------------------------
+  // STEP 1 — Atribuir onboarder
+  // ---------------------------------------------------------
+  // ---------------------------------------------------------
+  // Funil do Closer — lista das Opportunities dele no Salesforce
+  // ---------------------------------------------------------
+  const WEBHOOK_OPPS_URL = "https://hotmart.app.n8n.cloud/webhook/minhas-oportunidades";
+  // o Salesforce devolve o estágio com a caixa dele (ex: "Issues identified"), então toda comparação ignora maiúsculas
+  const ESTAGIOS_ENCERRADOS = ['closed won', 'lost deals'];
+  const oppSearch      = document.getElementById('oppSearch');
+  const oppStageFilter = document.getElementById('oppStageFilter');
+  const oppRefreshBtn  = document.getElementById('oppRefreshBtn');
+  const oppList        = document.getElementById('oppList');
+  const oppStatus      = document.getElementById('oppStatus');
+  const oppSelected    = document.getElementById('oppSelected');
+  const oppIdManual    = document.getElementById('oppIdManual');
+  const brl = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+  let oportunidades = [];
+  let oppEscolhida = null;
+
+  function motivoIndisponivel(o){
+    if (ESTAGIOS_ENCERRADOS.includes(String(o.estagio).toLowerCase())) return 'Estágio encerrado';
+    if (o.ja_atribuida) return 'Já atribuída a um onboarder';
+    return '';
+  }
+
+  function renderSelecao(){
+    if (oppEscolhida) {
+      oppSelected.textContent = 'Selecionada: ' + (oppEscolhida.hotmart_id ? oppEscolhida.hotmart_id + ' · ' : '') + oppEscolhida.nome;
+      oppSelected.style.display = 'block';
+    } else {
+      oppSelected.style.display = 'none';
+      oppSelected.textContent = '';
+    }
+  }
+
+  function escolherOpp(o){
+    oppEscolhida = o;
+    oppIdInput.value = o.opp_id;
+    oppIdManual.value = '';
+    assignError.classList.remove('show');
+    renderSelecao();
+    renderOpps();
+  }
+
+  function renderOpps(){
+    const termo = oppSearch.value.trim().toLowerCase();
+    const estagio = oppStageFilter.value;
+    const lista = oportunidades.filter(o =>
+      (!estagio || String(o.estagio).toLowerCase() === estagio.toLowerCase()) &&
+      (!termo || o.nome.toLowerCase().includes(termo) || o.hotmart_id.toLowerCase().includes(termo))
+    );
+    oppList.innerHTML = '';
+    if (!lista.length) {
+      const vazio = document.createElement('div');
+      vazio.className = 'opp-empty';
+      vazio.textContent = oportunidades.length ? 'Nenhuma oportunidade com esse filtro.' : 'Você não tem oportunidades nesses estágios.';
+      oppList.appendChild(vazio);
+    }
+    lista.forEach(o => {
+      const motivo = motivoIndisponivel(o);
+      const row = document.createElement('button');
+      row.type = 'button';
+      row.className = 'opp-row' + (oppEscolhida && oppEscolhida.opp_id === o.opp_id ? ' selected' : '');
+      row.disabled = !!motivo;
+      const mk = (cls, txt) => { const e = document.createElement('span'); e.className = cls; e.textContent = txt; return e; };
+      row.appendChild(mk('opp-hid', o.hotmart_id || '—'));
+      row.appendChild(mk('opp-nome', o.nome || '(sem nome)'));
+      row.appendChild(mk('opp-stage', o.estagio));
+      row.appendChild(mk('opp-amount', o.amount_12m == null ? '—' : brl.format(o.amount_12m)));
+      if (motivo) row.appendChild(mk('opp-note', motivo));
+      else row.addEventListener('click', () => escolherOpp(o));
+      oppList.appendChild(row);
+    });
+    const livres = oportunidades.filter(o => !motivoIndisponivel(o)).length;
+    oppStatus.textContent = oportunidades.length
+      ? lista.length + ' de ' + oportunidades.length + ' oportunidades · ' + livres + ' disponíveis para atribuir'
+      : '';
+  }
+
+  async function carregarOportunidades(){
+    oppList.innerHTML = '<div class="opp-empty">Carregando suas oportunidades…</div>';
+    oppStatus.textContent = '';
+    try {
+      const res = await apiFetch(WEBHOOK_OPPS_URL, { method: 'GET' });
+      if (!res.ok) throw new Error('status ' + res.status);
+      const data = await res.json();
+      oportunidades = Array.isArray(data.oportunidades) ? data.oportunidades : [];
+      if (oppEscolhida && !oportunidades.some(o => o.opp_id === oppEscolhida.opp_id)) { oppEscolhida = null; oppIdInput.value = ''; renderSelecao(); }
+      renderOpps();
+    } catch (e) {
+      if (!getSession()) return; // sessão expirou: apiFetch já levou pra tela de login
+      oportunidades = [];
+      oppList.innerHTML = '<div class="opp-empty">Não foi possível carregar suas oportunidades. Use "Atualizar" ou informe o ID manualmente.</div>';
+    }
+  }
+
+  oppSearch.addEventListener('input', renderOpps);
+  oppStageFilter.addEventListener('change', renderOpps);
+  oppRefreshBtn.addEventListener('click', carregarOportunidades);
+  oppIdManual.addEventListener('input', () => {
+    oppEscolhida = null;
+    renderSelecao();
+    oppIdInput.value = oppIdManual.value.trim();
+    renderOpps();
+  });
+
+  async function atribuir(){
+    const closerEmail = (getSession() || {}).email;
+    if (!closerEmail) { showLogin(); return; }
+
+    const oppId = oppIdInput.value.trim();
+    if (!oppId) {
+      assignError.textContent = 'Escolha uma Opportunity na lista (ou informe o ID manualmente) antes de atribuir.';
+      assignError.classList.add('show');
+      return;
+    }
+
+    const clienteEmail = clienteEmailInput.value.trim();
+    if (!clienteEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clienteEmail)) {
+      assignError.textContent = 'Informe um e-mail do cliente válido antes de atribuir.';
+      assignError.classList.add('show');
+      return;
+    }
+
+    flow.oppId = oppId;
+    flow.clienteEmail = clienteEmail;
+
+    assignBtn.disabled = true;
+    assignSpinner.classList.add('show');
+    assignBtnText.textContent = 'Atribuindo...';
+    assignError.classList.remove('show');
+    resultBox.style.display = 'none';
+    alertWrap.style.display = 'none';
+
+    try {
+      const res = await apiFetch(WEBHOOK_ASSIGN_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          opp_id: oppId,
+          email_closer: closerEmail
+        })
+      });
+
+      if (!res.ok) throw new Error('O servidor retornou um erro (status ' + res.status + ').');
+      const data = await res.json();
+
+      // Caminho de alerta (capacidade máxima)
+      if (data.status === 'alerta') {
+        alertMsg.textContent = data.motivo ?? 'Nenhum onboarder disponível. E-mail enviado ao coordenador.';
+        assignFormWrap.style.display = 'none';
+        alertWrap.style.display = 'block';
+        return;
+      }
+
+      if (!data.email_onboarder) throw new Error('Resposta inesperada do servidor.');
+
+      flow.onboarderEmail = data.email_onboarder;
+      flow.cliente = data.cliente || '';
+
+      podBadge.textContent = 'POD ' + (data.pod ?? '—');
+
+      const amountFormatado = (typeof data.amount === 'number')
+        ? data.amount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 })
+        : null;
+      const clienteLabel = data.cliente || ('Opportunity ' + oppId);
+
+      assignSummary.innerHTML = 'A oportunidade <b>' + clienteLabel + '</b>' +
+        (amountFormatado ? ' (<b>' + amountFormatado + '</b> em receita 12 meses)' : '') +
+        ' foi atribuída ao onboarder <b>' + data.email_onboarder + '</b>, do POD <b>' + (data.pod ?? '—') + '</b>.';
+
+      resultLevel.textContent = [
+        data.level,
+        data.e_guardiao ? '· Guardião' : null,
+        data._origem === 'outro_pod' ? '· Outro POD' : null
+      ].filter(Boolean).join(' ');
+
+      tallyBefore.textContent = data.carteira_total_antes  ?? '—';
+      tallyAfter.textContent  = data.carteira_total_depois ?? '—';
+
+      if (data.houve_empate_carteira) {
+        tiebreakNote.style.display = 'block';
+        tiebreakNote.innerHTML = data.houve_empate_pre_onboarding
+          ? 'Houve empate na carteira <b>e</b> no pré-onboarding — desempate pela última atribuição.'
+          : 'Houve empate na carteira — desempate pelo <b>menor número de pré-onboardings</b>.';
+      } else {
+        tiebreakNote.style.display = 'none';
+      }
+
+      resultOppLabel.textContent = data.cliente ? (clienteLabel + ' · ' + oppId) : oppId;
+      resultBox.style.display = 'block';
+      assignFormWrap.style.display = 'none';
+
+      // Monta o Step 2 com os horários que já vieram na resposta
+      onboarderNameLabel.textContent = data.email_onboarder;
+      renderSlots(data.horarios_disponiveis ?? []);
+
+      continueToStep2Btn.style.display = 'block';
+
+    } catch (err) {
+      assignError.textContent = 'Não foi possível atribuir o contrato. ' + err.message;
+      assignError.classList.add('show');
+    } finally {
+      assignBtn.disabled = false;
+      assignSpinner.classList.remove('show');
+      assignBtnText.textContent = 'Atribuir próximo contrato';
+    }
+  }
+  assignBtn.addEventListener('click', atribuir);
+
+  // ---------------------------------------------------------
+  // STEP 2 — Escolher horário e confirmar reunião
+  // ---------------------------------------------------------
+  function renderSlots(slots){
+    slotsWrap.innerHTML = '';
+    chosenSlotBox.style.display = 'none';
+    confirmMeetingBtn.disabled = true;
+    flow.chosenSlot = null;
+
+    if (!slots.length) {
+      slotsWrap.innerHTML = '<div class="empty-note">Nenhum horário livre encontrado nos próximos 30 dias. Combine o horário diretamente com o onboarder.</div>';
+      return;
+    }
+
+    // Agrupa por dia
+    const porDia = {};
+    slots.forEach(s => {
+      const d = new Date(s.inicio);
+      const chave = d.toLocaleDateString('pt-BR', { timeZone:'America/Sao_Paulo', weekday:'long', day:'2-digit', month:'2-digit' });
+      (porDia[chave] ||= []).push(s);
+    });
+
+    Object.entries(porDia).forEach(([label, itens]) => {
+      const dayDiv = document.createElement('div');
+      dayDiv.className = 'slot-day';
+      const lbl = document.createElement('div');
+      lbl.className = 'slot-day-label';
+      lbl.textContent = label;
+      dayDiv.appendChild(lbl);
+
+      const grid = document.createElement('div');
+      grid.className = 'slot-grid';
+      itens.forEach(s => {
+        const pill = document.createElement('button');
+        pill.type = 'button';
+        pill.className = 'slot-pill';
+        const hora = new Date(s.inicio).toLocaleTimeString('pt-BR', { timeZone:'America/Sao_Paulo', hour:'2-digit', minute:'2-digit' });
+        pill.textContent = hora;
+        pill.addEventListener('click', () => selectSlot(s, pill));
+        grid.appendChild(pill);
+      });
+      dayDiv.appendChild(grid);
+      slotsWrap.appendChild(dayDiv);
+    });
+  }
+
+  function selectSlot(slot, pillEl){
+    document.querySelectorAll('.slot-pill').forEach(p => p.classList.remove('selected'));
+    pillEl.classList.add('selected');
+    flow.chosenSlot = slot;
+
+    const d = new Date(slot.inicio);
+    const texto = d.toLocaleString('pt-BR', { timeZone:'America/Sao_Paulo', weekday:'long', day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+    chosenSlotText.textContent = texto;
+    chosenSlotBox.style.display = 'flex';
+    confirmMeetingBtn.disabled = false;
+  }
+
+  async function confirmarReuniao(){
+    const closerEmail = (getSession() || {}).email;
+    if (!flow.chosenSlot) return;
+
+    confirmMeetingBtn.disabled = true;
+    confirmSpinner.classList.add('show');
+    confirmBtnText.textContent = 'Confirmando...';
+    confirmError.classList.remove('show');
+
+    try {
+      const res = await apiFetch(WEBHOOK_CONFIRM_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email_onboarder: flow.onboarderEmail,
+          email_closer:    closerEmail,
+          email_cliente:   flow.clienteEmail,
+          cliente:         flow.cliente,
+          opp_id:          flow.oppId,
+          horario_inicio:  flow.chosenSlot.inicio,
+          horario_fim:     flow.chosenSlot.fim
+        })
+      });
+
+      if (!res.ok) throw new Error('O servidor retornou um erro (status ' + res.status + ').');
+      const data = await res.json();
+      if (data.erro) throw new Error(data.erro);
+      if (data.status !== 'confirmado') throw new Error('Resposta inesperada do servidor.');
+
+      cwOnboarder.textContent = flow.onboarderEmail;
+      cwWhen.textContent = chosenSlotText.textContent;
+      cwOppId.textContent = flow.oppId;
+
+      setTimeout(() => setStep(3), 400);
+
+    } catch (err) {
+      confirmError.textContent = 'Não foi possível confirmar a reunião. ' + err.message;
+      confirmError.classList.add('show');
+    } finally {
+      confirmMeetingBtn.disabled = false;
+      confirmSpinner.classList.remove('show');
+      confirmBtnText.textContent = 'Confirmar reunião';
+    }
+  }
+  confirmMeetingBtn.addEventListener('click', confirmarReuniao);
+
+  // ---------------------------------------------------------
+  // STEP 3 — Marcar Closed Won
+  // ---------------------------------------------------------
+  async function marcarClosedWon(){
+    closedWonBtn.disabled = true;
+    cwSpinner.classList.add('show');
+    cwBtnText.textContent = 'Marcando...';
+    cwError.classList.remove('show');
+
+    try {
+      const res = await apiFetch(WEBHOOK_CLOSEDWON_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ opp_id: flow.oppId })
+      });
+
+      if (!res.ok) throw new Error('O servidor retornou um erro (status ' + res.status + ').');
+      const data = await res.json();
+
+      if (data.status === 'campos_faltando') {
+        const lista = (data.campos_faltando || []).join(', ');
+        throw new Error('Preencha estes campos obrigatórios na Opportunity antes de marcar Closed Won: ' + lista + '.');
+      }
+      if (data.status !== 'closed_won') throw new Error('Resposta inesperada do servidor.');
+
+      setStep(4);
+
+    } catch (err) {
+      cwError.textContent = 'Não foi possível marcar como Closed Won. ' + err.message;
+      cwError.classList.add('show');
+    } finally {
+      closedWonBtn.disabled = false;
+      cwSpinner.classList.remove('show');
+      cwBtnText.textContent = 'Marcar como Closed Won';
+    }
+  }
+  closedWonBtn.addEventListener('click', marcarClosedWon);
+
+  // Persiste login entre sessões
+  const savedSession = getSession();
+  if (savedSession && isValidHotmartEmail(savedSession.email)) showApp(savedSession.email);
+</script>
+</body>
+</html>
