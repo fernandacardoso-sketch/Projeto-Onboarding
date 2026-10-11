@@ -496,6 +496,9 @@
   .drawer .pod-badge{ margin-bottom:var(--sp-3); }
 
   [hidden]{ display:none !important; }
+  .sf-link{ color:inherit; text-decoration:underline; text-underline-offset:3px; overflow-wrap:anywhere; }
+  .sf-link:hover{ text-decoration-thickness:2px; }
+  .sf-link:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
   /* resultado da atribuição, enxuto */
   .result-ok{ margin-bottom:var(--sp-3); padding:var(--sp-4); background:var(--surface-sunken); border-left:4px solid var(--orange); border-radius:var(--r-md); }
   .result-kicker{ font-size:12px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--text-muted); }
@@ -1192,6 +1195,15 @@
   }
 
   // resumo da Opportunity escolhida (topo do painel lateral)
+  // endereço do Salesforce (Lightning) para abrir a Opportunity
+  const SF_URL = 'https://hotmart.lightning.force.com/lightning/r/Opportunity/';
+  function linkSF(id, texto){
+    const a = mk('a', 'sf-link', texto);
+    a.href = SF_URL + encodeURIComponent(id) + '/view';
+    a.target = '_blank'; a.rel = 'noopener noreferrer';
+    a.title = 'Abrir no Salesforce';
+    return a;
+  }
   function renderSelecao(){
     oppResumo.innerHTML = '';
     const manual = oppIdInput.value.trim();
@@ -1199,7 +1211,8 @@
       const o = oppEscolhida;
       oppResumo.appendChild(mk('b', '', o.conta || 'Conta não informada'));
       oppResumo.appendChild(mk('div', 'linha', (o.amount_12m == null ? 'BRL —' : 'BRL ' + fmtValor.format(o.amount_12m)) + ' · ' + (o.estagio || '—')));
-      drawerTitle.textContent = o.nome || 'Atribuir onboarder';
+      drawerTitle.textContent = '';
+      drawerTitle.appendChild(linkSF(o.opp_id, (o.nome || 'Abrir no Salesforce') + ' ↗'));
     } else if (manual) {
       oppResumo.appendChild(mk('b', '', 'ID informado manualmente'));
       oppResumo.appendChild(mk('div', 'linha', manual));
