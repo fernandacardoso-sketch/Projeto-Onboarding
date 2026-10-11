@@ -495,6 +495,26 @@
   .drawer .amount-box{ margin:0 0 var(--sp-4); }
   .drawer .pod-badge{ margin-bottom:var(--sp-3); }
 
+  [hidden]{ display:none !important; }
+  /* resultado da atribuição, enxuto */
+  .result-ok{ margin-bottom:var(--sp-3); padding:var(--sp-4); background:var(--surface-sunken); border-left:4px solid var(--orange); border-radius:var(--r-md); }
+  .result-kicker{ font-size:12px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--text-muted); }
+  .result-onb{ margin:4px 0 var(--sp-2); font-size:17px; font-weight:700; overflow-wrap:anywhere; }
+  .chips{ display:flex; flex-wrap:wrap; gap:6px; }
+  .chip{ padding:3px 9px; font-size:12px; font-weight:600; color:var(--text); background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--r-pill); }
+  .drawer .tally{ display:flex; align-items:center; justify-content:space-between; gap:var(--sp-3); padding:var(--sp-3) var(--sp-4); background:var(--surface-sunken); border:0; }
+  .drawer .tally::before{ display:none; }
+  .drawer .tally-text{ font-size:13px; color:var(--text-muted); }
+  .drawer .tally-num{ font-size:22px; color:var(--text); }
+  .drawer .cw-summary{ margin-bottom:var(--sp-4); padding:var(--sp-3) var(--sp-4); font-size:14px; }
+  .cw-summary .sep{ margin:0 6px; color:var(--text-muted); }
+  .conta-linha{ display:flex; align-items:center; justify-content:space-between; gap:var(--sp-3); margin-bottom:var(--sp-2); }
+  .conta-linha .conta-atual{ margin:0; }
+  .link-btn{ flex:none; padding:4px; font-size:13px; font-weight:600; color:var(--text); background:none; text-decoration:underline; text-underline-offset:3px; }
+  .link-btn:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  .campos-outros{ margin:var(--sp-3) 0; font-size:13px; }
+  .campos-outros summary{ cursor:pointer; color:var(--text-muted); }
+  .campos-outros .campo{ margin-top:var(--sp-3); }
   @media (max-width:1023px){ #appScreen{ padding:12px 16px 8px; } .app-head{ padding-right:56px; } }
   @media (prefers-reduced-motion:reduce){ .drawer, .drawer-overlay{ transition:none; } .skel, .icon-btn.girando svg{ animation:none; } }
 </style>
@@ -612,21 +632,20 @@
               <input type="hidden" id="oppIdInput" />
 
               <div class="amount-box" id="amountBox" style="display:none;">
-                <label for="amountInput">Amount 12 months (R$) — obrigatório</label>
+                <label for="amountInput">Amount 12 months (R$)</label>
                 <input type="number" id="amountInput" min="0" step="any" placeholder="Ex: 180000" />
-                <div class="hint">Esta Opportunity está sem Amount 12 months. Ele define o subgrupo do onboarder, então precisa ser informado antes de atribuir.</div>
+                <div class="hint">Obrigatório: define o subgrupo do onboarder.</div>
               </div>
 
               <div class="fields">
                 <div>
                   <label for="clienteEmailInput">E-mail do cliente</label>
                   <input type="email" id="clienteEmailInput" placeholder="cliente@empresa.com" required />
-                  <div class="hint">Usado pra convidar o cliente na reunião de welcome.</div>
                 </div>
               </div>
 
               <details class="opp-manual" id="manualDetails">
-                <summary>Informar o ID da Opportunity manualmente</summary>
+                <summary>Informar ID manualmente</summary>
                 <input type="text" id="oppIdManual" placeholder="Ex: 006SG00000fKjnlYAC" />
               </details>
 
@@ -639,17 +658,18 @@
 
             <!-- Resultado da atribuição -->
             <div class="section-gap rise" id="resultBox" style="display:none;">
-              <button class="back-link" id="editOppBtn">← Voltar</button>
-              <div class="result-label" id="resultOppLabel">Opportunity —</div>
-              <div class="assign-summary" id="assignSummary">—</div>
-              <div class="result-level" id="resultLevel">—</div>
+              <button class="back-link" id="editOppBtn" hidden>← Voltar</button>
+              <div id="resultOppLabel" hidden></div>
+              <div id="assignSummary" hidden></div>
+              <div id="resultLevel" hidden></div>
+              <div class="result-ok">
+                <div class="result-kicker">Onboarder atribuído</div>
+                <div class="result-onb" id="resultOnb">—</div>
+                <div class="chips" id="resultChips"></div>
+              </div>
               <div class="tally">
-                <div class="tally-num">
-                  <span id="tallyBefore">0</span>
-                  <span class="arrow">→</span>
-                  <span id="tallyAfter">0</span>
-                </div>
-                <div class="tally-text">contratos na carteira ativa <b>do onboarder</b><br>antes e depois desta atribuição</div>
+                <span class="tally-text">Carteira do onboarder</span>
+                <span class="tally-num"><span id="tallyBefore">0</span><span class="arrow">→</span><span id="tallyAfter">0</span></span>
               </div>
               <div class="tiebreak-note" id="tiebreakNote" style="display:none;"></div>
               <button class="btn-primary" id="continueToStep2Btn" style="display:none;">Continuar para o agendamento →</button>
@@ -667,9 +687,8 @@
 
       <!-- ===== STEP 2 — AGENDAMENTO ===== -->
       <div class="card" id="step2Card" style="display:none;">
-        <button class="back-link" id="backToStep1Btn">← Voltar</button>
-        <div class="result-label">Agendar reunião de welcome</div>
-        <p class="sub" style="margin:0 0 16px; text-align:left;">Horários livres na agenda de <b id="onboarderNameLabel" style="color:var(--text);"></b> nos próximos 30 dias, em horário comercial.</p>
+        <button class="back-link" id="backToStep1Btn" hidden>← Voltar</button>
+        <p class="sub" style="margin:0 0 16px; text-align:left;">Agenda de <b id="onboarderNameLabel" style="color:var(--text);"></b></p>
 
         <div class="slots-wrap" id="slotsWrap">
           <div class="empty-note">Carregando horários…</div>
@@ -688,23 +707,20 @@
 
       <!-- ===== STEP 3 — CLOSED WON ===== -->
       <div class="card" id="step3Card" style="display:none;">
-        <button class="back-link" id="backToStep2Btn">← Voltar</button>
-        <div class="result-label">Fechar contrato</div>
-        <div class="cw-summary">
-          Onboarder <b id="cwOnboarder">—</b> atribuído e reunião de welcome agendada para <b id="cwWhen">—</b>.<br>
-          Ao confirmar, o Stage da Opportunity <b id="cwOppId">—</b> no Salesforce vai virar <b>Closed Won</b>.
-        </div>
+        <button class="back-link" id="backToStep2Btn" hidden>← Voltar</button>
+        <div class="cw-summary"><b id="cwOnboarder">—</b><span class="sep">·</span><b id="cwWhen">—</b><span id="cwOppId" hidden></span></div>
 
         <div class="campos-box" id="camposBox">
-          <div class="campos-title">Campos obrigatórios da Opportunity</div>
+          <div class="campos-title">Campos obrigatórios</div>
           <div class="hint" id="camposStatus">Carregando campos…</div>
           <div id="camposForm" style="margin-top:var(--sp-3);"></div>
           <div class="conta-box" id="contaBox" style="display:none;">
-            <label for="contaBusca">Conta (Account) da Opportunity</label>
-            <div class="conta-atual" id="contaAtual"></div>
-            <input type="text" id="contaBusca" placeholder="Trocar a Conta: busque por nome, e-mail ou User ID (mín. 3 caracteres)" autocomplete="off" maxlength="60" />
+            <div class="conta-linha">
+              <div class="conta-atual" id="contaAtual"></div>
+              <button type="button" class="link-btn" id="contaTrocarBtn">Trocar</button>
+            </div>
+            <input type="text" id="contaBusca" aria-label="Buscar Conta por nome, e-mail ou User ID" placeholder="Buscar Conta por nome, e-mail ou User ID" autocomplete="off" maxlength="60" style="display:none;" />
             <div class="opp-list" id="contaResultados" style="display:none;"></div>
-            <div class="hint">O User ID da plataforma vem da Conta e é preenchido sozinho quando ela é vinculada à Opportunity.</div>
           </div>
           <button type="button" class="btn-ghost" id="salvarCamposBtn" style="display:none;">Salvar campos no Salesforce</button>
           <div class="error-msg" id="camposError"></div>
@@ -723,7 +739,7 @@
         <div class="done-box">
           <div class="done-icon"></div>
           <div class="done-title">Tudo certo!</div>
-          <div class="done-sub">Onboarder atribuído, reunião de welcome agendada e contrato marcado como Closed Won.</div>
+          <div class="done-sub">Atribuído, agendado e fechado.</div>
         </div>
         <button class="btn-ghost" id="restartBtn">Atribuir outro contrato</button>
       </div>
@@ -1181,21 +1197,15 @@
     const manual = oppIdInput.value.trim();
     if (oppEscolhida) {
       const o = oppEscolhida;
-      const nome = mk('b', '', o.nome || '(sem nome)');
-      oppResumo.appendChild(nome);
-      [['Conta', o.conta || 'não informada'], ['Valor', o.amount_12m == null ? '—' : 'BRL ' + fmtValor.format(o.amount_12m)], ['Estágio', o.estagio || '—'], ['Hotmart ID', o.hotmart_id || '—']].forEach(par => {
-        const l = mk('div', 'linha');
-        l.appendChild(document.createTextNode(par[0] + ': '));
-        l.appendChild(mk('span', '', par[1]));
-        oppResumo.appendChild(l);
-      });
+      oppResumo.appendChild(mk('b', '', o.conta || 'Conta não informada'));
+      oppResumo.appendChild(mk('div', 'linha', (o.amount_12m == null ? 'BRL —' : 'BRL ' + fmtValor.format(o.amount_12m)) + ' · ' + (o.estagio || '—')));
       drawerTitle.textContent = o.nome || 'Atribuir onboarder';
     } else if (manual) {
       oppResumo.appendChild(mk('b', '', 'ID informado manualmente'));
       oppResumo.appendChild(mk('div', 'linha', manual));
       drawerTitle.textContent = 'Atribuir por ID';
     } else {
-      oppResumo.appendChild(mk('div', 'linha', manualDetails.open ? 'Informe abaixo o ID da Opportunity.' : 'Escolha uma oportunidade no funil ou informe o ID abaixo.'));
+      oppResumo.appendChild(mk('div', 'linha', manualDetails.open ? 'Informe o ID da Opportunity.' : 'Escolha uma oportunidade no funil.'));
       drawerTitle.textContent = manualDetails.open ? 'Atribuir por ID' : 'Atribuir onboarder';
     }
   }
@@ -1456,34 +1466,25 @@
       podBadge.textContent = 'POD ' + (data.pod ?? '—');
       podBadge.style.display = 'inline-flex';
 
-      const amountFormatado = (typeof data.amount === 'number')
-        ? data.amount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 })
-        : null;
       const clienteLabel = data.cliente || ('Opportunity ' + oppId);
-
-      assignSummary.innerHTML = 'A oportunidade <b>' + clienteLabel + '</b>' +
-        (amountFormatado ? ' (<b>' + amountFormatado + '</b> em receita 12 meses)' : '') +
-        ' foi atribuída ao onboarder <b>' + data.email_onboarder + '</b>, do POD <b>' + (data.pod ?? '—') + '</b>.';
-
-      resultLevel.textContent = [
-        data.level,
-        data.e_guardiao ? '· Guardião' : null,
-        data._origem === 'outro_pod' ? '· Outro POD' : null
-      ].filter(Boolean).join(' ');
+      document.getElementById('resultOnb').textContent = data.email_onboarder;
+      const chipsEl = document.getElementById('resultChips');
+      chipsEl.innerHTML = '';
+      ['POD ' + (data.pod ?? '—'), data.level, data.subgrupo, data.e_guardiao ? 'Guardião' : null, data._origem === 'outro_pod' ? 'Outro POD' : null]
+        .filter(Boolean).forEach(t => chipsEl.appendChild(mk('span', 'chip', String(t))));
 
       tallyBefore.textContent = data.carteira_total_antes  ?? '—';
       tallyAfter.textContent  = data.carteira_total_depois ?? '—';
 
       if (data.houve_empate_carteira) {
         tiebreakNote.style.display = 'block';
-        tiebreakNote.innerHTML = data.houve_empate_pre_onboarding
-          ? 'Houve empate na carteira <b>e</b> no pré-onboarding — desempate pela última atribuição.'
-          : 'Houve empate na carteira — desempate pelo <b>menor número de pré-onboardings</b>.';
+        tiebreakNote.textContent = data.houve_empate_pre_onboarding
+          ? 'Empate na carteira e no pré-onboarding: desempate pela última atribuição.'
+          : 'Empate na carteira: desempate pelo menor pré-onboarding.';
       } else {
         tiebreakNote.style.display = 'none';
       }
 
-      resultOppLabel.textContent = data.cliente ? (clienteLabel + ' · ' + oppId) : oppId;
       resultBox.style.display = 'block';
       assignFormWrap.style.display = 'none';
 
@@ -1628,6 +1629,7 @@
   const contaBox     = document.getElementById('contaBox');
   const contaAtual   = document.getElementById('contaAtual');
   const contaBusca   = document.getElementById('contaBusca');
+  const contaTrocarBtn = document.getElementById('contaTrocarBtn');
   const contaResultados = document.getElementById('contaResultados');
   let controlesCampos = {};   // api -> elemento de input/select
   let contaDaOpp = null;      // conta que está hoje na Opportunity
@@ -1645,6 +1647,8 @@
       el = document.createElement('select');
       el.appendChild(new Option('Selecione…', ''));
       (c.opcoes || []).forEach(o => el.appendChild(new Option(o.rotulo, o.valor)));
+      // lista dependente (ex.: Negotiated Fee só aceita certos valores conforme a Price Policy)
+      if (c.depende_de) { el.dataset.dependeDe = c.depende_de; el._opcoes = c.opcoes || []; }
     } else if (c.tipo === 'booleano') {
       el = document.createElement('select');
       el.appendChild(new Option('Selecione…', ''));
@@ -1662,7 +1666,28 @@
     return el;
   }
 
-  function addCampo(c){
+  // refaz as opções dos campos dependentes de acordo com o valor do campo que os controla
+  function refiltrarDependentes(){
+    Object.keys(controlesCampos).forEach(api => {
+      const el = controlesCampos[api];
+      if (!el.dataset || !el.dataset.dependeDe) return;
+      const ctrl = controlesCampos[el.dataset.dependeDe];
+      const cv = ctrl ? ctrl.value : '';
+      const atual = el.value;
+      el.innerHTML = '';
+      if (!cv) {
+        el.appendChild(new Option('Escolha antes a ' + (ctrl && ctrl.labels && ctrl.labels[0] ? ctrl.labels[0].firstChild.textContent : 'opção anterior'), ''));
+        el.disabled = true;
+        return;
+      }
+      el.disabled = false;
+      el.appendChild(new Option('Selecione…', ''));
+      el._opcoes.filter(o => !Array.isArray(o.validoPara) || o.validoPara.indexOf(cv) >= 0).forEach(o => el.appendChild(new Option(o.rotulo, o.valor)));
+      el.value = [...el.options].some(o => o.value === atual) ? atual : '';
+    });
+  }
+
+  function addCampo(c, destino){
     const wrap = mkEl('div', 'campo' + (c.vazio ? ' vazio' : ''));
     const lab = mkEl('label', '', c.label);
     if (c.vazio) lab.appendChild(mkEl('span', 'tag-vazio', 'vazio'));
@@ -1670,20 +1695,28 @@
     lab.htmlFor = el.id = 'campo_' + c.api;
     wrap.appendChild(lab);
     wrap.appendChild(el);
-    camposForm.appendChild(wrap);
+    (destino || camposForm).appendChild(wrap);
     controlesCampos[c.api] = el;
   }
 
   function descreverConta(c, prefixo){
     contaAtual.innerHTML = '';
     if (!c || (!c.id && !c.nome)) {
-      contaAtual.appendChild(mkEl('span', 'alerta', 'Nenhuma Conta vinculada à Opportunity. Busque e escolha uma abaixo.'));
+      contaAtual.appendChild(mkEl('span', 'alerta', 'Sem Conta vinculada'));
       return;
     }
-    contaAtual.appendChild(document.createTextNode((prefixo || 'Conta atual: ') + (c.nome || '(sem nome)') + ' · '));
+    contaAtual.appendChild(document.createTextNode((prefixo || 'Conta: ') + (c.nome || '(sem nome)') + ' · '));
     if (c.user_id) contaAtual.appendChild(mkEl('span', 'ok', 'User ID ' + c.user_id + ' ✓'));
-    else contaAtual.appendChild(mkEl('span', 'alerta', 'sem User ID — o Closed Won será recusado com essa Conta'));
+    else contaAtual.appendChild(mkEl('span', 'alerta', 'sem User ID'));
   }
+
+  // mostra/esconde a busca de Conta; abre sozinha quando a Conta atual não serve
+  function mostrarBuscaConta(sim){
+    contaBusca.style.display = sim ? 'block' : 'none';
+    contaTrocarBtn.style.display = sim ? 'none' : 'inline-block';
+    if (!sim) fecharResultadosConta();
+  }
+  contaTrocarBtn.addEventListener('click', () => { mostrarBuscaConta(true); contaBusca.focus(); });
 
   function fecharResultadosConta(){ contaResultados.style.display = 'none'; contaResultados.innerHTML = ''; }
 
@@ -1691,7 +1724,8 @@
     contaEscolhida = c;
     contaBusca.value = '';
     fecharResultadosConta();
-    descreverConta(c, 'Conta selecionada (ainda não salva): ');
+    descreverConta(c, 'Selecionada: ');
+    mostrarBuscaConta(false);
     marcarSujo();
   }
 
@@ -1741,15 +1775,30 @@
       const res = await apiFetch(WEBHOOK_CAMPOS_URL + '?opp_id=' + encodeURIComponent(flow.oppId), { method: 'GET' });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.mensagem || ('status ' + res.status));
-      (data.campos || []).forEach(addCampo);
-      camposForm.appendChild(mkEl('div', 'campo-fixo', 'Onboarding Owner: ' + (data.onboarding_owner_definido ? 'definido na atribuição ✓' : 'ainda não definido (é preenchido pela atribuição)')));
+      // o que falta aparece primeiro; o que já está preenchido fica recolhido
+      const lista = data.campos || [];
+      lista.filter(c => c.vazio).forEach(c => addCampo(c));
+      const cheios = lista.filter(c => !c.vazio);
+      if (cheios.length) {
+        const det = mkEl('details', 'campos-outros');
+        det.appendChild(mkEl('summary', '', 'Campos preenchidos (' + cheios.length + ')'));
+        cheios.forEach(c => addCampo(c, det));
+        camposForm.appendChild(det);
+      }
+      Object.keys(controlesCampos).forEach(api => {
+        const el = controlesCampos[api];
+        if (el.dataset && el.dataset.dependeDe && controlesCampos[el.dataset.dependeDe]) controlesCampos[el.dataset.dependeDe].addEventListener('change', refiltrarDependentes);
+      });
+      refiltrarDependentes();
+      if (!data.onboarding_owner_definido) camposForm.appendChild(mkEl('div', 'campo-fixo', 'Onboarding Owner ainda não definido (vem da atribuição).'));
       contaDaOpp = data.conta || null;
-      descreverConta(contaDaOpp, 'Conta atual: ');
+      descreverConta(contaDaOpp, 'Conta: ');
+      mostrarBuscaConta(!contaDaOpp || !!contaDaOpp.vazio);
       contaBox.style.display = 'block';
       salvarCamposBtn.style.display = 'block';
       camposStatus.textContent = (data.faltando && data.faltando.length)
-        ? 'Faltam: ' + data.faltando.join(', ') + '.'
-        : 'Todos os campos obrigatórios estão preenchidos.';
+        ? 'Faltam: ' + data.faltando.join(', ')
+        : 'Tudo preenchido ✓';
     } catch (e) {
       if (!getSession()) return; // sessão expirou: apiFetch já levou pra tela de login
       camposStatus.textContent = '';
@@ -1780,12 +1829,15 @@
       camposDirty = false;
       await carregarCampos();
       camposOk.textContent = (data.faltando && data.faltando.length)
-        ? 'Salvo. Ainda faltam: ' + data.faltando.join(', ') + '.'
-        : 'Salvo ✓ Tudo preenchido — pode marcar como Closed Won.';
+        ? 'Salvo. Faltam: ' + data.faltando.join(', ')
+        : 'Salvo ✓';
       camposOk.style.display = 'block';
     } catch (e) {
       if (!getSession()) return;
-      camposError.textContent = 'Não foi possível salvar. ' + e.message;
+      // o Salesforce não diz qual campo recusou ("Bad request"): aponta o suspeito mais comum
+      camposError.textContent = /bad request/i.test(e.message)
+        ? 'O Salesforce recusou um dos valores. Confira a Price Policy e o Negotiated Fee: o fee depende da política escolhida.'
+        : 'Não foi possível salvar. ' + e.message;
       camposError.classList.add('show');
     } finally {
       salvarCamposBtn.disabled = false;
@@ -1799,7 +1851,7 @@
   // ---------------------------------------------------------
   async function marcarClosedWon(){
     if (camposDirty) {
-      cwError.textContent = 'Você alterou campos que ainda não foram salvos. Clique em "Salvar campos no Salesforce" antes de marcar Closed Won.';
+      cwError.textContent = 'Há campos alterados e não salvos. Clique em "Salvar campos no Salesforce" antes.';
       cwError.classList.add('show');
       return;
     }
