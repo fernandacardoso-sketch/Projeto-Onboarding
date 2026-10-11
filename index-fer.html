@@ -333,7 +333,7 @@
   .theme-toggle .i-sun{ display:none; }
   :root[data-theme="dark"] .theme-toggle .i-sun{ display:block; }
   :root[data-theme="dark"] .theme-toggle .i-moon{ display:none; }
-  body:not(.is-login) .frame{ padding-top:44px; }
+
 
   /* login em duas colunas */
   body.is-login{ display:block; padding:0; }
@@ -373,6 +373,130 @@
     .login-form-col{ align-items:flex-start; padding:var(--sp-6) var(--sp-5) var(--sp-7); }
     .login-form{ max-width:none; }
   }
+
+  /* ============================================================
+     Onboarding Assignment — atribuição em Kanban (espelho do Funil do Salesforce)
+     ============================================================ */
+  :root{
+    --col-bg:#FFFFFF; --card-bg:#FFFFFF; --card-border:#E2DED7;
+    --teal:#0B7A6C;
+    --ok-bg:rgba(30,122,61,.12); --ok-text:#17632F;
+    --mute-bg:#EFECE6; --mute-text:rgba(13,13,13,.72);
+    --warn:#8A4B00; --overlay:rgba(13,13,13,.45);
+  }
+  :root[data-theme="dark"]{
+    --col-bg:#1C1C1C; --card-bg:#262626; --card-border:#3A3A3A;
+    --teal:#5CD6C0;
+    --ok-bg:rgba(111,208,140,.16); --ok-text:#6FD08C;
+    --mute-bg:#333333; --mute-text:rgba(245,243,239,.74);
+    --warn:#FFD450; --overlay:rgba(0,0,0,.62);
+  }
+  body:not(.is-login){ display:block; padding:0; }
+  body:not(.is-login) .frame{ max-width:none; padding:0; }
+  #appScreen{ display:flex; flex-direction:column; height:100vh; padding:16px 24px 8px; gap:10px; }
+
+  .app-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:var(--sp-4); flex-wrap:wrap; padding-right:56px; }
+  .app-h1{ font-size:22px; font-weight:700; letter-spacing:-.01em; text-align:left; margin:0; line-height:1.2; }
+  .app-sub{ margin:2px 0 0; font-size:14px; font-weight:500; color:var(--text); }
+  .app-status{ margin:2px 0 0; font-size:12px; color:var(--text-muted); }
+  .app-tools{ flex:1 1 640px; display:flex; align-items:center; justify-content:flex-end; gap:var(--sp-2); flex-wrap:wrap; }
+  .search{ position:relative; display:block; width:min(380px,100%); margin:0; }
+  .search svg{ position:absolute; left:10px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:var(--text-muted); pointer-events:none; }
+  .search input{ width:100%; padding:9px 12px 9px 34px; font-size:14px; }
+  input[type="search"]{ font-family:inherit; color:var(--text); background:var(--field-bg); border:1.5px solid var(--field-border); border-radius:var(--r-sm); outline:none; }
+  input[type="search"]:focus-visible{ outline:2px solid var(--orange); outline-offset:1px; border-color:var(--orange); }
+  .icon-btn{ width:38px; height:38px; padding:0; display:grid; place-items:center; border-radius:var(--r-sm); background:var(--surface); color:var(--text); border:1.5px solid var(--field-border); }
+  .icon-btn:hover{ border-color:var(--orange); }
+  .icon-btn:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  .icon-btn svg{ width:18px; height:18px; display:block; }
+  .icon-btn.girando svg{ animation:spin .8s linear infinite; }
+  .btn-sm{ width:auto; margin:0; padding:9px 12px; }
+  .app-tools .who{ margin-left:var(--sp-2); }
+  .flow-row{ max-width:420px; }
+  .flow-row .stepper{ margin-bottom:4px; }
+  .flow-row .step-labels{ margin-bottom:0; }
+
+  /* barra de estágios (path) + colunas: rolam juntas na horizontal quando a tela é estreita */
+  .board-scroll{ flex:1; min-height:0; display:flex; flex-direction:column; overflow-x:auto; }
+  @media (max-width:1023px){ .path, .board{ min-width:1310px; } }
+  .path{ flex:none; display:flex; background:var(--orange); color:var(--black); border-radius:var(--r-md) var(--r-md) 0 0; overflow:hidden; }
+  .path-step{ position:relative; flex:1 1 0; min-width:0; display:flex; align-items:center; justify-content:center; gap:6px; padding:10px 14px; font-size:13px; font-weight:700; white-space:nowrap; }
+  .path-step span:first-child{ overflow:hidden; text-overflow:ellipsis; }
+  .path-step:not(:last-child)::after{ content:""; position:absolute; right:2px; top:50%; width:10px; height:10px; border-top:2px solid var(--black); border-right:2px solid var(--black); transform:translate(-4px,-50%) rotate(45deg); opacity:.7; }
+  .path-count{ font-weight:600; }
+  .board{ flex:1; min-height:0; display:flex; background:var(--col-bg); border:1px solid var(--border); border-top:0; border-radius:0 0 var(--r-md) var(--r-md); overflow:hidden; }
+  .col{ flex:1 1 0; min-width:0; display:flex; flex-direction:column; background:var(--col-bg); border-left:1px solid var(--border); }
+  .col:first-child{ border-left:0; }
+  .col-total{ flex:none; text-align:center; font-size:20px; font-weight:600; color:var(--teal); padding:12px 10px 8px; }
+  .col-body{ flex:1; min-height:0; overflow-y:auto; padding:2px 10px 12px; display:flex; flex-direction:column; gap:10px; scrollbar-width:thin; scrollbar-color:var(--border-strong) transparent; }
+  .col-body::-webkit-scrollbar{ width:8px; }
+  .col-body::-webkit-scrollbar-thumb{ background:var(--border-strong); border-radius:var(--r-pill); }
+  .col-body::-webkit-scrollbar-track{ background:transparent; }
+  .col-empty{ margin:auto; padding:var(--sp-5); font-size:13px; color:var(--text-muted); text-align:center; }
+  .board-erro{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:var(--sp-3); padding:var(--sp-7); text-align:center; font-size:14px; }
+  .board-erro .btn-ghost{ width:auto; margin:0; padding:9px 16px; }
+
+  /* card da oportunidade */
+  .opp-card{ position:relative; display:flex; flex-direction:column; gap:3px; padding:10px 12px; background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--r-md); }
+  .opp-card:hover{ border-color:var(--field-border); }
+  .opp-card.is-sel{ border-color:var(--orange); box-shadow:inset 3px 0 0 var(--orange); }
+  .opp-card:has(button.opp-name:focus-visible){ outline:2px solid var(--focus); outline-offset:2px; }
+  .opp-card-top{ display:flex; align-items:flex-start; gap:6px; }
+  .opp-name{ flex:1; min-width:0; text-align:left; background:none; padding:0; font-family:inherit; font-size:14px; font-weight:700; line-height:1.3; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  button.opp-name{ cursor:pointer; }
+  button.opp-name:hover{ text-decoration:underline; text-underline-offset:3px; }
+  button.opp-name:focus-visible{ outline:none; }
+  button.opp-name::after{ content:""; position:absolute; inset:0; border-radius:var(--r-md); }
+  .opp-menu{ position:relative; z-index:2; flex:none; width:26px; height:26px; padding:0; display:grid; place-items:center; border-radius:var(--r-sm); background:var(--surface); color:var(--text); border:1px solid var(--card-border); }
+  .opp-menu svg{ width:12px; height:12px; display:block; }
+  .opp-menu:hover{ border-color:var(--orange); }
+  .opp-menu:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  .opp-valor{ font-size:13px; color:var(--text); }
+  .opp-conta{ font-size:13px; font-weight:500; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .opp-meta{ font-size:12px; color:var(--text-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .opp-rodape{ display:flex; align-items:center; justify-content:space-between; gap:var(--sp-2); margin-top:6px; min-height:22px; }
+  .badge-sit{ font-size:11.5px; font-weight:700; line-height:1.2; padding:3px 8px; border-radius:var(--r-pill); }
+  .badge-ok{ background:var(--ok-bg); color:var(--ok-text); }
+  .badge-mute{ background:var(--mute-bg); color:var(--mute-text); }
+  .badge-andamento{ background:var(--ink); color:var(--on-ink); }
+  .opp-alerta{ position:relative; z-index:2; display:grid; place-items:center; color:var(--warn); }
+  .opp-alerta svg{ width:16px; height:16px; display:block; }
+  .opp-card.is-off{ background:var(--surface-sunken); }
+  .opp-card.is-off .opp-name, .opp-card.is-off .opp-valor, .opp-card.is-off .opp-conta{ color:var(--text-muted); }
+  .opp-card.is-off .opp-name{ font-weight:600; }
+
+  /* carregando (sem gradiente: só pulsa) */
+  .skel{ background:var(--border); border-radius:var(--r-sm); animation:pulso 1.2s ease-in-out infinite; }
+  .skel-card{ display:flex; flex-direction:column; gap:8px; padding:12px; background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--r-md); }
+  .skel-l1{ height:14px; width:72%; } .skel-l2{ height:12px; width:42%; } .skel-l3{ height:12px; width:62%; }
+  @keyframes pulso{ 0%,100%{ opacity:.45; } 50%{ opacity:1; } }
+
+  /* menu de ações do card */
+  .card-menu{ position:fixed; z-index:60; min-width:190px; padding:4px; background:var(--surface); border:1px solid var(--field-border); border-radius:var(--r-sm); box-shadow:0 2px 10px rgba(13,13,13,.12); }
+  .card-menu[hidden]{ display:none; }
+  .menu-item{ display:block; width:100%; text-align:left; padding:8px 10px; font-size:13px; font-weight:600; color:var(--text); background:none; border-radius:4px; }
+  .menu-item:hover, .menu-item:focus-visible{ background:var(--accent-weak); outline:none; }
+
+  /* painel lateral (drawer) com o fluxo de atribuição */
+  .drawer-overlay{ position:fixed; inset:0; z-index:40; background:var(--overlay); opacity:0; visibility:hidden; transition:opacity .2s; }
+  .drawer-overlay.open{ opacity:1; visibility:visible; }
+  .drawer{ position:fixed; top:0; right:0; bottom:0; z-index:50; width:min(440px,100vw); display:flex; flex-direction:column; background:var(--bg); border-left:1px solid var(--border-strong); transform:translateX(100%); visibility:hidden; transition:transform .22s ease, visibility 0s linear .22s; }
+  .drawer.open{ transform:translateX(0); visibility:visible; transition:transform .22s ease; }
+  .drawer-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:var(--sp-3); padding:var(--sp-5) var(--sp-5) var(--sp-3); border-bottom:1px solid var(--border); }
+  .drawer-eyebrow{ font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--text-muted); }
+  .drawer-head h2{ margin:4px 0 0; font-size:18px; font-weight:700; line-height:1.25; overflow-wrap:anywhere; }
+  .drawer-body{ flex:1; overflow-y:auto; padding:var(--sp-5); }
+  .drawer .card{ padding:0; background:transparent; border:0; border-radius:0; }
+  .drawer .card::before{ display:none; }
+  .opp-resumo{ margin-bottom:var(--sp-4); padding:var(--sp-3) var(--sp-4); background:var(--surface-sunken); border-radius:var(--r-md); font-size:13px; line-height:1.6; overflow-wrap:anywhere; }
+  .opp-resumo b{ font-size:14px; }
+  .opp-resumo .linha{ color:var(--text-muted); }
+  .opp-manual{ margin:var(--sp-3) 0; font-size:13px; }
+  .drawer .amount-box{ margin:0 0 var(--sp-4); }
+  .drawer .pod-badge{ margin-bottom:var(--sp-3); }
+
+  @media (max-width:1023px){ #appScreen{ padding:12px 16px 8px; } .app-head{ padding-right:56px; } }
+  @media (prefers-reduced-motion:reduce){ .drawer, .drawer-overlay{ transition:none; } .skel, .icon-btn.girando svg{ animation:none; } }
 </style>
 
 </head>
@@ -424,99 +548,122 @@
 
     <!-- APP -->
     <section id="appScreen" style="display:none;">
-      <div class="topbar">
-        <div class="who">Logado como <b id="loggedEmail"></b></div>
-        <button class="logout-link" id="logoutBtn">sair</button>
-      </div>
-
-      <div class="stepper">
-        <div class="step-dot" id="dot1"></div>
-        <div class="step-dot" id="dot2"></div>
-        <div class="step-dot" id="dot3"></div>
-      </div>
-      <div class="step-labels">
-        <span>Atribuir</span>
-        <span>Agendar welcome</span>
-        <span>Closed Won</span>
-      </div>
-
-      <!-- ===== STEP 1 — ATRIBUIÇÃO ===== -->
-      <div class="card" id="step1Card">
-        <span class="pod-badge" id="podBadge">POD —</span>
-
-        <div id="assignFormWrap">
-          <div id="oppPicker" style="margin-bottom:var(--sp-4);">
-            <label for="oppSearch">Suas oportunidades no Salesforce</label>
-            <div class="opp-filters">
-              <input type="text" id="oppSearch" placeholder="Buscar por nome ou Hotmart ID" autocomplete="off" />
-              <select id="oppStageFilter" aria-label="Filtrar por estágio">
-                <option value="">Todos os estágios</option>
-                <option>Issues Identified</option>
-                <option>SQL</option>
-                <option>Offer Presented</option>
-                <option>Contract Sent</option>
-                <option>Closed Won</option>
-                <option>Lost Deals</option>
-              </select>
-              <button type="button" class="btn-ghost" id="oppRefreshBtn">Atualizar</button>
-            </div>
-            <div class="opp-list" id="oppList"></div>
-            <div class="hint" id="oppStatus"></div>
-            <input type="hidden" id="oppIdInput" />
-            <div class="opp-selected" id="oppSelected" style="display:none;"></div>
-            <div class="amount-box" id="amountBox" style="display:none;">
-              <label for="amountInput">Amount 12 months (R$) — obrigatório</label>
-              <input type="number" id="amountInput" min="0" step="any" placeholder="Ex: 180000" />
-              <div class="hint">Esta Opportunity está sem Amount 12 months. Ele define o subgrupo do onboarder, então precisa ser informado antes de atribuir.</div>
-            </div>
-            <details class="opp-manual">
-              <summary>Não achou? Informar o ID da Opportunity manualmente</summary>
-              <input type="text" id="oppIdManual" placeholder="Ex: 006SG00000fKjnlYAC" />
-            </details>
-          </div>
-
-          <div class="fields">
-            <div>
-              <label for="clienteEmailInput">E-mail do cliente</label>
-              <input type="email" id="clienteEmailInput" placeholder="cliente@empresa.com" required />
-              <div class="hint">Usado pra convidar o cliente na reunião de welcome.</div>
-            </div>
-          </div>
-
-          <button class="btn-primary" id="assignBtn">
-            <span class="spinner" id="assignSpinner"></span>
-            <span id="assignBtnText">Atribuir próximo contrato</span>
-          </button>
-          <div class="error-msg" id="assignError"></div>
+      <header class="app-head">
+        <div class="app-title">
+          <h1 class="app-h1">Onboarding Assignment</h1>
+          <p class="app-sub" id="funilSub">Funil de —</p>
+          <p class="app-status" id="funilStatus" aria-live="polite">Carregando oportunidades…</p>
         </div>
-
-        <!-- Resultado da atribuição -->
-        <div class="section-gap rise" id="resultBox" style="display:none;">
-          <button class="back-link" id="editOppBtn">← Voltar</button>
-          <div class="result-label" id="resultOppLabel">Opportunity —</div>
-          <div class="assign-summary" id="assignSummary">—</div>
-          <div class="result-level" id="resultLevel">—</div>
-          <div class="tally">
-            <div class="tally-num">
-              <span id="tallyBefore">0</span>
-              <span class="arrow">→</span>
-              <span id="tallyAfter">0</span>
-            </div>
-            <div class="tally-text">contratos na carteira ativa <b>do onboarder</b><br>antes e depois desta atribuição</div>
-          </div>
-          <div class="tiebreak-note" id="tiebreakNote" style="display:none;"></div>
-          <button class="btn-primary" id="continueToStep2Btn" style="display:none;">Continuar para o agendamento →</button>
+        <div class="app-tools">
+          <label class="search" for="oppSearch">
+            <span class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Buscar oportunidades</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input type="search" id="oppSearch" placeholder="Buscar por nome, cliente ou Hotmart ID" autocomplete="off" />
+          </label>
+          <button type="button" class="icon-btn" id="oppRefreshBtn" aria-label="Atualizar oportunidades" title="Atualizar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 4v5h-5"/></svg></button>
+          <button type="button" class="btn-ghost btn-sm" id="manualBtn">Atribuir por ID</button>
+          <div class="who">Logado como <b id="loggedEmail"></b> · <button class="logout-link" id="logoutBtn">sair</button></div>
         </div>
+      </header>
 
-        <!-- Alerta de capacidade máxima -->
-        <div class="section-gap rise" id="alertWrap" style="display:none;">
-          <div class="alert-box">
-            <strong>Capacidade máxima atingida</strong><br>
-            <span id="alertMsg"></span>
-          </div>
-          <button class="btn-ghost" id="assignAgainBtn">Tentar outro contrato</button>
+      <div class="flow-row">
+        <div class="stepper">
+          <div class="step-dot" id="dot1"></div>
+          <div class="step-dot" id="dot2"></div>
+          <div class="step-dot" id="dot3"></div>
+        </div>
+        <div class="step-labels">
+          <span>Atribuir</span>
+          <span>Agendar welcome</span>
+          <span>Closed Won</span>
         </div>
       </div>
+
+      <div class="board-scroll">
+        <div class="path" id="path" role="list" aria-label="Estágios do funil">
+        <div class="path-step" role="listitem"><span>Issues identified</span><span class="path-count">(0)</span></div>
+        <div class="path-step" role="listitem"><span>SQL</span><span class="path-count">(0)</span></div>
+        <div class="path-step" role="listitem"><span>Offer presented</span><span class="path-count">(0)</span></div>
+        <div class="path-step" role="listitem"><span>Contract Sent</span><span class="path-count">(0)</span></div>
+        <div class="path-step" role="listitem"><span>Closed Won</span><span class="path-count">(0)</span></div>
+        </div>
+        <div class="board" id="board"></div>
+      </div>
+
+      <footer class="app-foot" style="font-size:12px;color:var(--text-muted);text-align:center;">Sales Ops · New Business</footer>
+
+      <div class="drawer-overlay" id="drawerOverlay"></div>
+      <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
+        <div class="drawer-head">
+          <div>
+            <div class="drawer-eyebrow" id="drawerProgress">Etapa 1 de 3 · Atribuir</div>
+            <h2 id="drawerTitle">Atribuir onboarder</h2>
+          </div>
+          <button type="button" class="icon-btn" id="drawerClose" aria-label="Fechar painel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+        </div>
+        <div class="drawer-body">
+
+          <!-- ===== STEP 1 — ATRIBUIÇÃO ===== -->
+          <div class="card" id="step1Card">
+            <span class="pod-badge" id="podBadge">POD —</span>
+
+            <div id="assignFormWrap">
+              <div class="opp-resumo" id="oppResumo"></div>
+              <input type="hidden" id="oppIdInput" />
+
+              <div class="amount-box" id="amountBox" style="display:none;">
+                <label for="amountInput">Amount 12 months (R$) — obrigatório</label>
+                <input type="number" id="amountInput" min="0" step="any" placeholder="Ex: 180000" />
+                <div class="hint">Esta Opportunity está sem Amount 12 months. Ele define o subgrupo do onboarder, então precisa ser informado antes de atribuir.</div>
+              </div>
+
+              <div class="fields">
+                <div>
+                  <label for="clienteEmailInput">E-mail do cliente</label>
+                  <input type="email" id="clienteEmailInput" placeholder="cliente@empresa.com" required />
+                  <div class="hint">Usado pra convidar o cliente na reunião de welcome.</div>
+                </div>
+              </div>
+
+              <details class="opp-manual" id="manualDetails">
+                <summary>Informar o ID da Opportunity manualmente</summary>
+                <input type="text" id="oppIdManual" placeholder="Ex: 006SG00000fKjnlYAC" />
+              </details>
+
+              <button class="btn-primary" id="assignBtn">
+                <span class="spinner" id="assignSpinner"></span>
+                <span id="assignBtnText">Atribuir próximo contrato</span>
+              </button>
+              <div class="error-msg" id="assignError"></div>
+            </div>
+
+            <!-- Resultado da atribuição -->
+            <div class="section-gap rise" id="resultBox" style="display:none;">
+              <button class="back-link" id="editOppBtn">← Voltar</button>
+              <div class="result-label" id="resultOppLabel">Opportunity —</div>
+              <div class="assign-summary" id="assignSummary">—</div>
+              <div class="result-level" id="resultLevel">—</div>
+              <div class="tally">
+                <div class="tally-num">
+                  <span id="tallyBefore">0</span>
+                  <span class="arrow">→</span>
+                  <span id="tallyAfter">0</span>
+                </div>
+                <div class="tally-text">contratos na carteira ativa <b>do onboarder</b><br>antes e depois desta atribuição</div>
+              </div>
+              <div class="tiebreak-note" id="tiebreakNote" style="display:none;"></div>
+              <button class="btn-primary" id="continueToStep2Btn" style="display:none;">Continuar para o agendamento →</button>
+            </div>
+
+            <!-- Alerta de capacidade máxima -->
+            <div class="section-gap rise" id="alertWrap" style="display:none;">
+              <div class="alert-box">
+                <strong>Capacidade máxima atingida</strong><br>
+                <span id="alertMsg"></span>
+              </div>
+              <button class="btn-ghost" id="assignAgainBtn">Tentar outro contrato</button>
+            </div>
+          </div>
 
       <!-- ===== STEP 2 — AGENDAMENTO ===== -->
       <div class="card" id="step2Card" style="display:none;">
@@ -581,7 +728,9 @@
         <button class="btn-ghost" id="restartBtn">Atribuir outro contrato</button>
       </div>
 
-      <footer>Sales Ops · New Business</footer>
+        </div>
+      </aside>
+      <div class="card-menu" id="cardMenu" role="menu" hidden></div>
     </section>
 
   </div>
@@ -680,8 +829,9 @@
   const restartBtn = document.getElementById('restartBtn');
 
   // Estado da sessão de atribuição em andamento
+  let passoAtual = 1;
   let flow = {
-    oppId: '', cliente: '', clienteEmail: '',
+    atribuido: false, oppId: '', cliente: '', clienteEmail: '',
     onboarderEmail: '', chosenSlot: null
   };
 
@@ -690,6 +840,8 @@
   }
 
   function setStep(n){
+    passoAtual = n;
+    drawerProgress.textContent = n === 4 ? 'Concluído' : 'Etapa ' + n + ' de 3 · ' + ['', 'Atribuir', 'Agendar welcome', 'Closed Won'][n];
     dot1.className = 'step-dot' + (n === 1 ? ' active' : n > 1 ? ' done' : '');
     dot2.className = 'step-dot' + (n === 2 ? ' active' : n > 2 ? ' done' : '');
     dot3.className = 'step-dot' + (n === 3 ? ' active' : n > 3 ? ' done' : '');
@@ -698,6 +850,9 @@
     step3Card.style.display = (n === 3) ? 'block' : 'none';
     doneCard.style.display  = (n === 4) ? 'block' : 'none';
     if (n === 3) carregarCampos();
+    // o botão clicado some ao trocar de etapa: leva o foco ao título do painel (senão o teclado se perde)
+    if (drawer.classList.contains('open')) { drawerTitle.setAttribute('tabindex', '-1'); drawerTitle.focus({ preventScroll: true }); }
+    if (typeof renderBoard === 'function' && boardEl && boardEl.children.length) renderBoard();
   }
 
   // ---------------------------------------------------------
@@ -748,8 +903,10 @@
   function showApp(email){
     loginScreen.style.display = 'none';
     document.body.classList.remove('is-login');
-    appScreen.style.display = 'block';
+    appScreen.style.display = 'flex';
     loggedEmail.textContent = email;
+    funilSub.textContent = 'Funil de ' + ((getSession() || {}).nome || email);
+    oportunidades = []; atualizadoEm = 0; erroCarga = ''; oppSearch.value = '';   // outra pessoa pode ter entrado: nada do funil anterior
     resetFlow();
   }
 
@@ -763,8 +920,8 @@
     loginError.classList.remove('show');
   }
 
-  function resetFlow(){
-    flow = { oppId:'', cliente:'', clienteEmail:'', onboarderEmail:'', chosenSlot:null };
+  function resetFlow(recarregar){
+    flow = { atribuido:false, oppId:'', cliente:'', clienteEmail:'', onboarderEmail:'', chosenSlot:null };
     oppIdInput.value = '';
     oppIdManual.value = '';
     oppEscolhida = null;
@@ -772,6 +929,7 @@
     renderSelecao();
     clienteEmailInput.value = '';
     podBadge.textContent = 'POD —';
+    podBadge.style.display = 'none';
     assignFormWrap.style.display = 'block';
     resultBox.style.display = 'none';
     continueToStep2Btn.style.display = 'none';
@@ -780,7 +938,7 @@
     confirmError.classList.remove('show');
     cwError.classList.remove('show');
     setStep(1);
-    carregarOportunidades();
+    if (recarregar !== false) carregarOportunidades();
   }
 
   loginBtn.addEventListener('click', async () => {
@@ -821,8 +979,13 @@
   // Enter no e-mail pula para a senha; Enter na senha envia o formulário (que clica em "Entrar")
   emailInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); passwordInput.focus(); } });
   logoutBtn.addEventListener('click', () => { sessionStorage.removeItem(SESSION_KEY); showLogin(); });
-  restartBtn.addEventListener('click', resetFlow);
-  assignAgainBtn.addEventListener('click', resetFlow);
+  // "atribuir outro" / "tentar outro": fecha o painel e atualiza o funil
+  function reiniciarFluxo(){
+    drawer.classList.remove('open'); drawerOverlay.classList.remove('open'); drawer.setAttribute('aria-hidden', 'true');
+    resetFlow();
+  }
+  restartBtn.addEventListener('click', reiniciarFluxo);
+  assignAgainBtn.addEventListener('click', reiniciarFluxo);
   continueToStep2Btn.addEventListener('click', () => setStep(2));
   document.getElementById('backToStep1Btn').addEventListener('click', () => setStep(1));
   document.getElementById('backToStep2Btn').addEventListener('click', () => setStep(2));
@@ -835,35 +998,205 @@
   // STEP 1 — Atribuir onboarder
   // ---------------------------------------------------------
   // ---------------------------------------------------------
-  // Funil do Closer — lista das Opportunities dele no Salesforce
+  // Funil do Closer — espelho do Kanban de Oportunidades do Salesforce (visão "Funil")
   // ---------------------------------------------------------
   const WEBHOOK_OPPS_URL = "https://hotmart.app.n8n.cloud/webhook/minhas-oportunidades";
+  const ESTAGIOS_FUNIL = [
+    { chave: 'issues identified', nome: 'Issues identified' },
+    { chave: 'sql', nome: 'SQL' },
+    { chave: 'offer presented', nome: 'Offer presented' },
+    { chave: 'contract sent', nome: 'Contract Sent' },
+    { chave: 'closed won', nome: 'Closed Won' }
+  ];
   // o Salesforce devolve o estágio com a caixa dele (ex: "Issues identified"), então toda comparação ignora maiúsculas
   const ESTAGIOS_ENCERRADOS = ['closed won', 'lost deals'];
-  const oppSearch      = document.getElementById('oppSearch');
-  const oppStageFilter = document.getElementById('oppStageFilter');
-  const oppRefreshBtn  = document.getElementById('oppRefreshBtn');
-  const oppList        = document.getElementById('oppList');
-  const oppStatus      = document.getElementById('oppStatus');
-  const oppSelected    = document.getElementById('oppSelected');
-  const oppIdManual    = document.getElementById('oppIdManual');
+  const oppSearch     = document.getElementById('oppSearch');
+  const oppRefreshBtn = document.getElementById('oppRefreshBtn');
+  const manualBtn     = document.getElementById('manualBtn');
+  const manualDetails = document.getElementById('manualDetails');
+  const funilSub      = document.getElementById('funilSub');
+  const funilStatus   = document.getElementById('funilStatus');
+  const pathEl        = document.getElementById('path');
+  const boardEl       = document.getElementById('board');
+  const oppResumo     = document.getElementById('oppResumo');
+  const oppIdManual   = document.getElementById('oppIdManual');
+  const drawer        = document.getElementById('drawer');
+  const drawerOverlay = document.getElementById('drawerOverlay');
+  const drawerClose   = document.getElementById('drawerClose');
+  const drawerTitle   = document.getElementById('drawerTitle');
+  const drawerProgress = document.getElementById('drawerProgress');
+  const cardMenu      = document.getElementById('cardMenu');
+  const fmtValor = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const fmtTotal = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 });
   const brl = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+  const ICONE_SETA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+  const ICONE_ALERTA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>';
   let oportunidades = [];
   let oppEscolhida = null;
+  let carregando = false;
+  let erroCarga = '';
+  let atualizadoEm = 0;
+  let ultimoFoco = null;   // { tipo: 'nome'|'menu'|'manual'|'outro', id }
+  let menuBtn = null;
+
+  function mk(tag, cls, txt){ const e = document.createElement(tag); if (cls) e.className = cls; if (txt !== undefined) e.textContent = txt; return e; }
+  const chaveEstagio = o => String(o.estagio || '').trim().toLowerCase();
 
   function motivoIndisponivel(o){
-    if (ESTAGIOS_ENCERRADOS.includes(String(o.estagio).toLowerCase())) return 'Estágio encerrado';
+    if (ESTAGIOS_ENCERRADOS.includes(chaveEstagio(o))) return 'Estágio encerrado';
     if (o.ja_atribuida) return 'Já atribuída a um onboarder';
     return '';
   }
+  function emAndamento(o){ return !!flow.atribuido && flow.oppId === o.opp_id && passoAtual < 4; }
+  function pendencias(o){
+    const p = [];
+    if (!(Number(o.amount_12m) > 0)) p.push('Sem Amount 12 months');
+    if (!o.hotmart_id) p.push('Sem Hotmart ID');
+    return p;
+  }
 
-  function renderSelecao(){
-    if (oppEscolhida) {
-      oppSelected.textContent = 'Selecionada: ' + (oppEscolhida.hotmart_id ? oppEscolhida.hotmart_id + ' · ' : '') + oppEscolhida.nome;
-      oppSelected.style.display = 'block';
+  // só as oportunidades dos 5 estágios do funil, filtradas pela busca (nome, conta e Hotmart ID)
+  function filtradas(){
+    const t = oppSearch.value.trim().toLowerCase();
+    return oportunidades.filter(o =>
+      ESTAGIOS_FUNIL.some(e => e.chave === chaveEstagio(o)) &&
+      (!t || [o.nome, o.conta, o.hotmart_id].some(v => String(v == null ? '' : v).toLowerCase().includes(t)))
+    );
+  }
+
+  function rotuloTempo(ms){
+    const seg = Math.max(0, Math.round((Date.now() - ms) / 1000));
+    if (seg < 60) return 'há ' + seg + (seg === 1 ? ' segundo' : ' segundos');
+    const min = Math.floor(seg / 60);
+    return 'há ' + min + (min === 1 ? ' minuto' : ' minutos');
+  }
+  function atualizarStatus(){
+    if (erroCarga) { funilStatus.textContent = 'Não foi possível atualizar o funil'; return; }
+    if (!atualizadoEm) { funilStatus.textContent = 'Carregando oportunidades…'; return; }
+    const n = filtradas().length;
+    const total = oportunidades.filter(o => ESTAGIOS_FUNIL.some(e => e.chave === chaveEstagio(o))).length;
+    const qtd = (n === total ? n : n + ' de ' + total) + (total === 1 && n === total ? ' oportunidade' : ' oportunidades');
+    funilStatus.textContent = qtd + ' • ' + (carregando ? 'Atualizando…' : 'Atualizado ' + rotuloTempo(atualizadoEm));
+  }
+  setInterval(() => { if (appScreen.style.display !== 'none') atualizarStatus(); }, 1000);
+
+  function criarCard(o){
+    const motivo = motivoIndisponivel(o);
+    const andamento = emAndamento(o);
+    const elegivel = !motivo;
+    const card = mk('article', 'opp-card' + ((elegivel || andamento) ? '' : ' is-off') + ((oppEscolhida && oppEscolhida.opp_id === o.opp_id) ? ' is-sel' : ''));
+    card.dataset.id = o.opp_id;
+    const topo = mk('div', 'opp-card-top');
+    const titulo = o.nome || '(sem nome)';
+    let nome;
+    if (elegivel || andamento) {
+      nome = mk('button', 'opp-name', titulo);
+      nome.type = 'button';
+      nome.setAttribute('aria-label', (andamento ? 'Continuar o fluxo de ' : 'Atribuir onboarder: ') + titulo);
+      nome.addEventListener('click', () => abrirDrawer(o));
     } else {
-      oppSelected.style.display = 'none';
-      oppSelected.textContent = '';
+      nome = mk('span', 'opp-name', titulo);
+    }
+    nome.title = titulo;
+    topo.appendChild(nome);
+    if (elegivel) {
+      const m = mk('button', 'opp-menu');
+      m.type = 'button';
+      m.innerHTML = ICONE_SETA;
+      m.setAttribute('aria-label', 'Ações da oportunidade ' + titulo);
+      m.setAttribute('aria-haspopup', 'menu');
+      m.setAttribute('aria-expanded', 'false');
+      m.addEventListener('click', ev => { ev.stopPropagation(); abrirMenu(m, o); });
+      topo.appendChild(m);
+    }
+    card.appendChild(topo);
+    card.appendChild(mk('div', 'opp-valor', o.amount_12m == null ? 'BRL —' : 'BRL ' + fmtValor.format(o.amount_12m)));
+    const conta = mk('div', 'opp-conta', o.conta || 'Conta não informada');
+    conta.title = o.conta || '';
+    card.appendChild(conta);
+    card.appendChild(mk('div', 'opp-meta', (o.estagio || '—') + ' · Hotmart ID ' + (o.hotmart_id || '—')));
+    const rodape = mk('div', 'opp-rodape');
+    if (andamento) rodape.appendChild(mk('span', 'badge-sit badge-andamento', 'Em andamento · continuar'));
+    else if (elegivel) rodape.appendChild(mk('span', 'badge-sit badge-ok', 'Disponível para atribuir'));
+    else rodape.appendChild(mk('span', 'badge-sit badge-mute', motivo));
+    const pend = ESTAGIOS_ENCERRADOS.includes(chaveEstagio(o)) ? [] : pendencias(o);
+    if (pend.length) {
+      const a = mk('span', 'opp-alerta');
+      a.innerHTML = ICONE_ALERTA;
+      a.title = pend.join(' · ');
+      a.setAttribute('role', 'img');
+      a.setAttribute('aria-label', 'Pendência: ' + pend.join(', '));
+      rodape.appendChild(a);
+    }
+    card.appendChild(rodape);
+    return card;
+  }
+
+  function cardEsqueleto(){
+    const c = mk('div', 'skel-card');
+    c.setAttribute('aria-hidden', 'true');
+    ['skel-l1', 'skel-l2', 'skel-l3'].forEach(k => c.appendChild(mk('div', 'skel ' + k)));
+    return c;
+  }
+
+  function renderBoard(){
+    const lista = filtradas();
+    const contagens = pathEl.querySelectorAll('.path-count');
+    const esqueleto = carregando && oportunidades.length === 0;
+    const rolagens = [...boardEl.querySelectorAll('.col-body')].map(e => e.scrollTop);   // as colunas são recriadas: guarda a posição de cada uma
+    boardEl.innerHTML = '';
+    if (erroCarga) {
+      contagens.forEach(c => { c.textContent = '(–)'; });
+      const erro = mk('div', 'board-erro');
+      erro.appendChild(mk('div', '', 'Não foi possível consultar o Salesforce. ' + erroCarga));
+      const b = mk('button', 'btn-ghost', 'Tentar novamente');
+      b.type = 'button';
+      b.addEventListener('click', carregarOportunidades);
+      erro.appendChild(b);
+      boardEl.appendChild(erro);
+      atualizarStatus();
+      return;
+    }
+    ESTAGIOS_FUNIL.forEach((e, i) => {
+      const itens = lista.filter(o => chaveEstagio(o) === e.chave);
+      const soma = itens.reduce((t, o) => t + (Number(o.amount_12m) || 0), 0);
+      contagens[i].textContent = esqueleto ? '(–)' : '(' + itens.length + ')';
+      const col = mk('section', 'col');
+      col.setAttribute('aria-label', e.nome);
+      col.appendChild(mk('div', 'col-total', esqueleto ? ' ' : 'BRL ' + fmtTotal.format(soma)));
+      const corpo = mk('div', 'col-body');
+      if (esqueleto) { for (let k = 0; k < 3; k++) corpo.appendChild(cardEsqueleto()); }
+      else if (!itens.length) corpo.appendChild(mk('div', 'col-empty', 'Nenhuma oportunidade'));
+      else itens.forEach(o => corpo.appendChild(criarCard(o)));
+      col.appendChild(corpo);
+      boardEl.appendChild(col);
+      if (rolagens[i]) corpo.scrollTop = rolagens[i];
+    });
+    atualizarStatus();
+  }
+
+  // resumo da Opportunity escolhida (topo do painel lateral)
+  function renderSelecao(){
+    oppResumo.innerHTML = '';
+    const manual = oppIdInput.value.trim();
+    if (oppEscolhida) {
+      const o = oppEscolhida;
+      const nome = mk('b', '', o.nome || '(sem nome)');
+      oppResumo.appendChild(nome);
+      [['Conta', o.conta || 'não informada'], ['Valor', o.amount_12m == null ? '—' : 'BRL ' + fmtValor.format(o.amount_12m)], ['Estágio', o.estagio || '—'], ['Hotmart ID', o.hotmart_id || '—']].forEach(par => {
+        const l = mk('div', 'linha');
+        l.appendChild(document.createTextNode(par[0] + ': '));
+        l.appendChild(mk('span', '', par[1]));
+        oppResumo.appendChild(l);
+      });
+      drawerTitle.textContent = o.nome || 'Atribuir onboarder';
+    } else if (manual) {
+      oppResumo.appendChild(mk('b', '', 'ID informado manualmente'));
+      oppResumo.appendChild(mk('div', 'linha', manual));
+      drawerTitle.textContent = 'Atribuir por ID';
+    } else {
+      oppResumo.appendChild(mk('div', 'linha', manualDetails.open ? 'Informe abaixo o ID da Opportunity.' : 'Escolha uma oportunidade no funil ou informe o ID abaixo.'));
+      drawerTitle.textContent = manualDetails.open ? 'Atribuir por ID' : 'Atribuir onboarder';
     }
   }
 
@@ -903,6 +1236,8 @@
     const d2 = await r2.json();
     if (d2.status === 'erro_salesforce') throw new Error('O Salesforce recusou o Amount: ' + (d2.mensagem || 'regra de validação.'));
     if (d2.status !== 'salvo') throw new Error('Resposta inesperada ao salvar o Amount.');
+    const o = oportunidades.find(x => x.opp_id === oppId);
+    if (o) { o.amount_12m = Number(valor); if (oppEscolhida && oppEscolhida.opp_id === oppId) oppEscolhida = o; renderSelecao(); renderBoard(); }
   }
 
   function escolherOpp(o){
@@ -912,70 +1247,144 @@
     assignError.classList.remove('show');
     mostrarAmount(!(Number(o.amount_12m) > 0));
     renderSelecao();
-    renderOpps();
+    renderBoard();
   }
 
-  function renderOpps(){
-    const termo = oppSearch.value.trim().toLowerCase();
-    const estagio = oppStageFilter.value;
-    const lista = oportunidades.filter(o =>
-      (!estagio || String(o.estagio).toLowerCase() === estagio.toLowerCase()) &&
-      (!termo || o.nome.toLowerCase().includes(termo) || o.hotmart_id.toLowerCase().includes(termo))
-    );
-    oppList.innerHTML = '';
-    if (!lista.length) {
-      const vazio = document.createElement('div');
-      vazio.className = 'opp-empty';
-      vazio.textContent = oportunidades.length ? 'Nenhuma oportunidade com esse filtro.' : 'Você não tem oportunidades nesses estágios.';
-      oppList.appendChild(vazio);
+  // ── menu de ações do card ──
+  function abrirMenu(btn, o){
+    fecharMenu();
+    cardMenu.innerHTML = '';
+    const item = mk('button', 'menu-item', 'Atribuir onboarder');
+    item.type = 'button';
+    item.setAttribute('role', 'menuitem');
+    item.addEventListener('click', () => { fecharMenu(); abrirDrawer(o); });
+    cardMenu.appendChild(item);
+    const r = btn.getBoundingClientRect();
+    cardMenu.style.top = (r.bottom + 4) + 'px';
+    cardMenu.style.left = Math.max(8, r.right - 190) + 'px';
+    cardMenu.hidden = false;
+    btn.setAttribute('aria-expanded', 'true');
+    menuBtn = btn;
+    item.focus();
+  }
+  function fecharMenu(devolverFoco){
+    if (cardMenu.hidden) return;
+    cardMenu.hidden = true;
+    if (menuBtn) { menuBtn.setAttribute('aria-expanded', 'false'); if (devolverFoco) menuBtn.focus(); menuBtn = null; }
+  }
+  document.addEventListener('click', e => { if (!cardMenu.hidden && !cardMenu.contains(e.target)) fecharMenu(); });
+  cardMenu.addEventListener('keydown', e => { if (e.key === 'Escape') { e.stopPropagation(); fecharMenu(true); } });
+  window.addEventListener('resize', () => fecharMenu());
+  boardEl.addEventListener('scroll', () => fecharMenu(), true);
+
+  // ── painel lateral ──
+  function lembrarFoco(){
+    const a = document.activeElement;
+    const card = a && a.closest ? a.closest('.opp-card') : null;
+    if (card && a.classList.contains('opp-menu')) return { tipo: 'menu', id: card.dataset.id };
+    if (card) return { tipo: 'nome', id: card.dataset.id };
+    if (a === manualBtn) return { tipo: 'manual' };
+    return { tipo: 'outro' };
+  }
+  function devolverFoco(){
+    const u = ultimoFoco; if (!u) return;
+    let alvo = null;
+    if (u.tipo === 'manual') alvo = manualBtn;
+    else if (u.id) {
+      const c = [...boardEl.querySelectorAll('.opp-card')].find(x => x.dataset.id === u.id);
+      alvo = c && (u.tipo === 'menu' ? c.querySelector('.opp-menu') : c.querySelector('button.opp-name')) || (c && c.querySelector('.opp-menu, button.opp-name'));
     }
-    lista.forEach(o => {
-      const motivo = motivoIndisponivel(o);
-      const row = document.createElement('button');
-      row.type = 'button';
-      row.className = 'opp-row' + (oppEscolhida && oppEscolhida.opp_id === o.opp_id ? ' selected' : '');
-      row.disabled = !!motivo;
-      const mk = (cls, txt) => { const e = document.createElement('span'); e.className = cls; e.textContent = txt; return e; };
-      row.appendChild(mk('opp-hid', o.hotmart_id || '—'));
-      row.appendChild(mk('opp-nome', o.nome || '(sem nome)'));
-      row.appendChild(mk('opp-stage', o.estagio));
-      row.appendChild(mk('opp-amount', o.amount_12m == null ? '—' : brl.format(o.amount_12m)));
-      if (motivo) row.appendChild(mk('opp-note', motivo));
-      else row.addEventListener('click', () => escolherOpp(o));
-      oppList.appendChild(row);
-    });
-    const livres = oportunidades.filter(o => !motivoIndisponivel(o)).length;
-    oppStatus.textContent = oportunidades.length
-      ? lista.length + ' de ' + oportunidades.length + ' oportunidades · ' + livres + ' disponíveis para atribuir'
-      : '';
+    if (alvo && alvo.focus) alvo.focus();
+  }
+  function abrirDrawer(o, opts){
+    opts = opts || {};
+    fecharMenu();
+    ultimoFoco = lembrarFoco();
+    const retomar = !!o && emAndamento(o);
+    if (!retomar) {
+      if (flow.atribuido && passoAtual < 4 && o && flow.oppId && flow.oppId !== o.opp_id &&
+          !window.confirm('Há uma atribuição em andamento (agendar ou Closed Won). Abrir outra oportunidade descarta esse andamento. Continuar?')) return;
+      resetFlow(false);
+      if (o) escolherOpp(o); else { oppEscolhida = null; renderSelecao(); }
+    } else {
+      oppEscolhida = o;
+      renderSelecao();
+    }
+    manualDetails.open = !!opts.manual;
+    if (!o) renderSelecao();
+    drawer.classList.add('open');
+    drawerOverlay.classList.add('open');
+    drawer.setAttribute('aria-hidden', 'false');
+    setTimeout(() => {
+      const alvo = opts.manual ? oppIdManual : (passoAtual === 1 ? clienteEmailInput : drawerClose);
+      if (alvo && alvo.focus) alvo.focus();
+    }, 60);
+  }
+  function fecharDrawer(){
+    fecharMenu();
+    const concluido = passoAtual === 4;
+    drawer.classList.remove('open');
+    drawerOverlay.classList.remove('open');
+    drawer.setAttribute('aria-hidden', 'true');
+    renderBoard();
+    devolverFoco();
+    if (concluido) { resetFlow(); }   // fluxo concluído: limpa o estado e atualiza o funil
+  }
+  drawerClose.addEventListener('click', fecharDrawer);
+  drawerOverlay.addEventListener('click', fecharDrawer);
+  drawer.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { e.preventDefault(); fecharDrawer(); return; }
+    if (e.key !== 'Tab') return;
+    const f = [...drawer.querySelectorAll('button:not([disabled]), input:not([type=hidden]):not([disabled]), select:not([disabled]), summary, a[href]')].filter(el => el.offsetParent !== null);
+    if (!f.length) return;
+    const primeiro = f[0], ultimo = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === primeiro) { e.preventDefault(); ultimo.focus(); }
+    else if (!e.shiftKey && document.activeElement === ultimo) { e.preventDefault(); primeiro.focus(); }
+  });
+  manualBtn.addEventListener('click', () => abrirDrawer(null, { manual: true }));
+  // Esc fecha o painel em qualquer situação (mesmo se o foco estiver na página, e não dentro dele)
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && drawer.classList.contains('open') && cardMenu.hidden) fecharDrawer(); });
+
+  // ── atualizações locais (sem recarregar a página) ──
+  function marcarAtribuida(oppId){
+    if (flow.oppId === oppId) flow.atribuido = true;
+    const o = oportunidades.find(x => x.opp_id === oppId);
+    if (o) o.ja_atribuida = true;
+    renderBoard();
+  }
+  function marcarFechada(oppId){
+    const o = oportunidades.find(x => x.opp_id === oppId);
+    if (o) { o.estagio = 'Closed Won'; o.ja_atribuida = true; renderBoard(); }
   }
 
   async function carregarOportunidades(){
-    oppList.innerHTML = '<div class="opp-empty">Carregando suas oportunidades…</div>';
-    oppStatus.textContent = '';
+    carregando = true; erroCarga = '';
+    oppRefreshBtn.classList.add('girando');
+    renderBoard();
     try {
       const res = await apiFetch(WEBHOOK_OPPS_URL, { method: 'GET' });
-      if (!res.ok) throw new Error('status ' + res.status);
+      if (!res.ok) throw await erroDoServidor(res);
       const data = await res.json();
       oportunidades = Array.isArray(data.oportunidades) ? data.oportunidades : [];
-      if (oppEscolhida && !oportunidades.some(o => o.opp_id === oppEscolhida.opp_id)) { oppEscolhida = null; oppIdInput.value = ''; renderSelecao(); }
-      renderOpps();
+      atualizadoEm = Date.now();
     } catch (e) {
-      if (!getSession()) return; // sessão expirou: apiFetch já levou pra tela de login
-      oportunidades = [];
-      oppList.innerHTML = '<div class="opp-empty">Não foi possível carregar suas oportunidades. Use "Atualizar" ou informe o ID manualmente.</div>';
+      if (!getSession()) { carregando = false; oppRefreshBtn.classList.remove('girando'); return; } // sessão expirou: apiFetch já levou pra tela de login
+      erroCarga = e.message || 'Falha na consulta.';
+    } finally {
+      carregando = false;
+      oppRefreshBtn.classList.remove('girando');
     }
+    renderBoard();
   }
 
-  oppSearch.addEventListener('input', renderOpps);
-  oppStageFilter.addEventListener('change', renderOpps);
+  oppSearch.addEventListener('input', renderBoard);
   oppRefreshBtn.addEventListener('click', carregarOportunidades);
   oppIdManual.addEventListener('input', () => {
     oppEscolhida = null;
     mostrarAmount(false);
-    renderSelecao();
     oppIdInput.value = oppIdManual.value.trim();
-    renderOpps();
+    renderSelecao();
+    renderBoard();
   });
 
   async function atribuir(){
@@ -1045,6 +1454,7 @@
       flow.cliente = data.cliente || '';
 
       podBadge.textContent = 'POD ' + (data.pod ?? '—');
+      podBadge.style.display = 'inline-flex';
 
       const amountFormatado = (typeof data.amount === 'number')
         ? data.amount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 })
@@ -1082,6 +1492,7 @@
       renderSlots(data.horarios_disponiveis ?? [], data.aviso_agenda || '');
 
       continueToStep2Btn.style.display = 'block';
+      marcarAtribuida(oppId);
 
     } catch (err) {
       assignError.textContent = 'Não foi possível atribuir o contrato. ' + err.message;
@@ -1416,6 +1827,7 @@
       }
       if (data.status !== 'closed_won') throw new Error('Resposta inesperada do servidor.');
 
+      marcarFechada(flow.oppId);
       setStep(4);
 
     } catch (err) {
