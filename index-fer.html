@@ -242,6 +242,28 @@
   .opp-manual summary{ cursor:pointer; color:var(--text-muted); }
   .opp-manual input{ margin-top:var(--sp-2); }
   @media (max-width:560px){ .opp-row{ grid-template-columns:1fr auto; } .opp-hid{ grid-column:1 / -1; } .opp-note{ grid-column:1 / -1; } }
+
+  /* ---------- Formulário dos campos obrigatórios (passo 3) ---------- */
+  .campos-box{ margin:var(--sp-4) 0; }
+  .campos-title{ font-size:13px; font-weight:700; margin-bottom:var(--sp-1); }
+  .campo{ margin-bottom:var(--sp-3); }
+  .campo select, .campo input[type="number"], .campo input[type="date"]{
+    width:100%; font-family:inherit; font-size:15px; color:var(--text);
+    background:var(--surface); border:1.5px solid var(--border-strong);
+    border-radius:var(--r-sm); padding:10px 12px; outline:none;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  .campo select:focus, .campo input:focus{ border-color:var(--orange); box-shadow:0 0 0 3px var(--accent-weak); }
+  .campo.vazio select, .campo.vazio input{ border-color:var(--maroon); }
+  .campo .tag-vazio{ font-size:11px; font-weight:700; color:var(--maroon); margin-left:6px; }
+  .campo-fixo{ font-size:13px; color:var(--text-muted); margin-bottom:var(--sp-3); }
+  .campos-ok{ font-size:13px; font-weight:600; margin-top:var(--sp-2); }
+  .conta-box{ margin-bottom:var(--sp-3); }
+  .conta-atual{ font-size:13px; margin-bottom:var(--sp-2); line-height:1.5; }
+  .conta-atual .ok{ font-weight:700; }
+  .conta-atual .alerta{ color:var(--maroon); font-weight:700; }
+  .conta-box .opp-list{ margin-top:var(--sp-2); max-height:220px; }
+  .conta-box .opp-row{ grid-template-columns:100px 1fr auto; }
 </style>
 
 </head>
@@ -384,6 +406,22 @@
           Ao confirmar, o Stage da Opportunity <b id="cwOppId">—</b> no Salesforce vai virar <b>Closed Won</b>.
         </div>
 
+        <div class="campos-box" id="camposBox">
+          <div class="campos-title">Campos obrigatórios da Opportunity</div>
+          <div class="hint" id="camposStatus">Carregando campos…</div>
+          <div id="camposForm" style="margin-top:var(--sp-3);"></div>
+          <div class="conta-box" id="contaBox" style="display:none;">
+            <label for="contaBusca">Conta (Account) da Opportunity</label>
+            <div class="conta-atual" id="contaAtual"></div>
+            <input type="text" id="contaBusca" placeholder="Trocar a Conta: busque por nome, e-mail ou User ID (mín. 3 caracteres)" autocomplete="off" maxlength="60" />
+            <div class="opp-list" id="contaResultados" style="display:none;"></div>
+            <div class="hint">O User ID da plataforma vem da Conta e é preenchido sozinho quando ela é vinculada à Opportunity.</div>
+          </div>
+          <button type="button" class="btn-ghost" id="salvarCamposBtn" style="display:none;">Salvar campos no Salesforce</button>
+          <div class="error-msg" id="camposError"></div>
+          <div class="campos-ok" id="camposOk" style="display:none;"></div>
+        </div>
+
         <button class="btn-primary" id="closedWonBtn">
           <span class="spinner" id="cwSpinner"></span>
           <span id="cwBtnText">Marcar como Closed Won</span>
@@ -517,6 +555,7 @@
     step2Card.style.display = (n === 2) ? 'block' : 'none';
     step3Card.style.display = (n === 3) ? 'block' : 'none';
     doneCard.style.display  = (n === 4) ? 'block' : 'none';
+    if (n === 3) carregarCampos();
   }
 
   function showApp(email){
@@ -797,7 +836,7 @@
 
       // Monta o Step 2 com os horários que já vieram na resposta
       onboarderNameLabel.textContent = data.email_onboarder;
-      renderSlots(data.horarios_disponiveis ?? []);
+      renderSlots(data.horarios_disponiveis ?? [], data.aviso_agenda || '');
 
       continueToStep2Btn.style.display = 'block';
 
@@ -815,14 +854,19 @@
   // ---------------------------------------------------------
   // STEP 2 — Escolher horário e confirmar reunião
   // ---------------------------------------------------------
-  function renderSlots(slots){
+  function renderSlots(slots, aviso){
     slotsWrap.innerHTML = '';
     chosenSlotBox.style.display = 'none';
     confirmMeetingBtn.disabled = true;
     flow.chosenSlot = null;
 
     if (!slots.length) {
-      slotsWrap.innerHTML = '<div class="empty-note">Nenhum horário livre encontrado nos próximos 30 dias. Combine o horário diretamente com o onboarder.</div>';
+      slotsWrap.innerHTML = '';
+      const nota = document.createElement('div');
+      nota.className = 'empty-note';
+      // aviso_agenda vem do servidor quando a agenda do onboarder não pôde ser lida (ex.: não compartilhada)
+      nota.textContent = aviso ? aviso : 'Nenhum horário livre encontrado nos próximos 30 dias. Combine o horário diretamente com o onboarder.';
+      slotsWrap.appendChild(nota);
       return;
     }
 
@@ -917,9 +961,194 @@
   confirmMeetingBtn.addEventListener('click', confirmarReuniao);
 
   // ---------------------------------------------------------
+  // STEP 3 — Campos obrigatórios (preencher antes do Closed Won)
+  // ---------------------------------------------------------
+  const WEBHOOK_CAMPOS_URL = "https://hotmart.app.n8n.cloud/webhook/campos-oportunidade";
+  const WEBHOOK_SALVAR_URL = "https://hotmart.app.n8n.cloud/webhook/salvar-campos";
+  const WEBHOOK_CONTAS_URL = "https://hotmart.app.n8n.cloud/webhook/buscar-contas";
+  const camposStatus = document.getElementById('camposStatus');
+  const camposForm   = document.getElementById('camposForm');
+  const camposError  = document.getElementById('camposError');
+  const camposOk     = document.getElementById('camposOk');
+  const salvarCamposBtn = document.getElementById('salvarCamposBtn');
+  const contaBox     = document.getElementById('contaBox');
+  const contaAtual   = document.getElementById('contaAtual');
+  const contaBusca   = document.getElementById('contaBusca');
+  const contaResultados = document.getElementById('contaResultados');
+  let controlesCampos = {};   // api -> elemento de input/select
+  let contaDaOpp = null;      // conta que está hoje na Opportunity
+  let contaEscolhida = null;  // conta nova escolhida na busca (ainda não salva)
+  let camposDirty = false;
+  let contaTimer = null;
+  let contaSeq = 0;
+
+  function mkEl(tag, cls, txt){ const e = document.createElement(tag); if (cls) e.className = cls; if (txt !== undefined) e.textContent = txt; return e; }
+  function marcarSujo(){ camposDirty = true; camposOk.style.display = 'none'; }
+
+  function criarControle(c){
+    let el;
+    if (c.tipo === 'lista') {
+      el = document.createElement('select');
+      el.appendChild(new Option('Selecione…', ''));
+      (c.opcoes || []).forEach(o => el.appendChild(new Option(o.rotulo, o.valor)));
+    } else if (c.tipo === 'booleano') {
+      el = document.createElement('select');
+      el.appendChild(new Option('Selecione…', ''));
+      el.appendChild(new Option('Sim', 'true'));
+      el.appendChild(new Option('Não', 'false'));
+    } else {
+      el = document.createElement('input');
+      el.type = c.tipo === 'numero' ? 'number' : c.tipo === 'data' ? 'date' : 'text';
+      if (c.tipo === 'numero') el.step = 'any';
+      if (c.tipo === 'texto') el.maxLength = 255;
+    }
+    el.value = (c.valor === undefined || c.valor === null) ? '' : String(c.valor);
+    el.addEventListener('input', marcarSujo);
+    el.addEventListener('change', marcarSujo);
+    return el;
+  }
+
+  function addCampo(c){
+    const wrap = mkEl('div', 'campo' + (c.vazio ? ' vazio' : ''));
+    const lab = mkEl('label', '', c.label);
+    if (c.vazio) lab.appendChild(mkEl('span', 'tag-vazio', 'vazio'));
+    const el = criarControle(c);
+    lab.htmlFor = el.id = 'campo_' + c.api;
+    wrap.appendChild(lab);
+    wrap.appendChild(el);
+    camposForm.appendChild(wrap);
+    controlesCampos[c.api] = el;
+  }
+
+  function descreverConta(c, prefixo){
+    contaAtual.innerHTML = '';
+    if (!c || (!c.id && !c.nome)) {
+      contaAtual.appendChild(mkEl('span', 'alerta', 'Nenhuma Conta vinculada à Opportunity. Busque e escolha uma abaixo.'));
+      return;
+    }
+    contaAtual.appendChild(document.createTextNode((prefixo || 'Conta atual: ') + (c.nome || '(sem nome)') + ' · '));
+    if (c.user_id) contaAtual.appendChild(mkEl('span', 'ok', 'User ID ' + c.user_id + ' ✓'));
+    else contaAtual.appendChild(mkEl('span', 'alerta', 'sem User ID — o Closed Won será recusado com essa Conta'));
+  }
+
+  function fecharResultadosConta(){ contaResultados.style.display = 'none'; contaResultados.innerHTML = ''; }
+
+  function escolherConta(c){
+    contaEscolhida = c;
+    contaBusca.value = '';
+    fecharResultadosConta();
+    descreverConta(c, 'Conta selecionada (ainda não salva): ');
+    marcarSujo();
+  }
+
+  async function buscarContas(){
+    const q = contaBusca.value.trim();
+    const minhaBusca = ++contaSeq;
+    if (q.length < 3) { fecharResultadosConta(); return; }
+    contaResultados.style.display = 'block';
+    contaResultados.innerHTML = '<div class="opp-empty">Buscando…</div>';
+    try {
+      const res = await apiFetch(WEBHOOK_CONTAS_URL + '?q=' + encodeURIComponent(q), { method: 'GET' });
+      const data = await res.json().catch(() => ({}));
+      if (minhaBusca !== contaSeq) return; // chegou uma busca mais nova
+      if (!res.ok) throw new Error(data.mensagem || ('status ' + res.status));
+      const contas = Array.isArray(data.contas) ? data.contas : [];
+      contaResultados.innerHTML = '';
+      if (!contas.length) { contaResultados.appendChild(mkEl('div', 'opp-empty', 'Nenhuma Conta encontrada.')); return; }
+      contas.forEach(c => {
+        const row = document.createElement('button');
+        row.type = 'button';
+        row.className = 'opp-row';
+        row.appendChild(mkEl('span', 'opp-hid', c.user_id ? 'ID ' + c.user_id : 'sem User ID'));
+        row.appendChild(mkEl('span', 'opp-nome', c.nome || '(sem nome)'));
+        row.appendChild(mkEl('span', 'opp-stage', c.user_email || '—'));
+        row.addEventListener('click', () => escolherConta(c));
+        contaResultados.appendChild(row);
+      });
+    } catch (e) {
+      if (!getSession() || minhaBusca !== contaSeq) return;
+      contaResultados.innerHTML = '';
+      contaResultados.appendChild(mkEl('div', 'opp-empty', 'Não foi possível buscar: ' + e.message));
+    }
+  }
+  contaBusca.addEventListener('input', () => { clearTimeout(contaTimer); contaTimer = setTimeout(buscarContas, 400); });
+
+  async function carregarCampos(){
+    if (!flow.oppId) return;
+    camposStatus.textContent = 'Carregando campos…';
+    camposForm.innerHTML = '';
+    camposError.classList.remove('show');
+    camposOk.style.display = 'none';
+    salvarCamposBtn.style.display = 'none';
+    contaBox.style.display = 'none';
+    fecharResultadosConta();
+    controlesCampos = {}; contaDaOpp = null; contaEscolhida = null; camposDirty = false;
+    try {
+      const res = await apiFetch(WEBHOOK_CAMPOS_URL + '?opp_id=' + encodeURIComponent(flow.oppId), { method: 'GET' });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.mensagem || ('status ' + res.status));
+      (data.campos || []).forEach(addCampo);
+      camposForm.appendChild(mkEl('div', 'campo-fixo', 'Onboarding Owner: ' + (data.onboarding_owner_definido ? 'definido na atribuição ✓' : 'ainda não definido (é preenchido pela atribuição)')));
+      contaDaOpp = data.conta || null;
+      descreverConta(contaDaOpp, 'Conta atual: ');
+      contaBox.style.display = 'block';
+      salvarCamposBtn.style.display = 'block';
+      camposStatus.textContent = (data.faltando && data.faltando.length)
+        ? 'Faltam: ' + data.faltando.join(', ') + '.'
+        : 'Todos os campos obrigatórios estão preenchidos.';
+    } catch (e) {
+      if (!getSession()) return; // sessão expirou: apiFetch já levou pra tela de login
+      camposStatus.textContent = '';
+      camposError.textContent = 'Não foi possível carregar os campos: ' + e.message;
+      camposError.classList.add('show');
+    }
+  }
+
+  async function salvarCampos(){
+    camposError.classList.remove('show');
+    camposOk.style.display = 'none';
+    salvarCamposBtn.disabled = true;
+    salvarCamposBtn.textContent = 'Salvando…';
+    try {
+      const valores = {};
+      Object.keys(controlesCampos).forEach(api => { valores[api] = controlesCampos[api].value; });
+      const corpo = { opp_id: flow.oppId, valores };
+      if (contaEscolhida && contaEscolhida.id) corpo.account_id = contaEscolhida.id;
+      const res = await apiFetch(WEBHOOK_SALVAR_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(corpo)
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.mensagem || ('O servidor retornou um erro (status ' + res.status + ').'));
+      if (data.status === 'erro_salesforce') throw new Error('O Salesforce recusou: ' + (data.mensagem || 'regra de validação não atendida.'));
+      if (data.status !== 'salvo') throw new Error('Resposta inesperada do servidor.');
+      camposDirty = false;
+      await carregarCampos();
+      camposOk.textContent = (data.faltando && data.faltando.length)
+        ? 'Salvo. Ainda faltam: ' + data.faltando.join(', ') + '.'
+        : 'Salvo ✓ Tudo preenchido — pode marcar como Closed Won.';
+      camposOk.style.display = 'block';
+    } catch (e) {
+      if (!getSession()) return;
+      camposError.textContent = 'Não foi possível salvar. ' + e.message;
+      camposError.classList.add('show');
+    } finally {
+      salvarCamposBtn.disabled = false;
+      salvarCamposBtn.textContent = 'Salvar campos no Salesforce';
+    }
+  }
+  salvarCamposBtn.addEventListener('click', salvarCampos);
+
+  // ---------------------------------------------------------
   // STEP 3 — Marcar Closed Won
   // ---------------------------------------------------------
   async function marcarClosedWon(){
+    if (camposDirty) {
+      cwError.textContent = 'Você alterou campos que ainda não foram salvos. Clique em "Salvar campos no Salesforce" antes de marcar Closed Won.';
+      cwError.classList.add('show');
+      return;
+    }
     closedWonBtn.disabled = true;
     cwSpinner.classList.add('show');
     cwBtnText.textContent = 'Marcando...';
@@ -938,6 +1167,9 @@
       if (data.status === 'campos_faltando') {
         const lista = (data.campos_faltando || []).join(', ');
         throw new Error('Preencha estes campos obrigatórios na Opportunity antes de marcar Closed Won: ' + lista + '.');
+      }
+      if (data.status === 'erro_salesforce') {
+        throw new Error('O Salesforce recusou o fechamento: ' + (data.mensagem || 'regra de validação não atendida.'));
       }
       if (data.status !== 'closed_won') throw new Error('Resposta inesperada do servidor.');
 
