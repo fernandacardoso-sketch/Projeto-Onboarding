@@ -497,6 +497,9 @@
 
   [hidden]{ display:none !important; }
   .sf-link{ color:inherit; text-decoration:underline; text-underline-offset:3px; overflow-wrap:anywhere; }
+  a.opp-name{ cursor:pointer; text-decoration:underline; text-decoration-color:var(--text-muted); text-underline-offset:3px; }
+  a.opp-name:hover{ text-decoration-color:currentColor; }
+  a.opp-name:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
   .sf-link:hover{ text-decoration-thickness:2px; }
   .sf-link:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
   /* resultado da atribuição, enxuto */
@@ -1114,7 +1117,10 @@
       nome.setAttribute('aria-label', (andamento ? 'Continuar o fluxo de ' : 'Atribuir onboarder: ') + titulo);
       nome.addEventListener('click', () => abrirDrawer(o));
     } else {
-      nome = mk('span', 'opp-name', titulo);
+      // não dá para atribuir: o nome vira link para abrir a Opportunity no Salesforce
+      nome = linkSF(o.opp_id, titulo);
+      nome.classList.add('opp-name');
+      nome.setAttribute('aria-label', titulo + ' (abrir no Salesforce)');
     }
     nome.title = titulo;
     topo.appendChild(nome);
