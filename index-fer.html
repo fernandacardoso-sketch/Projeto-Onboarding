@@ -518,6 +518,8 @@
   .conta-linha .conta-atual{ margin:0; }
   .link-btn{ flex:none; padding:4px; font-size:13px; font-weight:600; color:var(--text); background:none; text-decoration:underline; text-underline-offset:3px; }
   .link-btn:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  .campo textarea{ width:100%; min-height:96px; padding:var(--sp-3); font:inherit; color:var(--text); background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--r-md); resize:vertical; }
+  .campo textarea:focus-visible{ outline:2px solid var(--focus); outline-offset:1px; }
   .campos-outros{ margin:var(--sp-3) 0; font-size:13px; }
   .campos-outros summary{ cursor:pointer; color:var(--text-muted); }
   .campos-outros .campo{ margin-top:var(--sp-3); }
@@ -1668,6 +1670,9 @@
       (c.opcoes || []).forEach(o => el.appendChild(new Option(o.rotulo, o.valor)));
       // lista dependente (ex.: Negotiated Fee só aceita certos valores conforme a Price Policy)
       if (c.depende_de) { el.dataset.dependeDe = c.depende_de; el._opcoes = c.opcoes || []; }
+    } else if (c.tipo === 'texto_longo') {
+      el = document.createElement('textarea');
+      el.rows = 4; el.maxLength = 4000;
     } else if (c.tipo === 'booleano') {
       el = document.createElement('select');
       el.appendChild(new Option('Selecione…', ''));
