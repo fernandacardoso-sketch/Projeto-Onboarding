@@ -3,7 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fecha e Passa · New Business Hotmart</title>
+<meta name="application-name" content="Onboarding Assignment">
+<meta name="description" content="Onboarding Assignment: atribua o onboarder, marque o welcome e feche a oportunidade.">
+<meta name="theme-color" content="#FF4000">
+<meta property="og:title" content="Onboarding Assignment · New Business Hotmart">
+<meta property="og:description" content="Onboarding Assignment: atribua o onboarder, marque o welcome e feche a oportunidade.">
+<script>
+  // Aplica o tema ANTES da renderização (evita o flash do tema errado): escolha salva > preferência do sistema.
+  (function () {
+    var t = 'light';
+    try {
+      var s = localStorage.getItem('carteira_tema');
+      if (s === 'light' || s === 'dark') t = s;
+      else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) t = 'dark';
+    } catch (e) {}
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+<title>Onboarding Assignment · New Business Hotmart</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,900;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -43,7 +60,7 @@
     font-family:var(--font-sans); line-height:1.5;
     -webkit-font-smoothing:antialiased;
   }
-  ::selection{ background:var(--orange); color:var(--white); }
+  ::selection{ background:var(--orange); color:var(--black); }
 
   /* ---------- Tipografia ---------- */
   .eyebrow{
@@ -73,7 +90,7 @@
   input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus{ border-color:var(--orange); box-shadow:0 0 0 3px var(--accent-weak); }
   input::placeholder{ color:var(--text-muted); }
   .hint{ font-size:12px; color:var(--text-muted); margin-top:6px; line-height:1.4; }
-  .error-msg{ font-size:13px; color:var(--maroon); font-weight:500; margin-top:10px; display:none; line-height:1.45; }
+  .error-msg{ font-size:13px; color:var(--danger-text); font-weight:500; margin-top:10px; display:none; line-height:1.45; }
   .error-msg.show{ display:block; }
 
   /* ---------- Botões ---------- */
@@ -88,14 +105,14 @@
   .btn-primary:hover{ background:var(--orange-hover); }
   .btn-primary:active{ transform:translateY(1px); }
   .btn-primary:disabled{ opacity:.4; cursor:not-allowed; }
-  .btn-primary.dark{ background:var(--black); color:var(--white); }
-  .btn-primary.dark:hover{ background:#262626; }
+  .btn-primary.dark{ background:var(--ink); color:var(--on-ink); }
+  .btn-primary.dark:hover{ background:var(--hover-ink); }
   .btn-ghost{
     width:100%; margin-top:10px; background:transparent; color:var(--text);
     font-size:13px; font-weight:600; padding:9px 14px; border-radius:var(--r-sm);
     border:1.5px solid var(--border-strong); transition:border-color .15s;
   }
-  .btn-ghost:hover{ border-color:var(--black); }
+  .btn-ghost:hover{ border-color:var(--ink); }
 
   .topbar{ display:flex; align-items:center; justify-content:space-between; gap:var(--sp-3); margin-bottom:var(--sp-5); }
   .who{ font-family:var(--font-mono); font-size:12.5px; color:var(--text-muted); }
@@ -110,7 +127,7 @@
   footer{ text-align:center; margin-top:var(--sp-5); font-size:12px; color:var(--text-muted); }
 
   /* ============================================================
-     Fecha e Passa
+     Onboarding Assignment
      ============================================================ */
   body{ display:flex; align-items:center; justify-content:center; padding:var(--sp-6) 20px; }
   .frame{ width:100%; max-width:460px; }
@@ -132,7 +149,7 @@
   .stepper{ display:flex; align-items:center; gap:6px; margin-bottom:var(--sp-3); }
   .step-dot{ flex:1; height:6px; border-radius:var(--r-pill); background:var(--border-strong); transition:background .25s; }
   .step-dot.active{ background:var(--orange); }
-  .step-dot.done{ background:var(--black); }
+  .step-dot.done{ background:var(--ink); }
   .step-labels{ display:flex; justify-content:space-between; font-size:12px; font-weight:600; color:var(--text-muted); margin-bottom:var(--sp-4); }
   .step-labels span{ flex:1; text-align:center; }
   .step-labels span:first-child{ text-align:left; }
@@ -181,7 +198,7 @@
     padding:8px 12px; border-radius:var(--r-sm); border:1.5px solid var(--border-strong);
     background:var(--surface); color:var(--text); transition:border-color .15s, background .15s;
   }
-  .slot-pill:hover{ border-color:var(--black); }
+  .slot-pill:hover{ border-color:var(--ink); }
   .slot-pill.selected{ background:var(--orange); border-color:var(--orange); color:var(--black); }
   .chosen-slot{ display:flex; align-items:center; gap:10px; margin:var(--sp-4) 0 0; }
 
@@ -197,7 +214,7 @@
   .done-sub{ font-size:14px; color:var(--text-muted); line-height:1.5; }
 
   .spinner{ width:16px; height:16px; border-radius:50%; border:2px solid rgba(13,13,13,.25); border-top-color:var(--black); animation:spin .7s linear infinite; display:none; }
-  .btn-primary.dark .spinner{ border-color:rgba(255,255,255,.35); border-top-color:var(--white); }
+  .btn-primary.dark .spinner{ border-color:rgba(128,128,128,.4); border-top-color:var(--on-ink); }
   .spinner.show{ display:inline-block; }
   @keyframes spin{ to{ transform:rotate(360deg); } }
   @keyframes rise{ from{ opacity:0; transform:translateY(6px); } to{ opacity:1; transform:translateY(0); } }
@@ -254,11 +271,11 @@
     transition:border-color .15s, box-shadow .15s;
   }
   .campo select:focus, .campo input:focus{ border-color:var(--orange); box-shadow:0 0 0 3px var(--accent-weak); }
-  .campo.vazio select, .campo.vazio input{ border-color:var(--maroon); }
-  .campo .tag-vazio{ font-size:11px; font-weight:700; color:var(--maroon); margin-left:6px; }
+  .campo.vazio select, .campo.vazio input{ border-color:var(--danger-text); }
+  .campo .tag-vazio{ font-size:11px; font-weight:700; color:var(--danger-text); margin-left:6px; }
   .campo-fixo{ font-size:13px; color:var(--text-muted); margin-bottom:var(--sp-3); }
   .campos-ok{ font-size:13px; font-weight:600; margin-top:var(--sp-2); }
-  .amount-box{ margin-top:var(--sp-3); padding:var(--sp-3); border:1.5px solid var(--maroon); border-radius:var(--r-sm); }
+  .amount-box{ margin-top:var(--sp-3); padding:var(--sp-3); border:1.5px solid var(--danger-text); border-radius:var(--r-sm); }
   .amount-box input[type="number"]{
     width:100%; font-family:inherit; font-size:15px; color:var(--text);
     background:var(--surface); border:1.5px solid var(--border-strong);
@@ -267,29 +284,143 @@
   .conta-box{ margin-bottom:var(--sp-3); }
   .conta-atual{ font-size:13px; margin-bottom:var(--sp-2); line-height:1.5; }
   .conta-atual .ok{ font-weight:700; }
-  .conta-atual .alerta{ color:var(--maroon); font-weight:700; }
+  .conta-atual .alerta{ color:var(--danger-text); font-weight:700; }
   .conta-box .opp-list{ margin-top:var(--sp-2); max-height:220px; }
   .conta-box .opp-row{ grid-template-columns:100px 1fr auto; }
+
+  /* ============================================================
+     Tema claro/escuro + tela de login (split screen)
+     Texto sobre laranja é SEMPRE preto (design system: branco reprova no contraste).
+     ============================================================ */
+  :root{
+    color-scheme:light;
+    --ink:#0D0D0D; --on-ink:#FFFFFF; --hover-ink:#262626;
+    --danger-text:#3E0F1D;
+    --focus:#0D0D0D;
+    --field-border:#8A857C;
+    --field-bg:var(--surface);
+  }
+  :root[data-theme="dark"]{
+    color-scheme:dark;
+    --bg:#141414; --surface:#1C1C1C; --surface-sunken:#242424;
+    --border:#2E2E2E; --border-strong:#6F6B64;
+    --text:#F5F3EF; --text-muted:rgba(245,243,239,.68);
+    --accent-weak:rgba(255,64,0,.18);
+    --ink:#F5F3EF; --on-ink:#0D0D0D; --hover-ink:#FFFFFF;
+    --danger-text:#FFB4A8;
+    --focus:#FFFFFF;
+    --field-border:#8A857C;
+  }
+
+  /* campos e foco */
+  input[type="text"], input[type="email"], input[type="password"]{ border-color:var(--field-border); background:var(--field-bg); }
+  input[type="text"]:focus-visible, input[type="email"]:focus-visible, input[type="password"]:focus-visible{
+    outline:2px solid var(--orange); outline-offset:1px; border-color:var(--orange);
+  }
+  input[aria-invalid="true"]{ border-color:var(--danger-text); }
+  .btn-primary:focus-visible{ outline:2px solid var(--focus); outline-offset:3px; }
+  .btn-primary:disabled{ cursor:not-allowed; }
+
+  /* botão de tema (sol/lua) */
+  .theme-toggle{
+    position:fixed; top:16px; right:16px; z-index:30; width:40px; height:40px; padding:0;
+    display:grid; place-items:center; border-radius:var(--r-pill);
+    background:var(--surface); color:var(--text); border:1.5px solid var(--field-border);
+  }
+  .theme-toggle:hover{ border-color:var(--orange); }
+  .theme-toggle:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  .theme-toggle svg{ width:20px; height:20px; display:block; }
+  .theme-toggle .i-sun{ display:none; }
+  :root[data-theme="dark"] .theme-toggle .i-sun{ display:block; }
+  :root[data-theme="dark"] .theme-toggle .i-moon{ display:none; }
+  body:not(.is-login) .frame{ padding-top:44px; }
+
+  /* login em duas colunas */
+  body.is-login{ display:block; padding:0; }
+  .login{ display:grid; grid-template-columns:55fr 45fr; min-height:100vh; width:100%; }
+  .login-brand{ background:var(--orange); color:var(--black); display:flex; align-items:center; padding:var(--sp-8) clamp(32px,6vw,96px); }
+  .login-brand-inner{ width:100%; max-width:560px; }
+  .login-brand .eyebrow{ color:var(--black); text-align:left; margin-bottom:var(--sp-4); }
+  .login-brand h1{ font-size:clamp(40px,5.2vw,72px); font-weight:700; line-height:1.02; letter-spacing:-.025em; text-align:left; margin:0 0 var(--sp-5); color:var(--black); }
+  .login-lead{ font-size:18px; line-height:1.5; max-width:46ch; margin:0 0 var(--sp-6); color:var(--black); }
+  .login-bullets{ list-style:none; padding:0; margin:0; display:grid; gap:var(--sp-3); }
+  .login-bullets li{ display:flex; align-items:center; gap:var(--sp-3); font-size:16px; font-weight:600; color:var(--black); }
+  .login-bullets li::before{ content:""; flex:none; width:10px; height:10px; border-radius:2px; background:var(--black); }
+  .login-form-col{ display:flex; align-items:center; justify-content:center; padding:var(--sp-7) var(--sp-5); background:var(--bg); }
+  .login-form{ width:100%; max-width:420px; }
+  .login-form h2{ font-size:22px; font-weight:700; line-height:1.2; margin:0 0 var(--sp-1); }
+  .login-support{ font-size:14px; color:var(--text-muted); margin:0 0 var(--sp-5); }
+  .login-form .field + .field{ margin-top:var(--sp-4); }
+  .pw-wrap{ position:relative; }
+  .pw-wrap input{ padding-right:46px; }
+  .pw-toggle{
+    position:absolute; top:50%; right:4px; transform:translateY(-50%); width:38px; height:38px; padding:0;
+    display:grid; place-items:center; background:none; color:var(--text-muted); border-radius:var(--r-sm);
+  }
+  .pw-toggle:hover{ color:var(--text); }
+  .pw-toggle:focus-visible{ outline:2px solid var(--orange); outline-offset:1px; }
+  .pw-toggle svg{ width:20px; height:20px; display:block; }
+  .pw-toggle .i-off{ display:none; }
+  .pw-toggle[aria-pressed="true"] .i-on{ display:none; }
+  .pw-toggle[aria-pressed="true"] .i-off{ display:block; }
+
+  @media (max-width:900px){
+    .login{ grid-template-columns:1fr; align-content:start; }
+    .login-brand{ padding:var(--sp-6) 72px var(--sp-5) var(--sp-5); }
+    .login-brand h1{ font-size:clamp(30px,8vw,40px); margin-bottom:var(--sp-3); }
+    .login-lead{ font-size:14px; margin:0; }
+    .login-bullets{ display:none; }
+    .login-form-col{ align-items:flex-start; padding:var(--sp-6) var(--sp-5) var(--sp-7); }
+    .login-form{ max-width:none; }
+  }
 </style>
 
 </head>
-<body>
-  <div class="frame">
+<body class="is-login">
+  <button type="button" class="theme-toggle" id="themeToggle" aria-label="Mudar para o tema escuro" title="Tema escuro">
+    <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+  </button>
 
-    <!-- LOGIN -->
-    <section id="loginScreen">
-      <div class="eyebrow">New Business · Hotmart</div>
-      <h1>Fecha e Passa</h1>
-      <p class="sub">Entre com seu e-mail @hotmart.com e sua senha. Daqui você atribui o onboarder, marca o welcome e fecha a Oportunidade.</p>
-      <div class="card">
-        <label for="emailInput">Seu e-mail</label>
-        <input type="email" id="emailInput" placeholder="seunome@hotmart.com" autocomplete="email" />
-        <label for="passwordInput" style="margin-top:12px;display:block;">Senha</label>
-        <input type="password" id="passwordInput" placeholder="Sua senha" autocomplete="current-password" />
-        <div class="error-msg" id="loginError">E-mail ou senha inválidos.</div>
-        <button class="btn-primary" id="loginBtn">Entrar</button>
+  <!-- LOGIN -->
+  <section id="loginScreen" class="login">
+    <div class="login-brand">
+      <div class="login-brand-inner">
+        <div class="eyebrow">New Business · Hotmart</div>
+        <h1>Onboarding Assignment</h1>
+        <p class="login-lead">Entre com seu e-mail @hotmart.com e sua senha. Daqui você atribui o onboarder, marca o welcome e fecha a oportunidade.</p>
+        <ul class="login-bullets">
+          <li>Atribuir o onboarder</li>
+          <li>Marcar o welcome</li>
+          <li>Fechar a oportunidade</li>
+        </ul>
       </div>
-    </section>
+    </div>
+    <div class="login-form-col">
+      <form class="login-form" id="loginForm" novalidate>
+        <h2>Entrar</h2>
+        <p class="login-support">Acesse com seu e-mail corporativo</p>
+        <div class="field">
+          <label for="emailInput">Seu e-mail</label>
+          <input type="email" id="emailInput" placeholder="seunome@hotmart.com" autocomplete="username" aria-describedby="loginError" />
+        </div>
+        <div class="field">
+          <label for="passwordInput">Senha</label>
+          <div class="pw-wrap">
+            <input type="password" id="passwordInput" placeholder="Sua senha" autocomplete="current-password" aria-describedby="loginError" />
+            <button type="button" class="pw-toggle" id="pwToggle" aria-label="Mostrar senha" aria-pressed="false">
+              <svg class="i-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="i-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="error-msg" id="loginError" role="alert">E-mail ou senha inválidos.</div>
+        <button class="btn-primary" id="loginBtn" type="submit">Entrar</button>
+      </form>
+    </div>
+  </section>
+
+  <div class="frame">
 
     <!-- APP -->
     <section id="appScreen" style="display:none;">
@@ -569,8 +700,54 @@
     if (n === 3) carregarCampos();
   }
 
+  // ---------------------------------------------------------
+  // Tema claro/escuro e senha visível (só interface; a autenticação não muda)
+  // ---------------------------------------------------------
+  const THEME_KEY = 'carteira_tema';
+  const themeToggle = document.getElementById('themeToggle');
+  const pwToggle = document.getElementById('pwToggle');
+  const loginForm = document.getElementById('loginForm');
+
+  function temaAtual(){ return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'; }
+  function atualizarBotaoTema(){
+    const escuro = temaAtual() === 'dark';
+    themeToggle.setAttribute('aria-label', escuro ? 'Mudar para o tema claro' : 'Mudar para o tema escuro');
+    themeToggle.title = escuro ? 'Tema claro' : 'Tema escuro';
+  }
+  function aplicarTema(t, salvar){
+    document.documentElement.setAttribute('data-theme', t);
+    if (salvar) { try { localStorage.setItem(THEME_KEY, t); } catch (e) {} }
+    atualizarBotaoTema();
+  }
+  themeToggle.addEventListener('click', () => aplicarTema(temaAtual() === 'dark' ? 'light' : 'dark', true));
+  // sem escolha salva, acompanha o sistema
+  try {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    if (mq.addEventListener) mq.addEventListener('change', ev => {
+      let salvo = null;
+      try { salvo = localStorage.getItem(THEME_KEY); } catch (e) {}
+      if (salvo !== 'light' && salvo !== 'dark') aplicarTema(ev.matches ? 'dark' : 'light', false);
+    });
+  } catch (e) {}
+  atualizarBotaoTema();
+
+  function ocultarSenha(){
+    passwordInput.type = 'password';
+    pwToggle.setAttribute('aria-pressed', 'false');
+    pwToggle.setAttribute('aria-label', 'Mostrar senha');
+  }
+  pwToggle.addEventListener('click', () => {
+    const mostrar = passwordInput.type === 'password';
+    passwordInput.type = mostrar ? 'text' : 'password';
+    pwToggle.setAttribute('aria-pressed', String(mostrar));
+    pwToggle.setAttribute('aria-label', mostrar ? 'Ocultar senha' : 'Mostrar senha');
+  });
+  // o Enter no formulário aciona o clique do botão "Entrar" (a lógica de login continua nele)
+  loginForm.addEventListener('submit', e => e.preventDefault());
+
   function showApp(email){
     loginScreen.style.display = 'none';
+    document.body.classList.remove('is-login');
     appScreen.style.display = 'block';
     loggedEmail.textContent = email;
     resetFlow();
@@ -578,9 +755,11 @@
 
   function showLogin(){
     appScreen.style.display = 'none';
-    loginScreen.style.display = 'block';
+    loginScreen.style.display = '';
+    document.body.classList.add('is-login');
     emailInput.value = '';
     passwordInput.value = '';
+    ocultarSenha();
     loginError.classList.remove('show');
   }
 
@@ -639,8 +818,8 @@
       loginBtn.disabled = false;
     }
   });
-  emailInput.addEventListener('keydown', e => { if (e.key === 'Enter') passwordInput.focus(); });
-  passwordInput.addEventListener('keydown', e => { if (e.key === 'Enter') loginBtn.click(); });
+  // Enter no e-mail pula para a senha; Enter na senha envia o formulário (que clica em "Entrar")
+  emailInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); passwordInput.focus(); } });
   logoutBtn.addEventListener('click', () => { sessionStorage.removeItem(SESSION_KEY); showLogin(); });
   restartBtn.addEventListener('click', resetFlow);
   assignAgainBtn.addEventListener('click', resetFlow);
