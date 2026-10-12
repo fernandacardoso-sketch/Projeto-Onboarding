@@ -710,16 +710,17 @@
             <ul class="notas" id="notasSegmentacao">
               <li><b>Faixas:</b> o valor inicial de cada faixa já pertence a ela, e o valor final pertence à faixa seguinte. Ex.: no N2-N3, R$300k é SG2, não SG1.</li>
               <li><b>Extremos:</b> o SG1 não tem valor mínimo e o SG3 não tem valor máximo.</li>
-              <li><b>Limite por subgrupo:</b> cada onboarder aceita até 10 contratos por subgrupo. Se todos os elegíveis da etapa estiverem com 10 no subgrupo do contrato, a atribuição vai para quem tem a menor carteira total. Elegíveis são os onboarders do POD do Closer ou, na etapa de outro POD, os do mesmo nível, sempre com a carteira total abaixo do limite. Guardiões não usam subgrupos.</li>
+              <li><b>Quem concorre:</b> só os onboarders abaixo do limite de carteira, que são os do POD do Closer ou, na etapa de outro POD, os do mesmo nível. Guardiões não usam subgrupos.</li>
             </ul>
             <p>Status: <span class="status-tag st-ok">tranquilo</span> abaixo de 70% · <span class="status-tag st-atencao">atenção</span> 70% a 99% · <span class="status-tag st-limite">no limite</span> 100% · <span class="status-tag st-acima">acima do limite</span> mais de 100%.</p>
           </section>
           <section class="regra">
-            <h3>Critério de desempate</h3>
+            <h3>Quem recebe a Oportunidade</h3>
             <ol class="curta">
-              <li>Menor carteira do subgrupo (ou, no modo alternativo, menor carteira total).</li>
-              <li>Empate → menor número de pré-onboardings do subgrupo.</li>
-              <li>Empate final → quem está há mais tempo sem receber uma atribuição.</li>
+              <li>Quem tem menos contratos no subgrupo da Oportunidade (SG1, SG2 ou SG3).</li>
+              <li>Empate: menor carteira total.</li>
+              <li>Empate: menos pré-onboardings no subgrupo.</li>
+              <li>Empate final: quem está há mais tempo sem receber uma atribuição.</li>
             </ol>
           </section>
         </div>
@@ -891,7 +892,6 @@
   const POR_PAGINA = 25;
   const FAIXA_ATENCAO = 70;               // % de ocupação a partir da qual o status vira "atenção"
   const LIMIAR_POUCOS_COM_VAGA = 2;       // nível com este número (ou menos) de onboarders com vaga entra em "Atenção"
-  const LIMITE_SUBGRUPO = 10;             // contratos por subgrupo (SG1/SG2/SG3) de cada onboarder
   const CLOSERS_TESTE = ['fernanda.cardoso@hotmart.com'];   // atribuições desses closers contam como teste
   const PADRAO_TESTE = /\bteste|\btest\b/i;                 // ...e as de cliente com "teste" no nome
   const CHAVE_ABA = 'painel_aba';
@@ -1119,12 +1119,13 @@
   function sgDetalhe(o){
     const wrap = h('div', 'sgs');
     if (o.sg1_carteira === undefined) { wrap.appendChild(h('span', 'mut', 'Distribuição por subgrupo indisponível: o workflow 5 precisa ser reimportado para enviar esse dado.')); return wrap; }
+    const maior = Math.max(1, num(o.sg1_carteira), num(o.sg2_carteira), num(o.sg3_carteira));   // a barra compara os três subgrupos entre si
     ['sg1', 'sg2', 'sg3'].forEach(k => {
       const v = num(o[k + '_carteira']); const it = h('div', 'sg-item');
       it.appendChild(h('span', 'badge', k.toUpperCase()));
-      const trk = h('div', 'meter-track'); const f = h('div', 'meter-fill'); f.style.width = Math.min(v / LIMITE_SUBGRUPO * 100, 100) + '%';
-      f.style.background = v >= LIMITE_SUBGRUPO ? 'var(--red-bar)' : 'var(--ok-bar)'; trk.appendChild(f); it.appendChild(trk);
-      const b = h('b', '', v + ' / ' + LIMITE_SUBGRUPO); it.appendChild(b);
+      const trk = h('div', 'meter-track'); const f = h('div', 'meter-fill'); f.style.width = (v / maior * 100) + '%';
+      f.style.background = 'var(--ok-bar)'; trk.appendChild(f); it.appendChild(trk);
+      const b = h('b', '', v + (v === 1 ? ' contrato' : ' contratos')); it.appendChild(b);
       const pre = num(o[k + '_pre_onboarding']); if (o[k + '_pre_onboarding'] !== undefined) it.appendChild(h('span', 'mut', pre + ' em pré'));
       wrap.appendChild(it);
     });

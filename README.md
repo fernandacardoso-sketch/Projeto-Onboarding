@@ -123,7 +123,7 @@ Atribuídas que ainda não chegaram ao Closed Won **não** entram na contagem (o
 3. **Outro POD do mesmo nível.**
 4. Ninguém cabe: e-mail ao coordenador do nível e nenhuma atribuição. Coordenadores: N2-N3 `raissa.salles`, N4-N5 `giovane.jansen`, N6+ `julia.brito`.
 
-**Escolha dentro do pool:** menor carteira **no subgrupo** (quem já tem 10 ou mais sai da disputa) → menor pré-onboarding no subgrupo → quem recebeu há mais tempo (nunca recebeu = primeiro). Se todos têm 10 ou mais no subgrupo, vale a menor carteira total, com os mesmos desempates.
+**Escolha dentro do pool** (sem limite fixo por subgrupo desde 12/10/2026): menos contratos **no subgrupo** da Oportunidade → empate: menor **carteira total** → empate: menor pré-onboarding no subgrupo → quem recebeu há mais tempo (nunca recebeu = primeiro). O antigo limite de 10 por subgrupo foi removido: nos dados reais quase todos já o tinham ultrapassado no SG1, e no N6+ três subgrupos de 10 (30) superavam o limite de carteira (25). Se tudo empatar, vale o primeiro da lista do Cache.
 
 ---
 
@@ -229,7 +229,7 @@ Mostra o funil com 7 oportunidades fictícias (5 elegíveis, 1 já atribuída, 1
 ### Painel de Acompanhamento (painel.html, v2 em 12/10/2026)
 Quatro abas (hash na URL: #visao-geral, #carteira, #atribuicoes, #regras; a última aba fica em localStorage):
 - **Visão geral:** 5 indicadores (onboarders/guardiões, contratos ativos, vagas livres *sem guardiões*, acima do limite >100%, no limite =100%), vagas por nível com os guardiões à parte, resumo por nível e por POD e o bloco "Atenção" (constante `LIMIAR_POUCOS_COM_VAGA` no JS).
-- **Carteira:** tabela (padrão) ou cards; filtros de nível, POD, status e nome; agrupar por POD; linha expansível com a carteira por subgrupo SG1/SG2/SG3 (x / 10); exportar CSV do que está filtrado.
+- **Carteira:** tabela (padrão) ou cards; filtros de nível, POD, status e nome; agrupar por POD; linha expansível com a carteira por subgrupo SG1/SG2/SG3; exportar CSV do que está filtrado.
 - **Atribuições:** Data/hora, cliente, Hotmart ID, onboarder, closer, segmentação (SG1/SG2/SG3 em badge, faixa oficial) e etapa da cascata (lida do início do racional: `[Guardião]`, `[Outro POD]`, senão "Mesmo POD"); filtros de período, closer, onboarder e nível; "Ocultar testes" (cliente com "teste" no nome ou closer em `CLOSERS_TESTE`).
 - **Regras:** cascata em 4 passos, uma tabela única de limites e subgrupos, desempate.
 Cabeçalho com links Atribuição/Painel, "Atualizado há N", atualizar (auto a cada 3 min), avatar com menu e tema. Ao imprimir, as 4 abas saem em sequência.
