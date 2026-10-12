@@ -214,6 +214,8 @@
   /* tabelas (rolam por dentro; o cabeçalho fica fixo) */
   .tabela{ flex:1; min-height:0; overflow:auto; background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--r-md); box-shadow:var(--card-sh); scrollbar-width:thin; scrollbar-color:var(--thumb) transparent; }
   .tabela::-webkit-scrollbar{ width:9px; height:9px; }
+  .tabela::-webkit-scrollbar-button{ display:none; width:0; height:0; }   /* sem as setinhas ▲▼ do navegador */
+  .tabela::-webkit-scrollbar-track, .tabela::-webkit-scrollbar-corner{ background:transparent; }
   .tabela::-webkit-scrollbar-thumb{ background:var(--thumb); border-radius:var(--r-pill); }
   .tabela::-webkit-scrollbar-thumb:hover{ background:var(--thumb-hover); }
   table{ width:100%; border-collapse:collapse; font-size:13.5px; }
@@ -398,6 +400,10 @@
     .card, .bloco, .kpi, .regra, .passo, .tabela{ box-shadow:none !important; }
     .meter-fill, .status-tag, .badge, .passo .n, .destaque-regra, .atencao li{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   }
+
+  .regra ul.notas{ margin:10px 0 0; padding-left:18px; font-size:12.5px; line-height:1.55; color:var(--text-muted); }
+  .regra ul.notas li{ margin-bottom:5px; }
+  .regra ul.notas b{ color:var(--text); font-weight:600; }
 
   /* ============================================================
      Tema claro/escuro + tela de login (split screen)
@@ -701,7 +707,11 @@
                 <tr><td>Guardian</td><td>150 contratos</td><td colspan="3" class="mut">sem subgrupos</td></tr>
               </tbody>
             </table>
-            <p>Limite inferior inclusive, superior exclusive. SG1 não tem piso e SG3 não tem teto. Cada subgrupo comporta 10 contratos por onboarder; se todos estiverem no limite, vale a menor carteira total.</p>
+            <ul class="notas" id="notasSegmentacao">
+              <li><b>Faixas:</b> o valor inicial de cada faixa já pertence a ela, e o valor final pertence à faixa seguinte. Ex.: no N2-N3, R$300k é SG2, não SG1.</li>
+              <li><b>Extremos:</b> o SG1 não tem valor mínimo e o SG3 não tem valor máximo.</li>
+              <li><b>Limite por subgrupo:</b> cada onboarder aceita até 10 contratos por subgrupo. Se todos os elegíveis da etapa estiverem com 10 no subgrupo do contrato, a atribuição vai para quem tem a menor carteira total. Elegíveis são os onboarders do POD do Closer ou, na etapa de outro POD, os do mesmo nível, sempre com a carteira total abaixo do limite. Guardiões não usam subgrupos.</li>
+            </ul>
             <p>Status: <span class="status-tag st-ok">tranquilo</span> abaixo de 70% · <span class="status-tag st-atencao">atenção</span> 70% a 99% · <span class="status-tag st-limite">no limite</span> 100% · <span class="status-tag st-acima">acima do limite</span> mais de 100%.</p>
           </section>
           <section class="regra">
