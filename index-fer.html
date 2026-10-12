@@ -518,8 +518,15 @@
   .conta-linha .conta-atual{ margin:0; }
   .link-btn{ flex:none; padding:4px; font-size:13px; font-weight:600; color:var(--text); background:none; text-decoration:underline; text-underline-offset:3px; }
   .link-btn:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
-  .campo textarea{ width:100%; min-height:96px; padding:var(--sp-3); font:inherit; color:var(--text); background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--r-md); resize:vertical; }
-  .campo textarea:focus-visible{ outline:2px solid var(--focus); outline-offset:1px; }
+  .rico-editor{ width:100%; min-height:110px; max-height:320px; overflow:auto; padding:var(--sp-3); font:inherit; line-height:1.45; color:var(--text); background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--r-md); overflow-wrap:anywhere; }
+  .rico-editor:focus-visible{ outline:2px solid var(--focus); outline-offset:1px; }
+  .rico-editor img{ display:block; max-width:100%; height:auto; margin:6px 0; border-radius:4px; }
+  .rico-editor:empty::before{ content:attr(data-vazio); color:var(--text-muted); pointer-events:none; }
+  .rico-editor.somente-leitura{ background:var(--surface-sunken); cursor:default; }
+  .rico-bar{ display:flex; align-items:center; flex-wrap:wrap; gap:var(--sp-3); margin-top:6px; font-size:12px; color:var(--text-muted); }
+  .rico-bar button{ padding:5px 10px; font-size:13px; font-weight:600; color:var(--text); background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--r-pill); cursor:pointer; }
+  .rico-bar button:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  .rico-msg{ margin-top:4px; font-size:12px; color:var(--maroon); }
   .campos-outros{ margin:var(--sp-3) 0; font-size:13px; }
   .campos-outros summary{ cursor:pointer; color:var(--text-muted); }
   .campos-outros .campo{ margin-top:var(--sp-3); }
@@ -1662,6 +1669,109 @@
   function mkEl(tag, cls, txt){ const e = document.createElement(tag); if (cls) e.className = cls; if (txt !== undefined) e.textContent = txt; return e; }
   function marcarSujo(){ camposDirty = true; camposOk.style.display = 'none'; }
 
+  // ── campo de texto rico: texto + imagens embutidas (data URI), comprimidas para caber no limite do campo ──
+  const RICO_IMG_MAX = 3;
+  const RICO_IMG = /^data:image\/(?:png|jpeg|gif);base64,[A-Za-z0-9+\/=]+$/;
+  function escHtml(t){ return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+  function serializarRico(no){
+    let h = '';
+    no.childNodes.forEach(n => {
+      if (n.nodeType === 3) h += escHtml(n.nodeValue.replace(/\u00a0/g, ' '));
+      else if (n.nodeName === 'BR') h += '<br>';
+      else if (n.nodeName === 'IMG') { const src = n.getAttribute('src') || ''; if (RICO_IMG.test(src)) h += '<img src="' + src + '" alt="imagem">'; }
+      else if (n.nodeType === 1) {
+        const dentro = serializarRico(n);
+        if (/^(DIV|P)$/.test(n.nodeName) && h && !/<br>$/.test(h)) h += '<br>';
+        h += dentro;
+      }
+    });
+    return h;
+  }
+  function limparRico(h){ return h.replace(/(<br>)+$/, ''); }
+
+  async function comprimirImagem(arquivo, maxChars){
+    const url = URL.createObjectURL(arquivo);
+    try {
+      const im = new Image();
+      await new Promise((ok, erro) => { im.onload = ok; im.onerror = () => erro(new Error('Não foi possível ler a imagem.')); im.src = url; });
+      let larg = Math.min(im.naturalWidth || 1, 1000);
+      while (larg >= 240) {
+        const alt = Math.max(1, Math.round((im.naturalHeight || 1) * larg / (im.naturalWidth || 1)));
+        const cv = document.createElement('canvas'); cv.width = larg; cv.height = alt;
+        const cx = cv.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, larg, alt); cx.drawImage(im, 0, 0, larg, alt);
+        for (const q of [0.72, 0.55, 0.4, 0.3]) {
+          const d = cv.toDataURL('image/jpeg', q);
+          if (d.length <= maxChars) return d;
+        }
+        larg = Math.round(larg * 0.75);
+      }
+      throw new Error('A imagem não cabe no espaço que sobrou no campo. Use um print menor ou apague outra imagem.');
+    } finally { URL.revokeObjectURL(url); }
+  }
+
+  function criarEditorRico(c){
+    const limite = Math.max(4000, Number(c.tamanho) || 32000);
+    const ed = document.createElement('div');
+    ed.className = 'rico-editor';
+    ed.setAttribute('role', 'textbox');
+    ed.setAttribute('aria-multiline', 'true');
+    ed.dataset.vazio = 'Escreva e cole prints aqui (Ctrl+V)';
+    const preenchido = !c.vazio;   // já tem conteúdo no Salesforce: mostra e não mexe
+    const barra = document.createElement('div'); barra.className = 'rico-bar';
+    const msg = document.createElement('div'); msg.className = 'rico-msg'; msg.setAttribute('role', 'status');
+    ed._extra = document.createElement('div'); ed._extra.appendChild(barra); ed._extra.appendChild(msg);
+
+    if (preenchido) {
+      ed.contentEditable = 'false'; ed.classList.add('somente-leitura');
+      ed.textContent = c.valor || '';
+      barra.appendChild(mkEl('span', '', 'Já preenchido no Salesforce — não será alterado aqui.'));
+      Object.defineProperty(ed, 'value', { get(){ return '__manter__'; }, set(){} });
+      return ed;
+    }
+    ed.contentEditable = 'true';
+    const arq = document.createElement('input'); arq.type = 'file'; arq.accept = 'image/png,image/jpeg,image/gif'; arq.multiple = true; arq.hidden = true;
+    const btn = mkEl('button', '', 'Anexar imagem'); btn.type = 'button';
+    const uso = mkEl('span', '', '');
+    barra.appendChild(btn); barra.appendChild(uso); barra.appendChild(arq);
+    btn.addEventListener('click', () => arq.click());
+    arq.addEventListener('change', () => { [...arq.files].forEach(inserir); arq.value = ''; });
+
+    const atual = () => limparRico(serializarRico(ed));
+    function atualizarUso(){
+      const n = ed.querySelectorAll('img').length, pct = Math.min(100, Math.round(atual().length * 100 / limite));
+      uso.textContent = (n ? n + ' imagem(ns) · ' : '') + 'espaço usado: ' + pct + '%';
+    }
+    async function inserir(arquivo){
+      msg.textContent = '';
+      if (!/^image\//.test(arquivo.type)) { msg.textContent = 'Só imagens (PNG, JPG ou GIF).'; return; }
+      if (ed.querySelectorAll('img').length >= RICO_IMG_MAX) { msg.textContent = 'Máximo de ' + RICO_IMG_MAX + ' imagens por campo.'; return; }
+      try {
+        const sobra = Math.min(limite - 1500 - atual().length - 40, Math.max(8000, Math.round(limite * 0.7)));
+        const dados = await comprimirImagem(arquivo, sobra);
+        const sel = window.getSelection();
+        if (!sel.rangeCount || !ed.contains(sel.anchorNode)) { const r = document.createRange(); r.selectNodeContents(ed); r.collapse(false); sel.removeAllRanges(); sel.addRange(r); }
+        ed.focus();
+        document.execCommand('insertHTML', false, '<img src="' + dados + '" alt="imagem">');
+        marcarSujo(); atualizarUso();
+      } catch (e) { msg.textContent = e.message; }
+    }
+    ed.addEventListener('paste', ev => {
+      const dt = ev.clipboardData; if (!dt) return;
+      const imgs = [...(dt.files || [])].filter(a => /^image\//.test(a.type));
+      ev.preventDefault();
+      if (imgs.length) imgs.forEach(inserir);
+      else document.execCommand('insertText', false, dt.getData('text/plain'));
+    });
+    ed.addEventListener('drop', ev => {
+      ev.preventDefault();
+      [...(ev.dataTransfer ? ev.dataTransfer.files : [])].filter(a => /^image\//.test(a.type)).forEach(inserir);
+    });
+    ed.addEventListener('input', () => { marcarSujo(); atualizarUso(); });
+    Object.defineProperty(ed, 'value', { get(){ return atual(); }, set(){} });
+    atualizarUso();
+    return ed;
+  }
+
   function criarControle(c){
     let el;
     if (c.tipo === 'lista') {
@@ -1671,8 +1781,7 @@
       // lista dependente (ex.: Negotiated Fee só aceita certos valores conforme a Price Policy)
       if (c.depende_de) { el.dataset.dependeDe = c.depende_de; el._opcoes = c.opcoes || []; }
     } else if (c.tipo === 'texto_longo') {
-      el = document.createElement('textarea');
-      el.rows = 4; el.maxLength = 4000;
+      return criarEditorRico(c);
     } else if (c.tipo === 'booleano') {
       el = document.createElement('select');
       el.appendChild(new Option('Selecione…', ''));
@@ -1717,8 +1826,10 @@
     if (c.vazio) lab.appendChild(mkEl('span', 'tag-vazio', 'vazio'));
     const el = criarControle(c);
     lab.htmlFor = el.id = 'campo_' + c.api;
+    if (el.classList.contains('rico-editor')) { lab.id = 'rotulo_' + c.api; el.setAttribute('aria-labelledby', lab.id); }
     wrap.appendChild(lab);
     wrap.appendChild(el);
+    if (el._extra) wrap.appendChild(el._extra);
     (destino || camposForm).appendChild(wrap);
     controlesCampos[c.api] = el;
   }
@@ -1860,7 +1971,7 @@
       if (!getSession()) return;
       // o Salesforce não diz qual campo recusou ("Bad request"): aponta o suspeito mais comum
       camposError.textContent = /bad request/i.test(e.message)
-        ? 'O Salesforce recusou um dos valores. Confira a Price Policy e o Negotiated Fee: o fee depende da política escolhida.'
+        ? 'O Salesforce recusou um dos valores. Confira a Price Policy e o Negotiated Fee (o fee depende da política) e o tamanho das imagens.'
         : 'Não foi possível salvar. ' + e.message;
       camposError.classList.add('show');
     } finally {
