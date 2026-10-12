@@ -378,14 +378,14 @@
      Onboarding Assignment — atribuição em Kanban (espelho do Funil do Salesforce)
      ============================================================ */
   :root{
-    --col-bg:#FFFFFF; --card-bg:#FFFFFF; --card-border:#E2DED7;
+    --col-bg:#ECEAE5; --card-bg:#FFFFFF; --card-border:#D9D5CD; --card-sh:0 1px 2px rgba(13,13,13,.08); --ok-bar:#1E7A3D;
     --teal:#0B7A6C;
     --ok-bg:rgba(30,122,61,.12); --ok-text:#17632F;
     --mute-bg:#EFECE6; --mute-text:rgba(13,13,13,.72);
     --warn:#8A4B00; --overlay:rgba(13,13,13,.45);
   }
   :root[data-theme="dark"]{
-    --col-bg:#1C1C1C; --card-bg:#262626; --card-border:#3A3A3A;
+    --col-bg:#181818; --card-bg:#2D2D2D; --card-border:#4D4D4D; --card-sh:0 1px 2px rgba(0,0,0,.45); --ok-bar:#6FD08C;
     --teal:#5CD6C0;
     --ok-bg:rgba(111,208,140,.16); --ok-text:#6FD08C;
     --mute-bg:#333333; --mute-text:rgba(245,243,239,.74);
@@ -393,16 +393,27 @@
   }
   body:not(.is-login){ display:block; padding:0; }
   body:not(.is-login) .frame{ max-width:none; padding:0; }
-  #appScreen{ display:flex; flex-direction:column; height:100vh; padding:16px 24px 8px; gap:10px; }
+  #appScreen{ display:flex; flex-direction:column; height:100vh; padding:16px 24px 16px; gap:10px; }
 
-  .app-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:var(--sp-4); flex-wrap:wrap; padding-right:56px; }
+  .app-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:var(--sp-4); flex-wrap:wrap; padding-right:112px; }
   .app-h1{ font-size:22px; font-weight:700; letter-spacing:-.01em; text-align:left; margin:0; line-height:1.2; }
   .app-sub{ margin:2px 0 0; font-size:14px; font-weight:500; color:var(--text); }
   .app-status{ margin:2px 0 0; font-size:12px; color:var(--text-muted); }
   .app-tools{ flex:1 1 640px; display:flex; align-items:center; justify-content:flex-end; gap:var(--sp-2); flex-wrap:wrap; }
   .search{ position:relative; display:block; width:min(380px,100%); margin:0; }
   .search svg{ position:absolute; left:10px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:var(--text-muted); pointer-events:none; }
-  .search input{ width:100%; padding:9px 12px 9px 34px; font-size:14px; }
+  .search input{ width:100%; padding:9px 34px 9px 34px; font-size:14px; }
+  input[type="search"]::-webkit-search-cancel-button{ -webkit-appearance:none; appearance:none; }
+  .search-clear{ position:absolute; right:4px; top:50%; transform:translateY(-50%); width:28px; height:28px; padding:0; display:grid; place-items:center; font-size:18px; line-height:1; color:var(--text-muted); background:none; border-radius:var(--r-sm); }
+  .search-clear:hover{ color:var(--text); }
+  .search-clear:focus-visible{ outline:2px solid var(--focus); outline-offset:1px; }
+  .chip-filtro{ display:inline-flex; align-items:center; gap:6px; padding:8px 12px; font-size:13px; font-weight:600; color:var(--text); background:var(--surface); border:1.5px solid var(--field-border); border-radius:var(--r-pill); white-space:nowrap; }
+  .chip-filtro:hover{ border-color:var(--ok-bar); }
+  .chip-filtro[aria-pressed="true"]{ background:var(--ok-bg); border-color:var(--ok-bar); color:var(--ok-text); }
+  .chip-filtro:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  .btn-quiet{ padding:8px 10px; font-size:13px; font-weight:600; color:var(--text-muted); background:none; border-radius:var(--r-sm); text-decoration:underline; text-decoration-color:transparent; text-underline-offset:3px; }
+  .btn-quiet:hover{ color:var(--text); text-decoration-color:currentColor; }
+  .btn-quiet:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
   input[type="search"]{ font-family:inherit; color:var(--text); background:var(--field-bg); border:1.5px solid var(--field-border); border-radius:var(--r-sm); outline:none; }
   input[type="search"]:focus-visible{ outline:2px solid var(--orange); outline-offset:1px; border-color:var(--orange); }
   .icon-btn{ width:38px; height:38px; padding:0; display:grid; place-items:center; border-radius:var(--r-sm); background:var(--surface); color:var(--text); border:1.5px solid var(--field-border); }
@@ -411,24 +422,24 @@
   .icon-btn svg{ width:18px; height:18px; display:block; }
   .icon-btn.girando svg{ animation:spin .8s linear infinite; }
   .btn-sm{ width:auto; margin:0; padding:9px 12px; }
-  .app-tools .who{ margin-left:var(--sp-2); }
-  .flow-row{ max-width:420px; }
-  .flow-row .stepper{ margin-bottom:4px; }
-  .flow-row .step-labels{ margin-bottom:0; }
 
   /* barra de estágios (path) + colunas: rolam juntas na horizontal quando a tela é estreita */
   .board-scroll{ flex:1; min-height:0; display:flex; flex-direction:column; overflow-x:auto; }
   @media (max-width:1023px){ .path, .board{ min-width:1310px; } }
-  .path{ flex:none; display:flex; background:var(--orange); color:var(--black); border-radius:var(--r-md) var(--r-md) 0 0; overflow:hidden; }
-  .path-step{ position:relative; flex:1 1 0; min-width:0; display:flex; align-items:center; justify-content:center; gap:6px; padding:10px 14px; font-size:13px; font-weight:700; white-space:nowrap; }
-  .path-step span:first-child{ overflow:hidden; text-overflow:ellipsis; }
-  .path-step:not(:last-child)::after{ content:""; position:absolute; right:2px; top:50%; width:10px; height:10px; border-top:2px solid var(--black); border-right:2px solid var(--black); transform:translate(-4px,-50%) rotate(45deg); opacity:.7; }
+  .path{ flex:none; display:flex; background:var(--surface); color:var(--text); border:1px solid var(--border); border-bottom-color:var(--border-strong); border-radius:var(--r-md) var(--r-md) 0 0; }
+  .path-step{ position:relative; flex:1 1 0; min-width:0; display:flex; align-items:baseline; justify-content:center; gap:6px; padding:6px 14px 6px; font-size:13px; white-space:nowrap; box-shadow:inset 0 -3px 0 var(--orange); }
+  .path-step + .path-step{ border-left:1px solid var(--border); }
+  .ps-nome{ min-width:0; overflow:hidden; text-overflow:ellipsis; font-weight:700; }
   .path-count{ font-weight:600; }
+  .path-count::before, .ps-total:not(:empty)::before{ content:"·"; margin-right:6px; font-weight:400; color:var(--text-muted); }
+  .ps-total{ flex:none; font-size:12.5px; font-weight:500; color:var(--text-muted); }
+  .path-step:not(:last-child)::after{ content:""; position:absolute; right:-5px; top:50%; z-index:1; width:8px; height:8px; background:var(--surface); border-top:1.5px solid var(--text-muted); border-right:1.5px solid var(--text-muted); transform:translateY(-50%) rotate(45deg); }
   .board{ flex:1; min-height:0; display:flex; background:var(--col-bg); border:1px solid var(--border); border-top:0; border-radius:0 0 var(--r-md) var(--r-md); overflow:hidden; }
   .col{ flex:1 1 0; min-width:0; display:flex; flex-direction:column; background:var(--col-bg); border-left:1px solid var(--border); }
   .col:first-child{ border-left:0; }
-  .col-total{ flex:none; text-align:center; font-size:20px; font-weight:600; color:var(--teal); padding:12px 10px 8px; }
-  .col-body{ flex:1; min-height:0; overflow-y:auto; padding:2px 10px 12px; display:flex; flex-direction:column; gap:10px; scrollbar-width:thin; scrollbar-color:var(--border-strong) transparent; }
+  .col-foot{ flex:none; padding:6px 10px 10px; }
+  .col-foot .btn-ghost{ width:100%; margin:0; padding:7px 10px; }
+  .col-body{ flex:1; min-height:0; overflow-y:auto; padding:10px 10px 12px; display:flex; flex-direction:column; gap:10px; scrollbar-width:thin; scrollbar-color:var(--border-strong) transparent; }
   .col-body::-webkit-scrollbar{ width:8px; }
   .col-body::-webkit-scrollbar-thumb{ background:var(--border-strong); border-radius:var(--r-pill); }
   .col-body::-webkit-scrollbar-track{ background:transparent; }
@@ -437,33 +448,61 @@
   .board-erro .btn-ghost{ width:auto; margin:0; padding:9px 16px; }
 
   /* card da oportunidade */
-  .opp-card{ position:relative; display:flex; flex-direction:column; gap:3px; padding:10px 12px; background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--r-md); }
+  .opp-card{ position:relative; display:flex; flex-direction:column; gap:3px; padding:10px 12px; background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--r-md); box-shadow:var(--card-sh); }
   .opp-card:hover{ border-color:var(--field-border); }
+  .opp-card.is-ok{ border-left:3px solid var(--ok-bar); padding-left:11px; }
+  .opp-card.is-andamento{ border-left:3px solid var(--ink); padding-left:11px; }
   .opp-card.is-sel{ border-color:var(--orange); box-shadow:inset 3px 0 0 var(--orange); }
+  .opp-card.is-off{ opacity:.7; }
   .opp-card:has(button.opp-name:focus-visible){ outline:2px solid var(--focus); outline-offset:2px; }
-  .opp-card-top{ display:flex; align-items:flex-start; gap:6px; }
-  .opp-name{ flex:1; min-width:0; text-align:left; background:none; padding:0; font-family:inherit; font-size:14px; font-weight:700; line-height:1.3; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .opp-card-top{ display:flex; align-items:baseline; gap:8px; }
+  .opp-name{ flex:1; min-width:0; text-align:left; background:none; padding:0; font-family:inherit; font-size:14px; font-weight:600; line-height:1.3; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-decoration:none; }
   button.opp-name{ cursor:pointer; }
-  button.opp-name:hover{ text-decoration:underline; text-underline-offset:3px; }
+  button.opp-name:hover, a.opp-name:hover{ text-decoration:underline; text-underline-offset:3px; }
+  a.opp-name{ cursor:pointer; text-decoration:none; }
+  a.opp-name:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
   button.opp-name:focus-visible{ outline:none; }
   button.opp-name::after{ content:""; position:absolute; inset:0; border-radius:var(--r-md); }
-  .opp-menu{ position:relative; z-index:2; flex:none; width:26px; height:26px; padding:0; display:grid; place-items:center; border-radius:var(--r-sm); background:var(--surface); color:var(--text); border:1px solid var(--card-border); }
-  .opp-menu svg{ width:12px; height:12px; display:block; }
-  .opp-menu:hover{ border-color:var(--orange); }
-  .opp-menu:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
-  .opp-valor{ font-size:13px; color:var(--text); }
-  .opp-conta{ font-size:13px; font-weight:500; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .opp-meta{ font-size:12px; color:var(--text-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .opp-rodape{ display:flex; align-items:center; justify-content:space-between; gap:var(--sp-2); margin-top:6px; min-height:22px; }
+  .opp-valor{ flex:none; font-size:14px; font-weight:700; color:var(--text); white-space:nowrap; text-align:right; }
+  .opp-conta{ font-size:12.5px; color:var(--text-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .opp-idrow{ display:flex; align-items:center; gap:4px; min-height:22px; font-family:var(--font-mono); font-size:11.5px; color:var(--text-muted); }
+  .opp-hid{ overflow-wrap:anywhere; }
+  .copy-btn{ position:relative; z-index:2; flex:none; width:22px; height:22px; padding:0; display:grid; place-items:center; color:var(--text-muted); background:none; border-radius:var(--r-sm); }
+  .copy-btn:hover{ color:var(--text); background:var(--surface-sunken); }
+  .copy-btn:focus-visible{ outline:2px solid var(--focus); outline-offset:1px; }
+  .copy-btn svg{ width:13px; height:13px; display:block; }
+  .copiado{ font-family:var(--font-sans); font-size:11.5px; font-weight:600; color:var(--ok-text); }
+  mark.hit{ background:var(--yellow); color:var(--black); border-radius:2px; padding:0 1px; }
+  .opp-rodape{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px; margin-top:6px; min-height:26px; }
+  .opp-rodape-esq{ display:flex; align-items:center; gap:6px; min-width:0; flex-wrap:wrap; }
   .badge-sit{ font-size:11.5px; font-weight:700; line-height:1.2; padding:3px 8px; border-radius:var(--r-pill); }
   .badge-ok{ background:var(--ok-bg); color:var(--ok-text); }
-  .badge-mute{ background:var(--mute-bg); color:var(--mute-text); }
   .badge-andamento{ background:var(--ink); color:var(--on-ink); }
-  .opp-alerta{ position:relative; z-index:2; display:grid; place-items:center; color:var(--warn); }
-  .opp-alerta svg{ width:16px; height:16px; display:block; }
-  .opp-card.is-off{ background:var(--surface-sunken); }
-  .opp-card.is-off .opp-name, .opp-card.is-off .opp-valor, .opp-card.is-off .opp-conta{ color:var(--text-muted); }
-  .opp-card.is-off .opp-name{ font-weight:600; }
+  .opp-acao{ position:relative; z-index:2; padding:5px 12px; font-size:12.5px; font-weight:700; line-height:1.2; color:var(--black); background:var(--orange); border-radius:var(--r-sm); }
+  .opp-acao:hover{ background:var(--orange-hover); }
+  .opp-acao.sec{ color:var(--text); background:transparent; border:1.5px solid var(--field-border); padding:4px 10px; }
+  .opp-acao:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  .opp-alerta, .opp-estado{ position:relative; z-index:2; display:grid; place-items:center; }
+  .opp-alerta{ color:var(--warn); }
+  .opp-estado{ color:var(--text-muted); }
+  .opp-alerta svg, .opp-estado svg{ width:16px; height:16px; display:block; }
+
+  /* stepper dentro do painel lateral */
+  .drawer-steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px; padding:var(--sp-3) var(--sp-5) 0; }
+  .dstep{ display:flex; flex-direction:column; align-items:center; gap:4px; min-width:0; }
+  .dstep .step-dot{ width:100%; flex:none; }
+  .dstep span{ max-width:100%; font-size:12px; font-weight:600; color:var(--text-muted); text-align:center; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+  /* menu do usuário */
+  .user-menu{ position:fixed; top:16px; right:64px; z-index:30; }
+  .avatar-btn{ width:40px; height:40px; padding:0; display:grid; place-items:center; font-size:14px; font-weight:700; letter-spacing:.02em; color:var(--black); background:var(--orange); border-radius:var(--r-pill); }
+  .avatar-btn:hover{ background:var(--orange-hover); }
+  .avatar-btn:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  .user-pop{ position:absolute; top:46px; right:0; width:max-content; min-width:230px; max-width:min(340px,90vw); padding:6px; background:var(--surface); border:1px solid var(--field-border); border-radius:var(--r-sm); box-shadow:0 4px 14px rgba(13,13,13,.16); }
+  .user-email{ padding:8px 10px; font-size:13px; font-weight:600; overflow-wrap:break-word; border-bottom:1px solid var(--border); margin-bottom:4px; }
+
+  /* aviso rápido */
+  .toast{ position:fixed; left:50%; bottom:24px; z-index:70; max-width:min(520px,calc(100vw - 32px)); padding:12px 16px; font-size:14px; font-weight:600; color:var(--on-ink); background:var(--ink); border-radius:var(--r-md); box-shadow:0 4px 16px rgba(13,13,13,.3); transform:translateX(-50%); }
 
   /* carregando (sem gradiente: só pulsa) */
   .skel{ background:var(--border); border-radius:var(--r-sm); animation:pulso 1.2s ease-in-out infinite; }
@@ -497,9 +536,6 @@
 
   [hidden]{ display:none !important; }
   .sf-link{ color:inherit; text-decoration:underline; text-underline-offset:3px; overflow-wrap:anywhere; }
-  a.opp-name{ cursor:pointer; text-decoration:underline; text-decoration-color:var(--text-muted); text-underline-offset:3px; }
-  a.opp-name:hover{ text-decoration-color:currentColor; }
-  a.opp-name:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
   .sf-link:hover{ text-decoration-thickness:2px; }
   .sf-link:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
   /* resultado da atribuição, enxuto */
@@ -530,7 +566,7 @@
   .campos-outros{ margin:var(--sp-3) 0; font-size:13px; }
   .campos-outros summary{ cursor:pointer; color:var(--text-muted); }
   .campos-outros .campo{ margin-top:var(--sp-3); }
-  @media (max-width:1023px){ #appScreen{ padding:12px 16px 8px; } .app-head{ padding-right:56px; } }
+  @media (max-width:1023px){ #appScreen{ padding:12px 16px 8px; } .app-head{ padding-right:112px; } }
   @media (prefers-reduced-motion:reduce){ .drawer, .drawer-overlay{ transition:none; } .skel, .icon-btn.girando svg{ animation:none; } }
 </style>
 
@@ -593,39 +629,25 @@
           <label class="search" for="oppSearch">
             <span class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Buscar oportunidades</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-            <input type="search" id="oppSearch" placeholder="Buscar por nome, cliente ou Hotmart ID" autocomplete="off" />
+            <input type="search" id="oppSearch" placeholder="Buscar por nome, cliente ou Hotmart ID  ( / )" autocomplete="off" />
+            <button type="button" class="search-clear" id="oppSearchClear" aria-label="Limpar busca" title="Limpar busca" hidden>×</button>
           </label>
+          <button type="button" class="chip-filtro" id="chipDisp" aria-pressed="false"><span>Disponíveis para atribuir (<span id="chipDispN">0</span>)</span></button>
           <button type="button" class="icon-btn" id="oppRefreshBtn" aria-label="Atualizar oportunidades" title="Atualizar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 4v5h-5"/></svg></button>
-          <button type="button" class="btn-ghost btn-sm" id="manualBtn">Atribuir por ID</button>
-          <div class="who">Logado como <b id="loggedEmail"></b> · <button class="logout-link" id="logoutBtn">sair</button></div>
+          <button type="button" class="btn-quiet" id="manualBtn">Atribuir por ID</button>
         </div>
       </header>
 
-      <div class="flow-row">
-        <div class="stepper">
-          <div class="step-dot" id="dot1"></div>
-          <div class="step-dot" id="dot2"></div>
-          <div class="step-dot" id="dot3"></div>
-        </div>
-        <div class="step-labels">
-          <span>Atribuir</span>
-          <span>Agendar welcome</span>
-          <span>Closed Won</span>
-        </div>
-      </div>
-
       <div class="board-scroll">
         <div class="path" id="path" role="list" aria-label="Estágios do funil">
-        <div class="path-step" role="listitem"><span>Issues identified</span><span class="path-count">(0)</span></div>
-        <div class="path-step" role="listitem"><span>SQL</span><span class="path-count">(0)</span></div>
-        <div class="path-step" role="listitem"><span>Offer presented</span><span class="path-count">(0)</span></div>
-        <div class="path-step" role="listitem"><span>Contract Sent</span><span class="path-count">(0)</span></div>
-        <div class="path-step" role="listitem"><span>Closed Won</span><span class="path-count">(0)</span></div>
+        <div class="path-step" role="listitem"><span class="ps-nome">Issues identified</span><span class="path-count">0</span><span class="ps-total">R$ 0</span></div>
+        <div class="path-step" role="listitem"><span class="ps-nome">SQL</span><span class="path-count">0</span><span class="ps-total">R$ 0</span></div>
+        <div class="path-step" role="listitem"><span class="ps-nome">Offer presented</span><span class="path-count">0</span><span class="ps-total">R$ 0</span></div>
+        <div class="path-step" role="listitem"><span class="ps-nome">Contract Sent</span><span class="path-count">0</span><span class="ps-total">R$ 0</span></div>
+        <div class="path-step" role="listitem"><span class="ps-nome">Closed Won</span><span class="path-count">0</span><span class="ps-total">R$ 0</span></div>
         </div>
         <div class="board" id="board"></div>
       </div>
-
-      <footer class="app-foot" style="font-size:12px;color:var(--text-muted);text-align:center;">Sales Ops · New Business</footer>
 
       <div class="drawer-overlay" id="drawerOverlay"></div>
       <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
@@ -635,6 +657,11 @@
             <h2 id="drawerTitle">Atribuir onboarder</h2>
           </div>
           <button type="button" class="icon-btn" id="drawerClose" aria-label="Fechar painel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+        </div>
+        <div class="drawer-steps" aria-hidden="true">
+          <div class="dstep"><div class="step-dot" id="dot1"></div><span>Atribuir</span></div>
+          <div class="dstep"><div class="step-dot" id="dot2"></div><span>Agendar welcome</span></div>
+          <div class="dstep"><div class="step-dot" id="dot3"></div><span>Closed Won</span></div>
         </div>
         <div class="drawer-body">
 
@@ -762,6 +789,14 @@
         </div>
       </aside>
       <div class="card-menu" id="cardMenu" role="menu" hidden></div>
+      <div class="user-menu" id="userMenu">
+        <button type="button" class="avatar-btn" id="avatarBtn" aria-haspopup="menu" aria-expanded="false" aria-label="Menu do usuário" title="Menu do usuário"><span id="avatarIni">?</span></button>
+        <div class="user-pop" id="userPop" role="menu" hidden>
+          <div class="user-email" id="loggedEmail"></div>
+          <button type="button" class="menu-item" id="logoutBtn" role="menuitem">Sair</button>
+        </div>
+      </div>
+      <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
     </section>
 
   </div>
@@ -936,6 +971,8 @@
     document.body.classList.remove('is-login');
     appScreen.style.display = 'flex';
     loggedEmail.textContent = email;
+    document.getElementById('avatarIni').textContent = iniciaisDoUsuario();
+    fecharMenuUsuario();
     funilSub.textContent = 'Funil de ' + ((getSession() || {}).nome || email);
     oportunidades = []; atualizadoEm = 0; erroCarga = ''; oppSearch.value = '';   // outra pessoa pode ter entrado: nada do funil anterior
     resetFlow();
@@ -1059,7 +1096,21 @@
   const cardMenu      = document.getElementById('cardMenu');
   const fmtValor = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const fmtTotal = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 });
-  const brl = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+  // formato único de valores em toda a tela: "R$ 120.000" (sem centavos quando for zero)
+  const fmtNum0 = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 });
+  const fmtNum2 = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  function fmtBRL(v){
+    if (v === null || v === undefined || v === '' || !isFinite(Number(v))) return 'R$ —';
+    const n = Number(v);
+    return 'R$ ' + (Math.round(n * 100) % 100 === 0 ? fmtNum0.format(n) : fmtNum2.format(n));
+  }
+  const CW_LIMITE = 5;                 // Closed Won mostra só os mais recentes até o usuário pedir "Ver todos"
+  const AUTO_ATUALIZAR_MS = 3 * 60 * 1000;
+  let cwExpandido = false;
+  let soDisponiveis = false;
+  const ICONE_CADEADO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+  const ICONE_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.8 2.8L16 9.5"/></svg>';
+  const ICONE_COPIAR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>';
   const ICONE_SETA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
   const ICONE_ALERTA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>';
   let oportunidades = [];
@@ -1086,13 +1137,54 @@
     return p;
   }
 
+  // acionável = dá para atribuir agora, ou já está em andamento neste painel
+  const ehAcionavel = o => !motivoIndisponivel(o) || emAndamento(o);
   // só as oportunidades dos 5 estágios do funil, filtradas pela busca (nome, conta e Hotmart ID)
-  function filtradas(){
+  function baseFiltrada(){
     const t = oppSearch.value.trim().toLowerCase();
     return oportunidades.filter(o =>
       ESTAGIOS_FUNIL.some(e => e.chave === chaveEstagio(o)) &&
       (!t || [o.nome, o.conta, o.hotmart_id].some(v => String(v == null ? '' : v).toLowerCase().includes(t)))
     );
+  }
+  function filtradas(){ const b = baseFiltrada(); return soDisponiveis ? b.filter(ehAcionavel) : b; }
+  function atualizarChip(){
+    document.getElementById('chipDispN').textContent = String(baseFiltrada().filter(ehAcionavel).length);
+    chipDisp.setAttribute('aria-pressed', String(soDisponiveis));
+  }
+
+  // texto com o trecho buscado destacado (sempre como texto, nunca como HTML)
+  function comDestaque(el, texto, termo){
+    const t = String(texto == null ? '' : texto);
+    if (!termo) { el.textContent = t; return el; }
+    const baixo = t.toLowerCase(), q = termo.toLowerCase();
+    let i = 0, k;
+    while ((k = baixo.indexOf(q, i)) >= 0) {
+      if (k > i) el.appendChild(document.createTextNode(t.slice(i, k)));
+      el.appendChild(mk('mark', 'hit', t.slice(k, k + q.length)));
+      i = k + q.length;
+    }
+    if (i < t.length) el.appendChild(document.createTextNode(t.slice(i)));
+    return el;
+  }
+
+  function copiarTexto(txt){
+    if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(txt);
+    return new Promise((ok, erro) => {
+      try {
+        const ta = document.createElement('textarea'); ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        const certo = document.execCommand('copy'); ta.remove();
+        certo ? ok() : erro(new Error('copy'));
+      } catch (e) { erro(e); }
+    });
+  }
+
+  function mostrarToast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.hidden = false;
+    clearTimeout(mostrarToast._t);
+    mostrarToast._t = setTimeout(() => { t.hidden = true; }, 4000);
   }
 
   function rotuloTempo(ms){
@@ -1115,44 +1207,65 @@
     const motivo = motivoIndisponivel(o);
     const andamento = emAndamento(o);
     const elegivel = !motivo;
-    const card = mk('article', 'opp-card' + ((elegivel || andamento) ? '' : ' is-off') + ((oppEscolhida && oppEscolhida.opp_id === o.opp_id) ? ' is-sel' : ''));
+    const termo = oppSearch.value.trim();
+    const card = mk('article', 'opp-card' + (andamento ? ' is-andamento' : elegivel ? ' is-ok' : ' is-off') + ((oppEscolhida && oppEscolhida.opp_id === o.opp_id) ? ' is-sel' : ''));
     card.dataset.id = o.opp_id;
     const topo = mk('div', 'opp-card-top');
     const titulo = o.nome || '(sem nome)';
     let nome;
     if (elegivel || andamento) {
-      nome = mk('button', 'opp-name', titulo);
+      nome = mk('button', 'opp-name');
       nome.type = 'button';
       nome.setAttribute('aria-label', (andamento ? 'Continuar o fluxo de ' : 'Atribuir onboarder: ') + titulo);
       nome.addEventListener('click', () => abrirDrawer(o));
     } else {
       // não dá para atribuir: o nome vira link para abrir a Opportunity no Salesforce
-      nome = linkSF(o.opp_id, titulo);
+      nome = linkSF(o.opp_id, '');
       nome.classList.add('opp-name');
       nome.setAttribute('aria-label', titulo + ' (abrir no Salesforce)');
     }
+    comDestaque(nome, titulo, termo);
     nome.title = titulo;
     topo.appendChild(nome);
-    if (elegivel) {
-      const m = mk('button', 'opp-menu');
-      m.type = 'button';
-      m.innerHTML = ICONE_SETA;
-      m.setAttribute('aria-label', 'Ações da oportunidade ' + titulo);
-      m.setAttribute('aria-haspopup', 'menu');
-      m.setAttribute('aria-expanded', 'false');
-      m.addEventListener('click', ev => { ev.stopPropagation(); abrirMenu(m, o); });
-      topo.appendChild(m);
-    }
+    topo.appendChild(mk('span', 'opp-valor', fmtBRL(o.amount_12m)));
     card.appendChild(topo);
-    card.appendChild(mk('div', 'opp-valor', o.amount_12m == null ? 'BRL —' : 'BRL ' + fmtValor.format(o.amount_12m)));
-    const conta = mk('div', 'opp-conta', o.conta || 'Conta não informada');
-    conta.title = o.conta || '';
-    card.appendChild(conta);
-    card.appendChild(mk('div', 'opp-meta', (o.estagio || '—') + ' · Hotmart ID ' + (o.hotmart_id || '—')));
+    if (o.conta) {
+      const conta = comDestaque(mk('div', 'opp-conta'), o.conta, termo);
+      conta.title = o.conta;
+      card.appendChild(conta);
+    }
+    if (o.hotmart_id) {
+      const linha = mk('div', 'opp-idrow');
+      linha.appendChild(comDestaque(mk('span', 'opp-hid'), o.hotmart_id, termo));
+      const cp = mk('button', 'copy-btn');
+      cp.type = 'button'; cp.innerHTML = ICONE_COPIAR;
+      cp.setAttribute('aria-label', 'Copiar Hotmart ID ' + o.hotmart_id);
+      cp.title = 'Copiar Hotmart ID';
+      const aviso = mk('span', 'copiado', '');
+      aviso.setAttribute('role', 'status');
+      cp.addEventListener('click', ev => {
+        ev.stopPropagation();
+        copiarTexto(String(o.hotmart_id)).then(() => {
+          aviso.textContent = 'Copiado';
+          clearTimeout(cp._t);
+          cp._t = setTimeout(() => { aviso.textContent = ''; }, 1500);
+        }).catch(() => { aviso.textContent = 'Não foi possível copiar'; clearTimeout(cp._t); cp._t = setTimeout(() => { aviso.textContent = ''; }, 2500); });
+      });
+      linha.appendChild(cp); linha.appendChild(aviso);
+      card.appendChild(linha);
+    }
     const rodape = mk('div', 'opp-rodape');
-    if (andamento) rodape.appendChild(mk('span', 'badge-sit badge-andamento', 'Em andamento · continuar'));
-    else if (elegivel) rodape.appendChild(mk('span', 'badge-sit badge-ok', 'Disponível para atribuir'));
-    else rodape.appendChild(mk('span', 'badge-sit badge-mute', motivo));
+    const esq = mk('div', 'opp-rodape-esq');
+    if (andamento) esq.appendChild(mk('span', 'badge-sit badge-andamento', 'Em andamento'));
+    else if (elegivel) esq.appendChild(mk('span', 'badge-sit badge-ok', 'Disponível para atribuir'));
+    else {
+      const ic = mk('span', 'opp-estado');
+      ic.innerHTML = ESTAGIOS_ENCERRADOS.includes(chaveEstagio(o)) ? ICONE_CHECK : ICONE_CADEADO;
+      ic.title = motivo;
+      ic.setAttribute('role', 'img');
+      ic.setAttribute('aria-label', motivo);
+      esq.appendChild(ic);
+    }
     const pend = ESTAGIOS_ENCERRADOS.includes(chaveEstagio(o)) ? [] : pendencias(o);
     if (pend.length) {
       const a = mk('span', 'opp-alerta');
@@ -1160,7 +1273,15 @@
       a.title = pend.join(' · ');
       a.setAttribute('role', 'img');
       a.setAttribute('aria-label', 'Pendência: ' + pend.join(', '));
-      rodape.appendChild(a);
+      esq.appendChild(a);
+    }
+    rodape.appendChild(esq);
+    if (elegivel || andamento) {
+      const b = mk('button', 'opp-acao' + (andamento ? ' sec' : ''), andamento ? 'Continuar' : 'Atribuir');
+      b.type = 'button';
+      b.setAttribute('aria-label', (andamento ? 'Continuar o fluxo de ' : 'Atribuir onboarder: ') + titulo);
+      b.addEventListener('click', ev => { ev.stopPropagation(); abrirDrawer(o); });
+      rodape.appendChild(b);
     }
     card.appendChild(rodape);
     return card;
@@ -1175,12 +1296,13 @@
 
   function renderBoard(){
     const lista = filtradas();
-    const contagens = pathEl.querySelectorAll('.path-count');
+    const passos = [...pathEl.querySelectorAll('.path-step')];
     const esqueleto = carregando && oportunidades.length === 0;
     const rolagens = [...boardEl.querySelectorAll('.col-body')].map(e => e.scrollTop);   // as colunas são recriadas: guarda a posição de cada uma
     boardEl.innerHTML = '';
+    atualizarChip();
     if (erroCarga) {
-      contagens.forEach(c => { c.textContent = '(–)'; });
+      passos.forEach(p => { p.querySelector('.path-count').textContent = '–'; p.querySelector('.ps-total').textContent = ''; p.removeAttribute('title'); });
       const erro = mk('div', 'board-erro');
       erro.appendChild(mk('div', '', 'Não foi possível consultar o Salesforce. ' + erroCarga));
       const b = mk('button', 'btn-ghost', 'Tentar novamente');
@@ -1191,18 +1313,34 @@
       atualizarStatus();
       return;
     }
+    const rank = o => ehAcionavel(o) ? 0 : 1;
     ESTAGIOS_FUNIL.forEach((e, i) => {
-      const itens = lista.filter(o => chaveEstagio(o) === e.chave);
+      let itens = lista.filter(o => chaveEstagio(o) === e.chave);
       const soma = itens.reduce((t, o) => t + (Number(o.amount_12m) || 0), 0);
-      contagens[i].textContent = esqueleto ? '(–)' : '(' + itens.length + ')';
+      const total = fmtBRL(soma);
+      passos[i].querySelector('.path-count').textContent = esqueleto ? '–' : String(itens.length);
+      passos[i].querySelector('.ps-total').textContent = esqueleto ? '' : total;
+      passos[i].title = esqueleto ? e.nome : e.nome + ' · ' + itens.length + ' · ' + total;
+      // dentro da coluna, os que dá para atribuir vêm primeiro (a ordem original é mantida entre iguais)
+      itens = itens.map((o, k) => [o, k]).sort((a, b) => rank(a[0]) - rank(b[0]) || a[1] - b[1]).map(x => x[0]);
+      const cw = e.chave === 'closed won';
+      const visiveis = (cw && !cwExpandido) ? itens.slice(0, CW_LIMITE) : itens;
       const col = mk('section', 'col');
       col.setAttribute('aria-label', e.nome);
-      col.appendChild(mk('div', 'col-total', esqueleto ? ' ' : 'BRL ' + fmtTotal.format(soma)));
       const corpo = mk('div', 'col-body');
       if (esqueleto) { for (let k = 0; k < 3; k++) corpo.appendChild(cardEsqueleto()); }
-      else if (!itens.length) corpo.appendChild(mk('div', 'col-empty', 'Nenhuma oportunidade'));
-      else itens.forEach(o => corpo.appendChild(criarCard(o)));
+      else if (!itens.length) corpo.appendChild(mk('div', 'col-empty', soDisponiveis ? 'Nenhuma disponível' : 'Nenhuma oportunidade'));
+      else visiveis.forEach(o => corpo.appendChild(criarCard(o)));
       col.appendChild(corpo);
+      if (cw && !esqueleto && itens.length > CW_LIMITE) {
+        const foot = mk('div', 'col-foot');
+        const b = mk('button', 'btn-ghost', cwExpandido ? 'Ver menos' : 'Ver todos (' + itens.length + ')');
+        b.type = 'button';
+        b.setAttribute('aria-expanded', String(cwExpandido));
+        b.addEventListener('click', () => { cwExpandido = !cwExpandido; renderBoard(); });
+        foot.appendChild(b);
+        col.appendChild(foot);
+      }
       boardEl.appendChild(col);
       if (rolagens[i]) corpo.scrollTop = rolagens[i];
     });
@@ -1225,7 +1363,7 @@
     if (oppEscolhida) {
       const o = oppEscolhida;
       oppResumo.appendChild(mk('b', '', o.conta || 'Conta não informada'));
-      oppResumo.appendChild(mk('div', 'linha', (o.amount_12m == null ? 'BRL —' : 'BRL ' + fmtValor.format(o.amount_12m)) + ' · ' + (o.estagio || '—')));
+      oppResumo.appendChild(mk('div', 'linha', fmtBRL(o.amount_12m) + ' · ' + (o.estagio || '—')));
       drawerTitle.textContent = '';
       drawerTitle.appendChild(linkSF(o.opp_id, (o.nome || 'Abrir no Salesforce') + ' ↗'));
     } else if (manual) {
@@ -1381,7 +1519,7 @@
   });
   manualBtn.addEventListener('click', () => abrirDrawer(null, { manual: true }));
   // Esc fecha o painel em qualquer situação (mesmo se o foco estiver na página, e não dentro dele)
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && drawer.classList.contains('open') && cardMenu.hidden) fecharDrawer(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && drawer.classList.contains('open') && cardMenu.hidden && userPop.hidden) fecharDrawer(); });
 
   // ── atualizações locais (sem recarregar a página) ──
   function marcarAtribuida(oppId){
@@ -1415,7 +1553,47 @@
     renderBoard();
   }
 
-  oppSearch.addEventListener('input', renderBoard);
+  const chipDisp = document.getElementById('chipDisp');
+  const oppSearchClear = document.getElementById('oppSearchClear');
+  oppSearch.addEventListener('input', () => { oppSearchClear.hidden = !oppSearch.value; renderBoard(); });
+  oppSearchClear.addEventListener('click', () => { oppSearch.value = ''; oppSearchClear.hidden = true; renderBoard(); oppSearch.focus(); });
+  chipDisp.addEventListener('click', () => { soDisponiveis = !soDisponiveis; renderBoard(); });
+  // "/" leva o foco à busca (fora de campos de texto e com o painel fechado)
+  document.addEventListener('keydown', e => {
+    if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (appScreen.style.display === 'none' || drawer.classList.contains('open')) return;
+    const a = document.activeElement;
+    if (a && (/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) || a.isContentEditable)) return;
+    e.preventDefault(); oppSearch.focus(); oppSearch.select();
+  });
+  // atualização automática do funil (mantém o botão manual e o texto "Atualizado há N minutos")
+  setInterval(() => {
+    if (appScreen.style.display === 'none' || carregando || drawer.classList.contains('open') || document.visibilityState === 'hidden') return;
+    carregarOportunidades();
+  }, AUTO_ATUALIZAR_MS);
+
+  // menu do usuário (avatar com iniciais)
+  const avatarBtn = document.getElementById('avatarBtn');
+  const userPop = document.getElementById('userPop');
+  function iniciaisDoUsuario(){
+    const s = getSession() || {};
+    const nome = String(s.nome || '').trim();
+    const partes = nome ? nome.split(/\s+/) : String(s.email || '?').split('@')[0].split(/[._-]+/);
+    return ((partes[0] || '?')[0] + ((partes[1] || '')[0] || '')).toUpperCase();
+  }
+  function fecharMenuUsuario(devolver){
+    if (userPop.hidden) return;
+    userPop.hidden = true; avatarBtn.setAttribute('aria-expanded', 'false');
+    if (devolver) avatarBtn.focus();
+  }
+  avatarBtn.addEventListener('click', ev => {
+    ev.stopPropagation();
+    const abrir = userPop.hidden;
+    userPop.hidden = !abrir; avatarBtn.setAttribute('aria-expanded', String(abrir));
+    if (abrir) document.getElementById('logoutBtn').focus();
+  });
+  document.addEventListener('click', e => { if (!userPop.hidden && !userPop.contains(e.target)) fecharMenuUsuario(); });
+  userPop.addEventListener('keydown', e => { if (e.key === 'Escape') { e.stopPropagation(); fecharMenuUsuario(true); } });
   oppRefreshBtn.addEventListener('click', carregarOportunidades);
   oppIdManual.addEventListener('input', () => {
     oppEscolhida = null;
@@ -1522,6 +1700,7 @@
 
       continueToStep2Btn.style.display = 'block';
       marcarAtribuida(oppId);
+      mostrarToast('Contrato atribuído a ' + data.email_onboarder);
 
     } catch (err) {
       assignError.textContent = 'Não foi possível atribuir o contrato. ' + err.message;
