@@ -704,7 +704,7 @@
 
               <button class="btn-primary" id="assignBtn">
                 <span class="spinner" id="assignSpinner"></span>
-                <span id="assignBtnText">Atribuir próximo contrato</span>
+                <span id="assignBtnText">Atribuir onboarder</span>
               </button>
               <div class="error-msg" id="assignError"></div>
             </div>
@@ -734,7 +734,7 @@
                 <strong>Capacidade máxima atingida</strong><br>
                 <span id="alertMsg"></span>
               </div>
-              <button class="btn-ghost" id="assignAgainBtn">Tentar outro contrato</button>
+              <button class="btn-ghost" id="assignAgainBtn">Tentar outra Oportunidade</button>
             </div>
           </div>
 
@@ -794,7 +794,7 @@
           <div class="done-title">Tudo certo!</div>
           <div class="done-sub">Atribuído, agendado e fechado.</div>
         </div>
-        <button class="btn-ghost" id="restartBtn">Atribuir outro contrato</button>
+        <button class="btn-ghost" id="restartBtn">Atribuir outra Oportunidade</button>
       </div>
 
         </div>
@@ -1123,7 +1123,7 @@
     { opp_id: '006DEMO00000000003', hotmart_id: '70000003', nome: 'Demo · Sem valor definido', conta: '', estagio: 'SQL', amount_12m: null, ja_atribuida: false },
     { opp_id: '006DEMO00000000004', hotmart_id: '', nome: 'Demo · Sem Hotmart ID', conta: 'Casa do Código Digital', estagio: 'Offer presented', amount_12m: 320000, ja_atribuida: false },
     { opp_id: '006DEMO00000000005', hotmart_id: '70000005', nome: 'Demo · Já atribuída', conta: 'Mentoria Norte', estagio: 'Offer presented', amount_12m: 410000, ja_atribuida: true },
-    { opp_id: '006DEMO00000000006', hotmart_id: '70000006', nome: 'Demo · Em contrato', conta: 'Academia Prisma', estagio: 'Contract Sent', amount_12m: 2750000, ja_atribuida: false },
+    { opp_id: '006DEMO00000000006', hotmart_id: '70000006', nome: 'Demo · Contrato enviado', conta: 'Academia Prisma', estagio: 'Contract Sent', amount_12m: 2750000, ja_atribuida: false },
     { opp_id: '006DEMO00000000007', hotmart_id: '70000007', nome: 'Demo · Fechada', conta: 'Clube do Vinho', estagio: 'Closed Won', amount_12m: 600000, ja_atribuida: true }
   ];
   const CW_LIMITE = 5;                 // Closed Won mostra só os mais recentes até o usuário pedir "Ver todos"
@@ -1743,15 +1743,15 @@
 
       continueToStep2Btn.style.display = 'block';
       marcarAtribuida(oppId);
-      mostrarToast('Contrato atribuído a ' + data.email_onboarder);
+      mostrarToast('Oportunidade atribuída a ' + data.email_onboarder);
 
     } catch (err) {
-      assignError.textContent = 'Não foi possível atribuir o contrato. ' + err.message;
+      assignError.textContent = 'Não foi possível atribuir a Oportunidade. ' + err.message;
       assignError.classList.add('show');
     } finally {
       assignBtn.disabled = false;
       assignSpinner.classList.remove('show');
-      assignBtnText.textContent = 'Atribuir próximo contrato';
+      assignBtnText.textContent = 'Atribuir onboarder';
     }
   }
   assignBtn.addEventListener('click', atribuir);
