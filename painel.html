@@ -1248,6 +1248,8 @@
   }
   // lê "N2-N3 · 120k–300k" (rótulo antigo) ou "N2-N3 · < R$300k" (padrão) e devolve nível, subgrupo e faixa oficial
   function segInfo(seg){
+    const g = String(seg || '').match(/^\s*Guardian\s+(sg[123])\s*$/i);   // guardiões não têm faixa de receita
+    if (g) return { nivel: 'Guardian', sg: g[1].toLowerCase(), faixa: 'guardião, sem faixa de receita', legado: false };
     const m = String(seg || '').match(/^\s*(N2-N3|N4-N5|N6\+)\s*·\s*(.+)$/);
     if (!m) return { nivel: null, sg: null, faixa: seg || '—', legado: false };
     const nivel = m[1], resto = norm(m[2]), f = FAIXAS[nivel];
