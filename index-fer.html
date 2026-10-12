@@ -473,10 +473,10 @@
   .opp-valor{ flex:none; font-size:14px; font-weight:700; color:var(--text); white-space:nowrap; text-align:right; }
   .opp-valor.vazio{ font-size:12.5px; font-weight:500; color:var(--text-muted); }
   .opp-conta{ font-size:12.5px; color:var(--text-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .opp-idrow{ display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:22px; }
-  .opp-id-esq{ display:flex; align-items:center; gap:4px; min-width:0; font-family:var(--font-mono); font-size:11.5px; color:var(--text-muted); }
+  .opp-idrow{ display:flex; align-items:center; flex-wrap:wrap; justify-content:space-between; gap:2px 8px; min-height:22px; }
+  .opp-id-esq{ display:flex; align-items:center; flex:none; gap:4px; font-family:var(--font-mono); font-size:11.5px; color:var(--text-muted); }
   .opp-id-dir{ display:flex; align-items:center; gap:6px; flex:none; margin-left:auto; }
-  .opp-hid{ overflow-wrap:anywhere; }
+  .opp-hid{ white-space:nowrap; }
   .copy-btn{ position:relative; z-index:2; flex:none; width:22px; height:22px; padding:0; display:grid; place-items:center; color:var(--text-muted); background:none; border-radius:var(--r-sm); }
   .copy-btn:hover{ color:var(--text); background:var(--surface-sunken); }
   .copy-btn:focus-visible{ outline:2px solid var(--focus); outline-offset:1px; }
