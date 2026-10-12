@@ -415,6 +415,7 @@
   .chip-filtro:disabled:hover{ border-color:var(--field-border); }
   .board-vazio{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:var(--sp-3); padding:var(--sp-7); font-size:14px; color:var(--text-muted); text-align:center; }
   .board-vazio .btn-ghost{ width:auto; margin:0; padding:8px 16px; }
+  .demo-banner a{ color:inherit; font-weight:700; text-decoration:underline; text-underline-offset:3px; margin-left:6px; }
   .demo-banner{ margin:0; padding:6px 12px; font-size:12.5px; font-weight:600; color:var(--black); background:var(--yellow); border-radius:var(--r-sm); }
   .btn-quiet{ height:38px; padding:0 12px; font-size:13px; font-weight:600; color:var(--text); background:transparent; border:1.5px solid var(--border-strong); border-radius:var(--r-sm); }
   .btn-quiet:hover{ color:var(--text); border-color:var(--field-border); }
@@ -647,7 +648,7 @@
           <button type="button" class="btn-quiet" id="manualBtn">Atribuir por ID</button>
         </div>
       </header>
-      <div class="demo-banner" id="demoBanner" role="status" hidden>Modo demonstração · dados fictícios · nada é gravado nem atribuído</div>
+      <div class="demo-banner" id="demoBanner" role="status" hidden>Modo demonstração · dados fictícios · nada é gravado. <a class="demo-reiniciar" href="?demo=1">Reiniciar a demonstração</a></div>
 
       <div class="board-scroll">
         <div class="path" id="path" role="list" aria-label="Estágios do funil">
@@ -823,7 +824,10 @@
   // Sessão fica só na aba (sessionStorage) e expira em 8h; o token é validado pelo n8n em toda chamada.
   const SESSION_KEY = "carteira_sessao";
 
+  // ?demo=1 → demonstração completa com dados fictícios, sem login e sem nenhuma chamada ao n8n/Salesforce
+  const MODO_DEMO = /[?&]demo=1(&|$)/.test(location.search);
   function getSession(){
+    if (MODO_DEMO) return { token: 'demo', email: 'demo@hotmart.com', nome: 'Fernanda Demo', papel: 'usuario', expira_em: new Date(Date.now() + 8 * 3600e3).toISOString() };
     try {
       const s = JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null');
       if (s && s.token && new Date(s.expira_em) > new Date()) return s;
@@ -834,6 +838,7 @@
 
   // fetch com o token da sessão; se o servidor responder 401, volta pra tela de login
   async function apiFetch(url, opts = {}){
+    if (MODO_DEMO) return demoApi(url, opts);
     const s = getSession();
     if (!s) { showLogin(); throw new Error('Sessão expirada. Faça login novamente.'); }
     const res = await fetch(url, { ...opts, headers: { ...(opts.headers || {}), 'Authorization': 'Bearer ' + s.token } });
@@ -1057,7 +1062,7 @@
   });
   // Enter no e-mail pula para a senha; Enter na senha envia o formulário (que clica em "Entrar")
   emailInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); passwordInput.focus(); } });
-  logoutBtn.addEventListener('click', () => { sessionStorage.removeItem(SESSION_KEY); showLogin(); });
+  logoutBtn.addEventListener('click', () => { if (MODO_DEMO) { location.href = location.pathname; return; } sessionStorage.removeItem(SESSION_KEY); showLogin(); });
   // "atribuir outro" / "tentar outro": fecha o painel e atualiza o funil
   function reiniciarFluxo(){
     drawer.classList.remove('open'); drawerOverlay.classList.remove('open'); drawer.setAttribute('aria-hidden', 'true');
@@ -1116,7 +1121,6 @@
     return 'R$ ' + (Math.round(n * 100) % 100 === 0 ? fmtNum0.format(n) : fmtNum2.format(n));
   }
   // ?demo=1 → funil com dados fictícios (sem chamadas ao n8n/Salesforce), só para ver e validar a tela
-  const MODO_DEMO = /[?&]demo=1(&|$)/.test(location.search);
   const DEMO_OPPS = [
     { opp_id: '006DEMO00000000001', hotmart_id: '70000001', nome: 'Demo · Curso de Fotografia Avançada', conta: 'Estúdio Lume LTDA', estagio: 'Issues identified', amount_12m: 180000, ja_atribuida: false },
     { opp_id: '006DEMO00000000002', hotmart_id: '70000002', nome: 'Demo · Nome muito longo de oportunidade para testar duas linhas de texto no card do funil', conta: 'Grupo Horizonte Educação e Treinamentos S.A.', estagio: 'SQL', amount_12m: 950000, ja_atribuida: false },
@@ -1124,8 +1128,132 @@
     { opp_id: '006DEMO00000000004', hotmart_id: '', nome: 'Demo · Sem Hotmart ID', conta: 'Casa do Código Digital', estagio: 'Offer presented', amount_12m: 320000, ja_atribuida: false },
     { opp_id: '006DEMO00000000005', hotmart_id: '70000005', nome: 'Demo · Já atribuída', conta: 'Mentoria Norte', estagio: 'Offer presented', amount_12m: 410000, ja_atribuida: true },
     { opp_id: '006DEMO00000000006', hotmart_id: '70000006', nome: 'Demo · Contrato enviado', conta: 'Academia Prisma', estagio: 'Contract Sent', amount_12m: 2750000, ja_atribuida: false },
-    { opp_id: '006DEMO00000000007', hotmart_id: '70000007', nome: 'Demo · Fechada', conta: 'Clube do Vinho', estagio: 'Closed Won', amount_12m: 600000, ja_atribuida: true }
+    { opp_id: '006DEMO00000000007', hotmart_id: '70000007', nome: 'Demo · Fechada', conta: 'Clube do Vinho', estagio: 'Closed Won', amount_12m: 600000, ja_atribuida: true },
+    { opp_id: '006DEMO00000000008', hotmart_id: '70000008', nome: 'Demo · Plataforma Other', conta: 'Escola Mar Aberto', estagio: 'Issues identified', amount_12m: 260000, ja_atribuida: false, outra_plataforma: true }
   ];
+
+  // ── motor da demonstração: responde no lugar dos webhooks do n8n (Closer N2-N3, POD 1) ──
+  const DEMO_ROSTER = [
+    { email: 'fernanda.demo@hotmart.com', carteira: 41, sg: [30, 8, 3], pre: [1, 0, 0], ult: '2026-10-05T14:00:00Z' },
+    { email: 'gabriel.demo@hotmart.com',  carteira: 38, sg: [24, 10, 4], pre: [0, 1, 0], ult: '2026-10-03T14:00:00Z' },
+    { email: 'carla.demo@hotmart.com',    carteira: 45, sg: [31, 9, 5], pre: [0, 0, 0], ult: '2026-10-07T14:00:00Z' },
+    { email: 'diego.demo@hotmart.com',    carteira: 40, sg: [22, 12, 6], pre: [2, 0, 1], ult: '2026-10-01T14:00:00Z' }
+  ];
+  const DEMO_CONTAS = [
+    { id: '001DEMO000000001', nome: 'Estúdio Lume LTDA', user_id: '', user_email: 'contato@lume.exemplo' },
+    { id: '001DEMO000000002', nome: 'Estúdio Lume Educação', user_id: '58000001', user_email: 'ana@lume.exemplo' },
+    { id: '001DEMO000000003', nome: 'Casa do Código Digital', user_id: '58000002', user_email: 'oi@casacodigo.exemplo' },
+    { id: '001DEMO000000004', nome: 'Escola Mar Aberto', user_id: '58000003', user_email: 'escola@maraberto.exemplo' },
+    { id: '001DEMO000000005', nome: 'Academia Prisma', user_id: '58000004', user_email: 'prisma@academia.exemplo' }
+  ];
+  const DEMO_FEES = {
+    'Pricing Policy': ['9,9%', '8,9%', '8,4%', '7,9%', '7,4%', '6,4%', '5,9%', '5,6%', '5,3%', '5,0%'],
+    'Rebate': ['8,4%'],
+    'Pricing Exception': ['5,0%', '5,3%']
+  };
+  const DEMO_TODAS_FEES = ['9,9%', '9,4%', '8,9%', '8,4%', '7,9%', '7,4%', '6,9%', '6,4%', '5,9%', '5,6%', '5,4%', '5,3%', '5,0%', '4,9%'];
+  const demoEstado = {};   // opp_id → { v: valores salvos, conta: {id,nome,user_id}|null, onboarder }
+  function demoDe(oppId){
+    const o = DEMO_OPPS.find(x => x.opp_id === oppId); if (!o) return null;
+    if (!demoEstado[oppId]) {
+      const semUserId = oppId.endsWith('1') || oppId.endsWith('4');   // estas duas começam com a Conta sem User ID, para treinar a troca
+      demoEstado[oppId] = { v: {}, conta: o.conta ? { id: '001DEMO0000000' + oppId.slice(-2), nome: o.conta, user_id: semUserId ? '' : '5800' + oppId.slice(-4) } : null, onboarder: null };
+    }
+    return { o, e: demoEstado[oppId] };
+  }
+  const DEMO_CAMPOS = [
+    ['Price_Policy__c', 'Price Policy', 'lista'], ['Negotiated_Fee__c', 'Negotiated Fee', 'lista'], ['Amount_12_months__c', 'Amount 12 months', 'numero'],
+    ['OnboardingSegmentation__c', 'Onboarding Segmentation', 'lista'], ['WhatsApp_Support_Needed__c', 'WhatsApp Support Needed', 'lista'],
+    ['ClosedReasonDetail__c', 'Closed Reason Detail', 'texto'], ['NumberProductsTobeMigrated__c', 'Number of products to be migrated', 'numero'],
+    ['Expected_Lauching_Date__c', 'Sales Start Date', 'data'], ['ProvenRevenueLastYear__c', 'Proven revenue from the last year', 'texto_longo']
+  ];
+  const demoVazio = v => v === null || v === undefined || v === '' || (typeof v === 'string' && /^(<p>)?(<br>)?(<\/p>)?$/.test(v));
+  function demoValor(d, api){ return api === 'Amount_12_months__c' ? (d.o.amount_12m == null ? '' : d.o.amount_12m) : (d.e.v[api] === undefined ? '' : d.e.v[api]); }
+  function demoFaltando(d){
+    const l = DEMO_CAMPOS.filter(([api]) => demoVazio(demoValor(d, api))).map(c => c[1]);
+    if (d.o.outra_plataforma && demoVazio(d.e.v.Other_platform__c)) l.push('Other Platform');
+    if (!d.e.onboarder) l.push('Onboarding Owner');
+    if (!d.e.conta || !d.e.conta.user_id) l.push('Conta com User ID');
+    return l;
+  }
+  function demoCampos(d){
+    const opcoes = {
+      Price_Policy__c: Object.keys(DEMO_FEES).map(p => ({ valor: p, rotulo: p })),
+      Negotiated_Fee__c: DEMO_TODAS_FEES.map(v => ({ valor: v, rotulo: v, validoPara: Object.keys(DEMO_FEES).filter(p => DEMO_FEES[p].includes(v)) })),
+      OnboardingSegmentation__c: ['High Touch', 'Mid Touch', 'Low Touch'].map(v => ({ valor: v, rotulo: v })),
+      WhatsApp_Support_Needed__c: ['Yes', 'No'].map(v => ({ valor: v, rotulo: v }))
+    };
+    const campos = DEMO_CAMPOS.map(([api, label, tipo]) => {
+      const v = demoValor(d, api);
+      const c = { api, label, tipo, valor: v, opcoes: opcoes[api] || [], vazio: demoVazio(v) };
+      if (api === 'Negotiated_Fee__c') c.depende_de = 'Price_Policy__c';
+      if (tipo === 'texto_longo') c.tamanho = 32768;
+      return c;
+    });
+    if (d.o.outra_plataforma) { const v = d.e.v.Other_platform__c ?? ''; campos.push({ api: 'Other_platform__c', label: 'Other Platform', tipo: 'texto', valor: v, opcoes: [], vazio: demoVazio(v) }); }
+    const c = d.e.conta;
+    return { opp_id: d.o.opp_id, nome: d.o.nome, campos, onboarding_owner_definido: !!d.e.onboarder,
+      conta: c ? { id: c.id, nome: c.nome, user_id: c.user_id, user_email: '', vazio: !c.user_id } : { id: null, nome: '', user_id: '', user_email: '', vazio: true }, faltando: demoFaltando(d) };
+  }
+  function demoHorarios(){
+    const l = []; const d = new Date(); d.setUTCHours(12, 0, 0, 0);
+    for (let n = 0; l.length < 14; n++) {
+      d.setUTCDate(d.getUTCDate() + 1);
+      if (d.getUTCDay() === 0 || d.getUTCDay() === 6) continue;
+      [13, 14, 17, 18, 19].forEach(h => { const i = new Date(d); i.setUTCHours(h, 0, 0, 0); l.push({ inicio: i.toISOString(), fim: new Date(i.getTime() + 3600e3).toISOString() }); });
+    }
+    return l;
+  }
+  function demoAtribuir(o){
+    const limites = [300000, 600000], k = o.amount_12m < limites[0] ? 0 : o.amount_12m < limites[1] ? 1 : 2;
+    // a regra real: menos contratos no subgrupo → menor carteira total → menos pré-onboardings no subgrupo → há mais tempo sem receber
+    const chave = r => [r.sg[k], r.carteira, r.pre[k], Date.parse(r.ult)];
+    const ordenado = DEMO_ROSTER.slice().sort((x, y) => { const a = chave(x), b = chave(y); for (let i = 0; i < 4; i++) if (a[i] !== b[i]) return a[i] - b[i]; return 0; });
+    const r = ordenado[0], emp = ordenado.filter(x => x.sg[k] === r.sg[k]);
+    const antes = r.carteira; r.carteira++; r.sg[k]++; r.ult = new Date().toISOString();
+    return { email_onboarder: r.email, pod: 1, level: 'N2-N3', subgrupo: 'sg' + (k + 1), e_guardiao: false, _origem: 'mesmo_pod', modo_fallback: false,
+      sg_carteira_antes: r.sg[k] - 1, sg_carteira_depois: r.sg[k], carteira_total_antes: antes, carteira_total_depois: antes + 1,
+      houve_empate_carteira: emp.length > 1 && emp.filter(x => x.carteira === antes).length > 1, houve_empate_pre_onboarding: false,
+      horarios_disponiveis: demoHorarios(), cliente: o.nome, amount: o.amount_12m, aviso_agenda: null };
+  }
+  async function demoApi(url, opts){
+    await new Promise(r => setTimeout(r, 300));
+    const u = new URL(url), rota = u.pathname.split('/').pop();
+    const corpo = opts && opts.body ? JSON.parse(opts.body) : {};
+    const resp = (obj, status) => ({ ok: (status || 200) < 400, status: status || 200, json: async () => obj, text: async () => JSON.stringify(obj) });
+    const d = demoDe(corpo.opp_id || u.searchParams.get('opp_id'));
+    if (rota === 'atribuicao-onboarder') {
+      if (!d) return resp({ status: 'erro', mensagem: 'Oportunidade de demonstração não encontrada.' }, 404);
+      if (!(Number(d.o.amount_12m) > 0)) return resp({ status: 'erro', codigo: 'amount_obrigatorio', mensagem: 'Informe o Amount 12 months antes de atribuir.' }, 422);
+      if (d.e.onboarder) return resp({ status: 'erro', mensagem: 'Esta Oportunidade já tem onboarder.' }, 409);
+      const r = demoAtribuir(d.o); d.e.onboarder = r.email_onboarder; d.o.ja_atribuida = true;
+      return resp(r);
+    }
+    if (rota === 'campos-oportunidade') return d ? resp(demoCampos(d)) : resp({ status: 'erro', mensagem: 'Oportunidade não encontrada.' }, 404);
+    if (rota === 'salvar-campos') {
+      if (!d) return resp({ status: 'erro', mensagem: 'Oportunidade não encontrada.' }, 404);
+      const v = corpo.valores || {};
+      if (v.Negotiated_Fee__c && v.Price_Policy__c && !(DEMO_FEES[v.Price_Policy__c] || []).includes(v.Negotiated_Fee__c))
+        return resp({ status: 'erro_salesforce', opp_id: d.o.opp_id, mensagem: 'INVALID_OR_NULL_FOR_RESTRICTED_PICKLIST: o Negotiated Fee ' + v.Negotiated_Fee__c + ' não vale para a Price Policy ' + v.Price_Policy__c + '.' });
+      Object.keys(v).forEach(api => { if (v[api] === '__manter__') return; if (api === 'Amount_12_months__c') { const n = Number(String(v[api]).replace(',', '.')); d.o.amount_12m = isFinite(n) && v[api] !== '' ? n : null; } else d.e.v[api] = v[api]; });
+      if (corpo.account_id) { const c = DEMO_CONTAS.find(x => x.id === corpo.account_id); if (c) d.e.conta = { id: c.id, nome: c.nome, user_id: c.user_id }; }
+      return resp({ status: 'salvo', opp_id: d.o.opp_id, faltando: demoFaltando(d) });
+    }
+    if (rota === 'buscar-contas') {
+      const q = (u.searchParams.get('q') || '').toLowerCase();
+      const l = DEMO_CONTAS.filter(c => [c.nome, c.user_email, c.user_id].some(x => String(x).toLowerCase().includes(q)));
+      return resp({ total: l.length, contas: l });
+    }
+    if (rota === 'confirmar-reuniao-onboarding') return resp({ status: 'confirmado', evento_id: 'demo', link_evento: '' });
+    if (rota === 'closed-won-onboarding') {
+      if (!d) return resp({ status: 'erro', mensagem: 'Oportunidade não encontrada.' }, 404);
+      const falta = demoFaltando(d);
+      if (falta.length) return resp({ status: 'campos_faltando', opp_id: d.o.opp_id, campos_faltando: falta });
+      d.o.estagio = 'Closed Won'; d.o.ja_atribuida = true;
+      return resp({ status: 'closed_won', opp_id: d.o.opp_id, stage: 'Closed Won' });
+    }
+    return resp({ status: 'erro', mensagem: 'Rota não disponível na demonstração.' }, 404);
+  }
   const CW_LIMITE = 5;                 // Closed Won mostra só os mais recentes até o usuário pedir "Ver todos"
   const AUTO_ATUALIZAR_MS = 3 * 60 * 1000;
   let cwExpandido = false;
@@ -1649,7 +1777,6 @@
     const closerEmail = (getSession() || {}).email;
     if (!closerEmail) { showLogin(); return; }
 
-    if (MODO_DEMO) { assignError.textContent = 'Modo demonstração: nada é atribuído de verdade. Saia de ?demo=1 para usar o funil real.'; assignError.classList.add('show'); return; }
     const oppId = oppIdInput.value.trim();
     if (!oppId) {
       assignError.textContent = 'Escolha uma Opportunity na lista (ou informe o ID manualmente) antes de atribuir.';
@@ -1719,7 +1846,7 @@
       document.getElementById('resultOnb').textContent = data.email_onboarder;
       const chipsEl = document.getElementById('resultChips');
       chipsEl.innerHTML = '';
-      ['POD ' + (data.pod ?? '—'), data.level, data.subgrupo, data.e_guardiao ? 'Guardião' : null, data._origem === 'outro_pod' ? 'Outro POD' : null]
+      ['POD ' + (data.pod ?? '—'), data.level, data.subgrupo ? String(data.subgrupo).toUpperCase() : null, data.e_guardiao ? 'Guardião' : null, data._origem === 'outro_pod' ? 'Outro POD' : null]
         .filter(Boolean).forEach(t => chipsEl.appendChild(mk('span', 'chip', String(t))));
 
       tallyBefore.textContent = data.carteira_total_antes  ?? '—';

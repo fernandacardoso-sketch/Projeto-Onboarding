@@ -223,8 +223,7 @@ Uma credencial OAuth2 (`GCal - sales.bizops`) autorizada por `sales.bizops@hotma
 
 
 ### Modo demonstração (`index-fer.html?demo=1`)
-Mostra o funil com 7 oportunidades fictícias (5 elegíveis, 1 já atribuída, 1 fechada), sem nenhuma chamada ao n8n ou ao Salesforce, com faixa amarela de aviso. Serve para validar o visual do card "Disponível para atribuir" quando o funil real não tem nenhum elegível. Atribuir é recusado nesse modo. O login continua sendo exigido.
-
+Percorre o fluxo **inteiro** (atribuir, agendar o welcome, campos e Closed Won) com 8 Oportunidades fictícias, **sem login** e sem nenhuma chamada ao n8n ou ao Salesforce: o próprio navegador responde no lugar dos webhooks. A atribuição usa a **regra real** (menos contratos no subgrupo, depois carteira total, pré-onboarding e última atribuição) sobre um time fictício de 4 onboarders do POD 1 N2-N3. Há casos de treino: Oportunidade sem Amount, Conta sem User ID e plataforma "Other". Faixa amarela de aviso com "Reiniciar a demonstração"; "Sair" volta ao endereço normal. Nada é gravado: recarregar a página reinicia tudo.
 
 ### Painel de Acompanhamento (painel.html, v2 em 12/10/2026)
 Quatro abas (hash na URL: #visao-geral, #carteira, #atribuicoes, #regras; a última aba fica em localStorage):
