@@ -1777,6 +1777,8 @@
     if (c.tipo === 'lista') {
       el = document.createElement('select');
       el.appendChild(new Option('Selecione…', ''));
+      // Negotiated Fee: do maior para o menor (9,9% … 4,9%)
+      if (c.api === 'Negotiated_Fee__c') c = { ...c, opcoes: (c.opcoes || []).slice().sort((a, b) => parseFloat(String(b.rotulo).replace(',', '.')) - parseFloat(String(a.rotulo).replace(',', '.'))) };
       (c.opcoes || []).forEach(o => el.appendChild(new Option(o.rotulo, o.valor)));
       // lista dependente (ex.: Negotiated Fee só aceita certos valores conforme a Price Policy)
       if (c.depende_de) { el.dataset.dependeDe = c.depende_de; el._opcoes = c.opcoes || []; }
