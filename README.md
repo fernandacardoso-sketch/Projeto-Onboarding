@@ -224,3 +224,7 @@ Uma credencial OAuth2 (`GCal - sales.bizops`) autorizada por `sales.bizops@hotma
 
 ### Modo demonstração (`index-fer.html?demo=1`)
 Mostra o funil com 7 oportunidades fictícias (5 elegíveis, 1 já atribuída, 1 fechada), sem nenhuma chamada ao n8n ou ao Salesforce, com faixa amarela de aviso. Serve para validar o visual do card "Disponível para atribuir" quando o funil real não tem nenhum elegível. Atribuir é recusado nesse modo. O login continua sendo exigido.
+
+
+### Painel de Acompanhamento (painel.html, redesenhado em 12/10/2026)
+Três abas: **Carteira** (filtro por nível e por analistas, indicadores, tabela ordenável com barra de capacidade e status), **Atribuições** (filtro por data com atalhos Hoje/7/30 dias/Tudo e intervalo livre, busca por cliente/onboarder/closer, racional expansível, "Ver mais" de 25 em 25) e **Regras**. Status: tranquilo (<70%), atenção (70–99%), no limite (100%+, em vermelho aberto). O workflow 5 passou a devolver até **500** atribuições (antes 20); sem reimportá-lo, a aba Atribuições mostra só as 20 mais recentes e a nota abaixo da tabela informa o período carregado.

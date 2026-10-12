@@ -127,106 +127,157 @@
   footer{ text-align:center; margin-top:var(--sp-5); font-size:12px; color:var(--text-muted); }
 
   /* ============================================================
-     Painel de Acompanhamento
+     Painel de Acompanhamento — mesmo padrão do Onboarding Assignment
      ============================================================ */
-  body{ padding:var(--sp-6) 20px 60px; }
-  .frame{ width:100%; max-width:980px; margin:0 auto; }
-  .sub{ margin-bottom:var(--sp-2); }
-  .gerado-em{ text-align:center; font-family:var(--font-mono); font-size:12px; color:var(--text-muted); margin-bottom:var(--sp-5); }
-  .nav-link{ font-size:13px; font-weight:600; color:var(--text); text-decoration:underline; text-underline-offset:3px; }
-  .nav-link:hover{ color:var(--orange); }
-
-  /* ---------- Filtros ---------- */
-  .filter-row{ display:flex; flex-wrap:wrap; gap:var(--sp-2); margin-bottom:var(--sp-5); }
-  .filter-pill{
-    font-size:13px; font-weight:600; padding:8px 14px; border-radius:var(--r-pill);
-    border:1.5px solid var(--border-strong); background:var(--surface); color:var(--text);
-    transition:border-color .15s, background .15s;
+  :root{
+    --card-bg:#FFFFFF; --card-border:#D9D5CD; --card-sh:0 1px 2px rgba(13,13,13,.08);
+    --ok-bg:rgba(30,122,61,.12); --ok-text:#17632F; --ok-bar:#1E7A3D;
+    --red-bg:rgba(217,48,37,.12); --red-text:#B3261E; --red-bar:#D93025;
+    --warn-bg:#FFD450; --warn-text:#0D0D0D;
+    --head-bg:#F2F0EB; --thumb:#CFCAC1; --thumb-hover:#B5AFA5;
   }
-  .filter-pill:hover{ border-color:var(--ink); }
-  .filter-pill.active{ background:var(--ink); border-color:var(--ink); color:var(--on-ink); }
-
-  /* ---------- KPIs (stat card) ---------- */
-  .kpi-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:var(--sp-3); margin-bottom:var(--sp-5); }
-  .kpi-tile{
-    position:relative; background:var(--surface); border:1px solid var(--border);
-    border-radius:var(--r-md); padding:var(--sp-4) var(--sp-4) var(--sp-4) var(--sp-5);
+  :root[data-theme="dark"]{
+    --card-bg:#242424; --card-border:#4D4D4D; --card-sh:0 1px 2px rgba(0,0,0,.45);
+    --ok-bg:rgba(111,208,140,.16); --ok-text:#6FD08C; --ok-bar:#6FD08C;
+    --red-bg:rgba(255,107,94,.16); --red-text:#FF8A80; --red-bar:#FF6B5E;
+    --head-bg:#2D2D2D; --thumb:#7E7E7E; --thumb-hover:#A3A3A3;
   }
-  .kpi-tile::before{ content:""; position:absolute; left:0; top:14px; bottom:14px; width:4px; background:var(--orange); border-radius:0 3px 3px 0; }
-  .kpi-num{ font-size:36px; font-weight:700; letter-spacing:-.02em; line-height:1; color:var(--orange); }
-  .kpi-label{ font-size:13px; color:var(--text-muted); margin-top:var(--sp-2); line-height:1.35; }
-  @media (max-width:720px){ .kpi-row{ grid-template-columns:repeat(2,1fr); } }
+  [hidden]{ display:none !important; }
+  .sr-only{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+  body:not(.is-login){ display:block; padding:0; }
+  .frame{ width:100%; }
+  #appScreen{ display:flex; flex-direction:column; height:100vh; padding:16px 24px 16px; gap:12px; }
 
-  /* ---------- Seções ---------- */
-  .section-title{ font-size:20px; font-weight:600; line-height:1.2; margin:var(--sp-6) 0 var(--sp-2); }
-  .section-sub{ font-size:13px; color:var(--text-muted); margin:0 0 var(--sp-4); line-height:1.6; }
+  .app-head{ flex:none; display:flex; align-items:flex-start; justify-content:space-between; gap:var(--sp-4); flex-wrap:wrap; padding-right:112px; }
+  .app-h1{ font-size:22px; font-weight:700; letter-spacing:-.01em; text-align:left; margin:0; line-height:1.2; }
+  .app-sub{ margin:2px 0 0; font-size:14px; font-weight:500; color:var(--text); }
+  .app-status{ margin:2px 0 0; font-size:12px; color:var(--text-muted); }
+  .app-tools{ display:flex; align-items:center; gap:var(--sp-2); flex-wrap:wrap; }
+  .icon-btn{ width:38px; height:38px; padding:0; display:grid; place-items:center; border-radius:var(--r-sm); background:var(--surface); color:var(--text); border:1.5px solid var(--field-border); }
+  .icon-btn:hover{ border-color:var(--orange); }
+  .icon-btn:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  .icon-btn svg{ width:18px; height:18px; display:block; }
+  .icon-btn.girando svg{ animation:spin .8s linear infinite; }
+  .btn-quiet{ display:inline-flex; align-items:center; height:38px; padding:0 12px; font-size:13px; font-weight:600; color:var(--text); background:transparent; border:1.5px solid var(--border-strong); border-radius:var(--r-sm); text-decoration:none; }
+  .btn-quiet:hover{ border-color:var(--field-border); }
+  .btn-quiet:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
 
-  /* ---------- Cards de onboarder ---------- */
-  .onboarder-list{ display:flex; flex-direction:column; gap:var(--sp-3); }
-  .onb-card{
-    background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md);
-    padding:var(--sp-4) var(--sp-5); display:grid; grid-template-columns:1.6fr .7fr 2fr .9fr; gap:var(--sp-4); align-items:center;
-  }
-  @media (max-width:720px){ .onb-card{ grid-template-columns:1fr; gap:var(--sp-2); } }
-  .onb-email{ font-size:14px; font-weight:600; word-break:break-word; }
-  .badge-row{ display:flex; gap:6px; margin-top:6px; }
-  .badge{
-    display:inline-flex; align-items:center; font-size:12px; font-weight:600; line-height:1;
-    padding:4px 10px; border-radius:var(--r-pill); border:1.5px solid var(--border-strong); color:var(--text);
-  }
-  .badge.pod{ background:var(--accent-weak); border-color:transparent; color:var(--orange); }
-  .onb-pre{ font-size:12px; color:var(--text-muted); text-align:center; }
-  .onb-pre b{ display:block; font-size:20px; font-weight:700; color:var(--text); }
+  /* abas */
+  .tabs{ flex:none; display:flex; gap:4px; border-bottom:1px solid var(--border-strong); overflow-x:auto; }
+  .tab{ position:relative; flex:none; padding:10px 16px; font-size:14px; font-weight:600; color:var(--text-muted); background:none; border-radius:var(--r-sm) var(--r-sm) 0 0; white-space:nowrap; }
+  .tab:hover{ color:var(--text); }
+  .tab[aria-selected="true"]{ color:var(--text); }
+  .tab[aria-selected="true"]::after{ content:""; position:absolute; left:12px; right:12px; bottom:-1px; height:3px; background:var(--orange); border-radius:3px 3px 0 0; }
+  .tab:focus-visible{ outline:2px solid var(--focus); outline-offset:-2px; }
+  .panel{ flex:1; min-height:0; display:flex; flex-direction:column; gap:12px; }
+  .panel.rola{ overflow-y:auto; padding-bottom:8px; }
 
-  .meter-wrap{ display:flex; flex-direction:column; gap:6px; }
-  .meter-track{ height:8px; border-radius:var(--r-pill); background:var(--surface-sunken); overflow:hidden; }
-  .meter-fill{ height:100%; border-radius:var(--r-pill); transition:width .3s ease; }
-  .meter-labels{ display:flex; justify-content:space-between; font-size:12px; color:var(--text-muted); }
-  .meter-labels b{ color:var(--text); font-weight:700; }
+  /* barra de filtros */
+  .toolbar{ flex:none; display:flex; flex-wrap:wrap; align-items:center; gap:var(--sp-2); }
+  .toolbar .grow{ flex:1 1 0; }
+  .pill{ padding:7px 13px; font-size:13px; font-weight:600; color:var(--text); background:var(--surface); border:1.5px solid var(--field-border); border-radius:var(--r-pill); white-space:nowrap; }
+  .pill:hover{ border-color:var(--text-muted); }
+  .pill[aria-pressed="true"]{ background:var(--ink); border-color:var(--ink); color:var(--on-ink); }
+  .pill:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  .sep-v{ width:1px; height:24px; background:var(--border-strong); margin:0 4px; }
+  .campo-data{ display:flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600; color:var(--text-muted); margin:0; }
+  .campo-data input, .busca input{ font-family:inherit; font-size:13px; color:var(--text); background:var(--field-bg); border:1.5px solid var(--field-border); border-radius:var(--r-sm); padding:7px 9px; outline:none; }
+  .campo-data input:focus-visible, .busca input:focus-visible{ outline:2px solid var(--orange); outline-offset:1px; border-color:var(--orange); }
+  .busca{ position:relative; display:block; margin:0; width:min(260px,100%); }
+  .busca svg{ position:absolute; left:10px; top:50%; transform:translateY(-50%); width:15px; height:15px; color:var(--text-muted); pointer-events:none; }
+  .busca input{ width:100%; padding-left:32px; }
+  .contagem{ font-size:12.5px; color:var(--text-muted); }
 
-  /* status: sem verde/âmbar decorativo — laranja = atenção, preto sólido = ok, maroon = limite */
-  .status-tag{
-    display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; line-height:1;
-    padding:5px 10px; border-radius:var(--r-pill); justify-self:end; white-space:nowrap;
-  }
+  /* analistas (multisseleção) */
+  .pop-wrap{ position:relative; }
+  .pop{ position:absolute; top:calc(100% + 6px); left:0; z-index:40; width:min(340px,92vw); max-height:min(420px,70vh); display:flex; flex-direction:column; background:var(--surface); border:1px solid var(--field-border); border-radius:var(--r-md); box-shadow:0 6px 20px rgba(13,13,13,.22); }
+  .pop-top{ padding:10px; border-bottom:1px solid var(--border); }
+  .pop-top .busca{ width:100%; }
+  .pop-lista{ flex:1; overflow-y:auto; padding:4px; }
+  .pop-item{ display:flex; align-items:center; gap:10px; padding:7px 8px; border-radius:var(--r-sm); font-size:13px; cursor:pointer; margin:0; font-weight:500; }
+  .pop-item:hover{ background:var(--accent-weak); }
+  .pop-item input{ width:16px; height:16px; margin:0; accent-color:var(--orange); }
+  .pop-item .mut{ margin-left:auto; font-size:11.5px; color:var(--text-muted); white-space:nowrap; }
+  .pop-pe{ display:flex; justify-content:space-between; gap:8px; padding:8px 10px; border-top:1px solid var(--border); }
+  .pop-pe button{ padding:6px 10px; font-size:13px; font-weight:600; color:var(--text); background:none; border-radius:var(--r-sm); text-decoration:underline; text-underline-offset:3px; }
+  .pop-vazio{ padding:14px; font-size:13px; color:var(--text-muted); text-align:center; }
+
+  /* indicadores */
+  .kpis{ flex:none; display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .kpi{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--r-md); box-shadow:var(--card-sh); padding:10px 14px; }
+  .kpi b{ display:block; font-size:24px; font-weight:700; letter-spacing:-.01em; line-height:1.15; }
+  .kpi span{ font-size:12.5px; color:var(--text-muted); }
+  .kpi.alerta b{ color:var(--red-text); }
+  @media (max-width:720px){ .kpis{ grid-template-columns:repeat(2,1fr); } }
+
+  /* tabelas (rolam por dentro; o cabeçalho fica fixo) */
+  .tabela{ flex:1; min-height:0; overflow:auto; background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--r-md); box-shadow:var(--card-sh); scrollbar-width:thin; scrollbar-color:var(--thumb) transparent; }
+  .tabela::-webkit-scrollbar{ width:9px; height:9px; }
+  .tabela::-webkit-scrollbar-thumb{ background:var(--thumb); border-radius:var(--r-pill); }
+  .tabela::-webkit-scrollbar-thumb:hover{ background:var(--thumb-hover); }
+  table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  th{ position:sticky; top:0; z-index:2; text-align:left; font-size:11.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--text-muted); background:var(--head-bg); padding:0; border-bottom:1px solid var(--border-strong); white-space:nowrap; }
+  th > .ord, th > .sem-ord{ display:flex; align-items:center; gap:4px; width:100%; padding:10px 12px; font:inherit; letter-spacing:inherit; text-transform:inherit; color:inherit; background:none; text-align:left; }
+  th > .ord:hover{ color:var(--text); }
+  th > .ord:focus-visible{ outline:2px solid var(--focus); outline-offset:-2px; }
+  th[aria-sort] > .ord{ color:var(--text); }
+  th[aria-sort="ascending"] > .ord::after{ content:"↑"; }
+  th[aria-sort="descending"] > .ord::after{ content:"↓"; }
+  td{ padding:9px 12px; border-top:1px solid var(--border); vertical-align:middle; }
+  tbody tr:first-child td{ border-top:0; }
+  tbody tr.lin:hover{ background:var(--accent-weak); }
+  .num{ text-align:right; font-variant-numeric:tabular-nums; }
+  th.num > .ord{ justify-content:flex-end; }
+  .mut{ color:var(--text-muted); }
+  .email{ font-weight:600; overflow-wrap:anywhere; }
+  .badge{ display:inline-flex; align-items:center; font-size:12px; font-weight:600; line-height:1; padding:4px 9px; border-radius:var(--r-pill); border:1px solid var(--border-strong); color:var(--text); white-space:nowrap; }
+  .badge.pod{ background:var(--accent-weak); border-color:transparent; }
+  .meter{ display:flex; align-items:center; gap:10px; min-width:190px; }
+  .meter-track{ flex:1; height:8px; min-width:80px; border-radius:var(--r-pill); background:var(--surface-sunken); overflow:hidden; }
+  .meter-fill{ height:100%; border-radius:var(--r-pill); }
+  .meter-txt{ font-size:12.5px; color:var(--text-muted); white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .meter-txt b{ color:var(--text); }
+  .status-tag{ display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; line-height:1; padding:5px 10px; border-radius:var(--r-pill); white-space:nowrap; }
   .status-tag::before{ content:""; width:6px; height:6px; border-radius:50%; background:currentColor; }
-  .status-tranquilo{ background:rgba(30,122,61,.10); color:var(--success); }
-  .status-atencao{ background:var(--yellow); color:var(--black); }
-  .status-limite{ background:var(--maroon); color:var(--white); }
-  @media (max-width:720px){ .status-tag{ justify-self:start; } }
+  .st-ok{ background:var(--ok-bg); color:var(--ok-text); }
+  .st-atencao{ background:var(--warn-bg); color:var(--warn-text); }
+  .st-limite{ background:var(--red-bg); color:var(--red-text); }
+  .vazio-tab{ padding:var(--sp-7) var(--sp-5); text-align:center; font-size:14px; color:var(--text-muted); }
+  .vazio-tab .btn-quiet{ margin-top:var(--sp-3); }
+  .exp{ width:26px; height:26px; padding:0; display:inline-grid; place-items:center; color:var(--text-muted); background:none; border-radius:var(--r-sm); vertical-align:middle; }
+  .exp:hover{ color:var(--text); background:var(--surface-sunken); }
+  .exp:focus-visible{ outline:2px solid var(--focus); outline-offset:1px; }
+  .exp svg{ width:14px; height:14px; transition:transform .15s; }
+  .exp[aria-expanded="true"] svg{ transform:rotate(90deg); }
+  tr.det td{ background:var(--surface-sunken); font-size:13px; line-height:1.55; color:var(--text); padding:10px 16px 12px 50px; }
+  .mais{ padding:12px; text-align:center; border-top:1px solid var(--border); }
+  .mais .btn-quiet{ width:auto; }
+  .nota-dados{ flex:none; font-size:12px; color:var(--text-muted); }
 
-  /* ---------- Tabela ---------- */
-  .table-wrap{ overflow-x:auto; border:1px solid var(--border); border-radius:var(--r-md); background:var(--surface); }
-  table{ width:100%; border-collapse:collapse; font-size:14px; min-width:680px; }
-  th{
-    text-align:left; font-size:12px; font-weight:600; letter-spacing:.06em; text-transform:uppercase;
-    background:var(--ink); color:var(--on-ink); padding:12px 14px;
-  }
-  td{ padding:12px 14px; border-top:1px solid var(--border); vertical-align:top; }
-  tbody tr:hover{ background:var(--accent-weak); }
-  .cell-muted{ color:var(--text-muted); font-size:13px; }
-  .cell-racional{ max-width:260px; color:var(--text-muted); font-size:13px; line-height:1.4; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  /* regras */
+  .regras{ display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:12px; align-items:start; }
+  .regra{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--r-md); box-shadow:var(--card-sh); padding:var(--sp-4) var(--sp-5); font-size:13.5px; line-height:1.55; }
+  .regra h3{ margin:0 0 var(--sp-2); font-size:15px; font-weight:700; }
+  .regra ol{ margin:6px 0 0; padding-left:20px; } .regra li{ margin-bottom:5px; }
+  .regra p{ margin:8px 0 0; font-size:12.5px; color:var(--text-muted); }
+  .regra table{ margin-top:6px; font-size:13px; }
+  .regra th{ position:static; padding:7px 10px; background:var(--head-bg); }
+  .regra td{ padding:7px 10px; border:1px solid var(--border); }
+  .pill-note{ display:inline-flex; font-size:12px; font-weight:600; line-height:1; background:var(--accent-weak); color:var(--text); padding:3px 8px; border-radius:var(--r-pill); }
 
-  /* ---------- Regras ---------- */
-  .rules-card{
-    position:relative; overflow:hidden; background:var(--surface); border:1px solid var(--border);
-    border-radius:var(--r-md); padding:var(--sp-5); font-size:14px; line-height:1.6;
-  }
-  .rules-card::before{ content:""; position:absolute; top:0; left:0; right:0; height:4px; background:var(--orange); }
-  .rules-card h3{ font-size:16px; font-weight:600; margin:var(--sp-5) 0 var(--sp-2); }
-  .rules-card h3:first-child{ margin-top:var(--sp-1); }
-  .rules-card ol, .rules-card ul{ margin:6px 0; padding-left:20px; }
-  .rules-card li{ margin-bottom:4px; }
-  .rules-table{ width:100%; border-collapse:collapse; margin-top:var(--sp-2); font-size:13px; min-width:0; }
-  .rules-table th, .rules-table td{ border:1px solid var(--border); padding:8px 12px; text-align:left; }
-  .rules-table th{ background:var(--ink); color:var(--on-ink); font-size:12px; }
-  .pill-note{
-    display:inline-flex; font-size:12px; font-weight:600; line-height:1;
-    background:var(--accent-weak); color:var(--orange); padding:4px 10px; border-radius:var(--r-pill);
-  }
+  /* menu do usuário */
+  .user-menu{ position:fixed; top:16px; right:64px; z-index:30; }
+  .avatar-btn{ width:40px; height:40px; padding:0; display:grid; place-items:center; font-size:14px; font-weight:700; letter-spacing:.02em; color:var(--black); background:var(--orange); border-radius:var(--r-pill); }
+  .avatar-btn:hover{ background:var(--orange-hover); }
+  .avatar-btn:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  .user-pop{ position:absolute; top:46px; right:0; width:max-content; min-width:230px; max-width:min(340px,90vw); padding:6px; background:var(--surface); border:1px solid var(--field-border); border-radius:var(--r-sm); box-shadow:0 4px 14px rgba(13,13,13,.16); }
+  .user-email{ padding:8px 10px; font-size:13px; font-weight:600; overflow-wrap:break-word; border-bottom:1px solid var(--border); margin-bottom:4px; }
+  .menu-item{ display:block; width:100%; text-align:left; padding:8px 10px; font-size:13px; font-weight:600; color:var(--text); background:none; border-radius:4px; }
+  .menu-item:hover, .menu-item:focus-visible{ background:var(--accent-weak); outline:none; }
+  @media (max-width:900px){ #appScreen{ padding:12px 16px 12px; } .app-head{ padding-right:112px; } }
+  @media (prefers-reduced-motion:reduce){ .icon-btn.girando svg, .exp svg{ animation:none; transition:none; } }
 
-  .empty-note{ text-align:center; padding:var(--sp-5); }
-  footer{ margin-top:var(--sp-6); }
 
   /* ============================================================
      Tema claro/escuro + tela de login (split screen)
@@ -273,7 +324,7 @@
   .theme-toggle .i-sun{ display:none; }
   :root[data-theme="dark"] .theme-toggle .i-sun{ display:block; }
   :root[data-theme="dark"] .theme-toggle .i-moon{ display:none; }
-  body:not(.is-login) .frame{ padding-top:44px; }
+  
 
   /* login em duas colunas */
   body.is-login{ display:block; padding:0; }
@@ -369,94 +420,167 @@
 
     <!-- PAINEL -->
     <section id="appScreen" style="display:none;">
-      <div class="topbar">
-        <div class="who">Logado como <b id="loggedEmail"></b> · <a class="nav-link" href="index-fer.html">Ir pro Onboarding Assignment →</a></div>
-        <button class="logout-link" id="logoutBtn">sair</button>
+      <header class="app-head">
+        <div class="app-title">
+          <h1 class="app-h1">Painel de Acompanhamento</h1>
+          <p class="app-sub">Carteira, atribuições e regras do Onboarding Assignment</p>
+          <p class="app-status" id="geradoEm" aria-live="polite">Carregando…</p>
+        </div>
+        <div class="app-tools">
+          <button type="button" class="icon-btn" id="refreshBtn" aria-label="Atualizar painel" title="Atualizar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 4v5h-5"/></svg></button>
+          <a class="btn-quiet" href="index-fer.html">Onboarding Assignment →</a>
+        </div>
+      </header>
+
+      <div class="tabs" role="tablist" aria-label="Seções do painel">
+        <button type="button" class="tab" role="tab" id="tab-carteira" aria-controls="panel-carteira" aria-selected="true" data-aba="carteira">Carteira</button>
+        <button type="button" class="tab" role="tab" id="tab-atribuicoes" aria-controls="panel-atribuicoes" aria-selected="false" tabindex="-1" data-aba="atribuicoes">Atribuições</button>
+        <button type="button" class="tab" role="tab" id="tab-regras" aria-controls="panel-regras" aria-selected="false" tabindex="-1" data-aba="regras">Regras</button>
       </div>
 
-      <div class="eyebrow">New Business · Hotmart</div>
-      <h1>Painel de Acompanhamento</h1>
-      <p class="sub">Carteira, capacidade e últimas atribuições de cada Onboarder/Guardião, em tempo real.</p>
-      <p class="gerado-em" id="geradoEm">—</p>
+      <!-- ===== ABA CARTEIRA ===== -->
+      <div class="panel" id="panel-carteira" role="tabpanel" aria-labelledby="tab-carteira">
+        <div class="toolbar" id="filtroNivel" role="group" aria-label="Filtrar por nível">
+          <button type="button" class="pill" data-nivel="todos" aria-pressed="true">Todos</button>
+          <button type="button" class="pill" data-nivel="N2-N3" aria-pressed="false">N2-N3</button>
+          <button type="button" class="pill" data-nivel="N4-N5" aria-pressed="false">N4-N5</button>
+          <button type="button" class="pill" data-nivel="N6+" aria-pressed="false">N6+</button>
+          <button type="button" class="pill" data-nivel="Guardian" aria-pressed="false">Guardião</button>
+          <span class="sep-v" aria-hidden="true"></span>
+          <div class="pop-wrap">
+            <button type="button" class="pill" id="analistasBtn" aria-haspopup="dialog" aria-expanded="false" aria-pressed="false">Analistas</button>
+            <div class="pop" id="analistasPop" role="dialog" aria-label="Escolher analistas" hidden>
+              <div class="pop-top">
+                <label class="busca"><span class="sr-only">Buscar analista</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                  <input type="search" id="analistasBusca" placeholder="Buscar analista" autocomplete="off" /></label>
+              </div>
+              <div class="pop-lista" id="analistasLista"></div>
+              <div class="pop-pe"><button type="button" id="analistasTodos">Selecionar os listados</button><button type="button" id="analistasLimpar">Limpar</button></div>
+            </div>
+          </div>
+          <span class="contagem grow" id="carteiraCount" aria-live="polite"></span>
+        </div>
 
-      <div class="filter-row" id="filterRow">
-        <button class="filter-pill active" data-level="todos">Todos</button>
-        <button class="filter-pill" data-level="N2-N3">N2-N3</button>
-        <button class="filter-pill" data-level="N4-N5">N4-N5</button>
-        <button class="filter-pill" data-level="N6+">N6+</button>
-        <button class="filter-pill" data-level="Guardian">Guardião</button>
+        <div class="kpis" id="kpis">
+          <div class="kpi"><b id="kpiTotalOnb">—</b><span>Analistas</span></div>
+          <div class="kpi"><b id="kpiCarteiraTotal">—</b><span>Contratos ativos</span></div>
+          <div class="kpi"><b id="kpiLivreTotal">—</b><span>Vagas livres</span></div>
+          <div class="kpi" id="kpiLimiteBox"><b id="kpiNoLimite">—</b><span>No limite máximo</span></div>
+        </div>
+
+        <div class="tabela" id="tabelaCarteira" tabindex="0" aria-label="Carteira por analista">
+          <table>
+            <thead>
+              <tr id="cabCarteira">
+                <th data-col="email" scope="col"><button type="button" class="ord">Analista</button></th>
+                <th data-col="pod" scope="col"><button type="button" class="ord">POD</button></th>
+                <th data-col="level" scope="col"><button type="button" class="ord">Nível</button></th>
+                <th data-col="carteira" scope="col"><button type="button" class="ord">Carteira</button></th>
+                <th data-col="livres" scope="col" class="num"><button type="button" class="ord">Livres</button></th>
+                <th data-col="pre" scope="col" class="num"><button type="button" class="ord" title="Pré-onboarding em andamento">Pré-onb.</button></th>
+                <th data-col="ultima" scope="col"><button type="button" class="ord">Última atribuição</button></th>
+                <th data-col="pct" scope="col"><button type="button" class="ord" title="Carteira ativa / limite do nível">Status</button></th>
+              </tr>
+            </thead>
+            <tbody id="corpoCarteira"></tbody>
+          </table>
+        </div>
       </div>
 
-      <div class="kpi-row" id="kpiRow">
-        <div class="kpi-tile"><div class="kpi-num" id="kpiTotalOnb">—</div><div class="kpi-label">Onboarders/Guardiões visíveis</div></div>
-        <div class="kpi-tile"><div class="kpi-num" id="kpiCarteiraTotal">—</div><div class="kpi-label">Contratos ativos na carteira</div></div>
-        <div class="kpi-tile"><div class="kpi-num" id="kpiLivreTotal">—</div><div class="kpi-label">Vagas livres na carteira</div></div>
-        <div class="kpi-tile"><div class="kpi-num" id="kpiNoLimite">—</div><div class="kpi-label">No limite máximo</div></div>
+      <!-- ===== ABA ATRIBUIÇÕES ===== -->
+      <div class="panel" id="panel-atribuicoes" role="tabpanel" aria-labelledby="tab-atribuicoes" hidden>
+        <div class="toolbar" role="group" aria-label="Filtrar por data">
+          <button type="button" class="pill" data-periodo="hoje" aria-pressed="false">Hoje</button>
+          <button type="button" class="pill" data-periodo="7" aria-pressed="false">7 dias</button>
+          <button type="button" class="pill" data-periodo="30" aria-pressed="false">30 dias</button>
+          <button type="button" class="pill" data-periodo="tudo" aria-pressed="true">Tudo</button>
+          <span class="sep-v" aria-hidden="true"></span>
+          <label class="campo-data">De <input type="date" id="dataDe" /></label>
+          <label class="campo-data">Até <input type="date" id="dataAte" /></label>
+          <label class="busca"><span class="sr-only">Buscar por cliente, onboarder ou closer</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input type="search" id="atribBusca" placeholder="Cliente, onboarder ou closer" autocomplete="off" /></label>
+          <span class="contagem grow" id="atribCount" aria-live="polite"></span>
+        </div>
+        <div class="tabela" id="tabelaAtrib" tabindex="0" aria-label="Últimas atribuições">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col"><span class="sem-ord"><span class="sr-only">Detalhe</span></span></th>
+                <th scope="col"><span class="sem-ord">Data</span></th>
+                <th scope="col"><span class="sem-ord">Cliente</span></th>
+                <th scope="col"><span class="sem-ord">Onboarder</span></th>
+                <th scope="col"><span class="sem-ord">Closer</span></th>
+                <th scope="col"><span class="sem-ord">Segmentação</span></th>
+              </tr>
+            </thead>
+            <tbody id="corpoAtrib"></tbody>
+          </table>
+          <div class="mais" id="atribMais" hidden></div>
+        </div>
+        <div class="nota-dados" id="atribNota"></div>
       </div>
 
-      <div class="section-title">Carteira por Onboarder</div>
-      <div class="section-sub">Capacidade consumida = carteira ativa / limite máximo do nível. <span class="status-tag status-tranquilo" style="padding:2px 8px;">tranquilo</span> &lt;70% · <span class="status-tag status-atencao" style="padding:2px 8px;">atenção</span> 70–99% · <span class="status-tag status-limite" style="padding:2px 8px;">no limite</span> 100%+</div>
-      <div class="onboarder-list" id="onboarderList">
-        <div class="empty-note">Carregando dados do painel…</div>
+      <!-- ===== ABA REGRAS ===== -->
+      <div class="panel rola" id="panel-regras" role="tabpanel" aria-labelledby="tab-regras" hidden>
+        <div class="regras">
+          <section class="regra">
+            <h3>Cascata de decisão <span class="mut">(nunca cruza nível)</span></h3>
+            <ol>
+              <li><b>Mesmo POD</b> — onboarders do POD do Closer com carteira abaixo do limite do nível.</li>
+              <li><b>Guardião</b> — só se o POD estiver no limite. Vale para <span class="pill-note">N2-N3</span> e <span class="pill-note">N4-N5</span> (nunca N6+). Escolhe o guardião com menor carteira, limite de 150.</li>
+              <li><b>Outro POD, mesmo nível</b> — mesma lógica da etapa 1, em qualquer POD do nível do Closer.</li>
+              <li><b>Alerta ao coordenador</b> — se todo o nível (guardiões inclusos) estiver no limite, é enviado e-mail ao coordenador e nada é atribuído.</li>
+            </ol>
+          </section>
+          <section class="regra">
+            <h3>Limite de carteira por nível</h3>
+            <table>
+              <thead><tr><th scope="col">Nível</th><th scope="col">Limite total</th></tr></thead>
+              <tbody>
+                <tr><td>N2-N3</td><td>75 contratos</td></tr>
+                <tr><td>N4-N5</td><td>50 contratos</td></tr>
+                <tr><td>N6+</td><td>25 contratos</td></tr>
+                <tr><td>Guardian</td><td>150 contratos</td></tr>
+              </tbody>
+            </table>
+            <p>Status: <span class="status-tag st-ok">tranquilo</span> abaixo de 70% · <span class="status-tag st-atencao">atenção</span> de 70% a 99% · <span class="status-tag st-limite">no limite</span> 100% ou mais.</p>
+          </section>
+          <section class="regra">
+            <h3>Subgrupo por receita (12 meses)</h3>
+            <table>
+              <thead><tr><th scope="col">Nível</th><th scope="col">sg1</th><th scope="col">sg2</th><th scope="col">sg3</th></tr></thead>
+              <tbody>
+                <tr><td>N2-N3</td><td>&lt; R$300k</td><td>R$300k a &lt; R$600k</td><td>≥ R$600k</td></tr>
+                <tr><td>N4-N5</td><td>&lt; R$2M</td><td>R$2M a &lt; R$3M</td><td>≥ R$3M</td></tr>
+                <tr><td>N6+</td><td>&lt; R$10M</td><td>R$10M a &lt; R$15M</td><td>≥ R$15M</td></tr>
+              </tbody>
+            </table>
+            <p>Limite inferior inclusive, superior exclusive. sg1 não tem piso e sg3 não tem teto. Cada subgrupo comporta 10 contratos por onboarder; se todos estiverem no limite, vale a menor carteira total.</p>
+          </section>
+          <section class="regra">
+            <h3>Critério de desempate</h3>
+            <ol>
+              <li>Menor carteira do subgrupo (ou, no modo alternativo, menor carteira total).</li>
+              <li>Empate → menor número de pré-onboardings do subgrupo.</li>
+              <li>Empate final → quem está há mais tempo sem receber uma atribuição.</li>
+            </ol>
+          </section>
+        </div>
       </div>
 
-      <div class="section-title">Últimas atribuições</div>
-      <div class="section-sub">As atribuições mais recentes registradas no histórico, mais recente primeiro.</div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>Cliente</th><th>Onboarder</th><th>Closer</th><th>Segmentação</th><th>Data</th><th>Racional</th></tr>
-          </thead>
-          <tbody id="histBody">
-            <tr><td colspan="6" class="empty-note">Carregando…</td></tr>
-          </tbody>
-        </table>
+      <div class="user-menu" id="userMenu">
+        <button type="button" class="avatar-btn" id="avatarBtn" aria-haspopup="menu" aria-expanded="false" aria-label="Menu do usuário" title="Menu do usuário"><span id="avatarIni">?</span></button>
+        <div class="user-pop" id="userPop" role="menu" hidden>
+          <div class="user-email" id="loggedEmail"></div>
+          <button type="button" class="menu-item" id="logoutBtn" role="menuitem">Sair</button>
+        </div>
       </div>
-
-      <div class="section-title">Resumo das regras de atribuição</div>
-      <div class="rules-card">
-        <h3>Cascata de decisão (nunca cruza nível)</h3>
-        <ol>
-          <li><b>Mesmo POD</b> — onboarders do mesmo POD do Closer, com carteira abaixo do limite do nível.</li>
-          <li><b>Guardião</b> — só entra se o POD estiver no limite. Vale só pra <span class="pill-note">N2-N3</span> e <span class="pill-note">N4-N5</span> (nunca N6+). Escolhe o guardião com menor carteira, limite 150 contratos.</li>
-          <li><b>Outro POD, mesmo nível</b> — mesma lógica da etapa 1, mas em qualquer POD do mesmo nível do Closer.</li>
-          <li><b>Alerta ao coordenador</b> — se todo mundo do nível (incluindo guardiões) estiver no limite, dispara e-mail pro coordenador e nenhuma atribuição é feita.</li>
-        </ol>
-
-        <h3>Limite máximo de carteira por nível</h3>
-        <table class="rules-table">
-          <thead><tr><th>Nível</th><th>Limite total</th></tr></thead>
-          <tbody>
-            <tr><td>N2-N3</td><td>75 contratos</td></tr>
-            <tr><td>N4-N5</td><td>50 contratos</td></tr>
-            <tr><td>N6+</td><td>25 contratos</td></tr>
-            <tr><td>Guardian</td><td>150 contratos</td></tr>
-          </tbody>
-        </table>
-
-        <h3>Segmentação por subgrupo de receita (12 meses)</h3>
-        <table class="rules-table">
-          <thead><tr><th>Nível</th><th>sg1</th><th>sg2</th><th>sg3</th></tr></thead>
-          <tbody>
-            <tr><td>N2-N3</td><td>&lt; R$300k</td><td>R$300k a &lt; R$600k</td><td>≥ R$600k</td></tr>
-            <tr><td>N4-N5</td><td>&lt; R$2M</td><td>R$2M a &lt; R$3M</td><td>≥ R$3M</td></tr>
-            <tr><td>N6+</td><td>&lt; R$10M</td><td>R$10M a &lt; R$15M</td><td>≥ R$15M</td></tr>
-          </tbody>
-        </table>
-        <p class="section-sub" style="margin-top:6px;">Limite inferior inclusive, superior exclusive — por isso não há valor repetido entre faixas vizinhas. sg1 não tem piso e sg3 não tem teto. Cada subgrupo tem limite de 10 contratos por onboarder; se todos do subgrupo estiverem no limite, o desempate cai pra menor carteira total.</p>
-
-        <h3>Critério de desempate</h3>
-        <ol>
-          <li>Menor carteira do subgrupo (ou, em modo fallback, menor carteira total)</li>
-          <li>Empate → menor número de pré-onboardings do subgrupo</li>
-          <li>Empate final → quem está há mais tempo sem receber uma atribuição nova</li>
-        </ol>
-      </div>
-
-      <footer>Sales Ops · New Business</footer>
     </section>
 
   </div>
+
 
 <script>
   // ============================================================
@@ -497,18 +621,6 @@
   const loginError   = document.getElementById('loginError');
   const loggedEmail  = document.getElementById('loggedEmail');
   const logoutBtn    = document.getElementById('logoutBtn');
-
-  const geradoEm       = document.getElementById('geradoEm');
-  const filterRow      = document.getElementById('filterRow');
-  const onboarderList  = document.getElementById('onboarderList');
-  const histBody       = document.getElementById('histBody');
-  const kpiTotalOnb     = document.getElementById('kpiTotalOnb');
-  const kpiCarteiraTotal = document.getElementById('kpiCarteiraTotal');
-  const kpiLivreTotal   = document.getElementById('kpiLivreTotal');
-  const kpiNoLimite     = document.getElementById('kpiNoLimite');
-
-  let painelData = { onboarders: [], ultimas_atribuicoes: [] };
-  let levelAtivo = 'todos';
 
   function isValidHotmartEmail(email){
     return /^[^\s@]+@hotmart\.com$/i.test(email.trim());
@@ -562,8 +674,10 @@
   function showApp(email){
     loginScreen.style.display = 'none';
     document.body.classList.remove('is-login');
-    appScreen.style.display = 'block';
+    appScreen.style.display = 'flex';
     loggedEmail.textContent = email;
+    document.getElementById('avatarIni').textContent = iniciaisDoUsuario();
+    fecharMenuUsuario();
     carregarPainel();
   }
   function showLogin(){
@@ -616,125 +730,354 @@
   logoutBtn.addEventListener('click', () => { sessionStorage.removeItem(SESSION_KEY); showLogin(); });
 
   // ---------------------------------------------------------
-  // Carrega dados do webhook
+  // Painel: dados, abas e filtros
   // ---------------------------------------------------------
+  const AUTO_ATUALIZAR_MS = 3 * 60 * 1000;
+  const POR_PAGINA = 25;
+  const ORDEM_NIVEL = { 'N2-N3': 1, 'N4-N5': 2, 'N6+': 3, 'Guardian': 4 };
+  const ICONE_SETA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>';
+
+  const geradoEm = document.getElementById('geradoEm');
+  const refreshBtn = document.getElementById('refreshBtn');
+  const corpoCarteira = document.getElementById('corpoCarteira');
+  const corpoAtrib = document.getElementById('corpoAtrib');
+  const analistasBtn = document.getElementById('analistasBtn');
+  const analistasPop = document.getElementById('analistasPop');
+  const analistasLista = document.getElementById('analistasLista');
+  const analistasBusca = document.getElementById('analistasBusca');
+  const dataDe = document.getElementById('dataDe');
+  const dataAte = document.getElementById('dataAte');
+  const atribBusca = document.getElementById('atribBusca');
+  const atribMais = document.getElementById('atribMais');
+  const avatarBtn = document.getElementById('avatarBtn');
+  const userPop = document.getElementById('userPop');
+
+  let painelData = { onboarders: [], ultimas_atribuicoes: [], gerado_em: null };
+  let carregando = false, erroCarga = '', atualizadoEm = 0;
+  let nivelAtivo = 'todos';
+  const analistasSel = new Set();
+  let ordem = { col: 'pct', dir: 'desc' };
+  let periodo = 'tudo';
+  let visiveisAtrib = POR_PAGINA;
+  const expandidas = new Set();
+
+  function h(tag, cls, txt){ const e = document.createElement(tag); if (cls) e.className = cls; if (txt !== undefined) e.textContent = txt; return e; }
+
+  // ── abas ──
+  const ABAS = ['carteira', 'atribuicoes', 'regras'];
+  function selecionarAba(id, focar){
+    if (!ABAS.includes(id)) id = 'carteira';
+    ABAS.forEach(a => {
+      const t = document.getElementById('tab-' + a), p = document.getElementById('panel-' + a), sel = a === id;
+      t.setAttribute('aria-selected', String(sel));
+      t.tabIndex = sel ? 0 : -1;
+      p.hidden = !sel;
+      if (sel && focar) t.focus();
+    });
+    try { history.replaceState(null, '', '#' + id); } catch (e) {}
+  }
+  document.querySelector('.tabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (b) selecionarAba(b.dataset.aba); });
+  document.querySelector('.tabs').addEventListener('keydown', e => {
+    const i = ABAS.indexOf(document.activeElement.dataset ? document.activeElement.dataset.aba : '');
+    if (i < 0) return;
+    let j = null;
+    if (e.key === 'ArrowRight') j = (i + 1) % ABAS.length;
+    else if (e.key === 'ArrowLeft') j = (i - 1 + ABAS.length) % ABAS.length;
+    else if (e.key === 'Home') j = 0;
+    else if (e.key === 'End') j = ABAS.length - 1;
+    if (j !== null) { e.preventDefault(); selecionarAba(ABAS[j], true); }
+  });
+
+  // ── status de capacidade ──
+  function statusDe(pct){
+    if (pct === null || pct === undefined) return { classe: 'st-ok', label: 'sem limite', cor: 'var(--ok-bar)' };
+    if (pct >= 100) return { classe: 'st-limite', label: 'no limite', cor: 'var(--red-bar)' };
+    if (pct >= 70)  return { classe: 'st-atencao', label: 'atenção', cor: 'var(--orange)' };
+    return { classe: 'st-ok', label: 'tranquilo', cor: 'var(--ok-bar)' };
+  }
+
+  // ── carteira ──
+  function listaCarteira(){
+    let l = painelData.onboarders || [];
+    if (nivelAtivo !== 'todos') l = l.filter(o => o.level === nivelAtivo);
+    if (analistasSel.size) l = l.filter(o => analistasSel.has(o.email));
+    return l;
+  }
+  function valorOrdem(o, col){
+    switch (col) {
+      case 'email': return String(o.email || '').toLowerCase();
+      case 'pod': return Number(o.pod) || 0;
+      case 'level': return ORDEM_NIVEL[o.level] || 9;
+      case 'carteira': return o.carteira_atual || 0;
+      case 'livres': return o.capacidade_livre == null ? -1 : o.capacidade_livre;
+      case 'pre': return o.pre_onboarding_atual || 0;
+      case 'ultima': return o.ultima_atribuicao_em ? Date.parse(o.ultima_atribuicao_em) || 0 : 0;
+      default: return o.percentual_consumido == null ? -1 : o.percentual_consumido;
+    }
+  }
+  function fmtDia(iso){
+    if (!iso) return '—';
+    const d = new Date(iso);
+    if (isNaN(d)) return '—';
+    return d.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
+  function renderCarteira(){
+    const lista = listaCarteira().slice().sort((a, b) => {
+      const x = valorOrdem(a, ordem.col), y = valorOrdem(b, ordem.col);
+      const c = x < y ? -1 : x > y ? 1 : 0;
+      return (ordem.dir === 'asc' ? c : -c) || String(a.email).localeCompare(String(b.email));
+    });
+    document.getElementById('kpiTotalOnb').textContent = String(lista.length);
+    document.getElementById('kpiCarteiraTotal').textContent = String(lista.reduce((s, o) => s + (o.carteira_atual || 0), 0));
+    document.getElementById('kpiLivreTotal').textContent = String(lista.reduce((s, o) => s + (o.capacidade_livre || 0), 0));
+    const noLimite = lista.filter(o => (o.percentual_consumido ?? 0) >= 100).length;
+    document.getElementById('kpiNoLimite').textContent = String(noLimite);
+    document.getElementById('kpiLimiteBox').classList.toggle('alerta', noLimite > 0);
+    document.getElementById('carteiraCount').textContent = analistasSel.size || nivelAtivo !== 'todos'
+      ? lista.length + ' de ' + (painelData.onboarders || []).length + ' analistas' : '';
+    document.querySelectorAll('#cabCarteira th').forEach(th => {
+      if (th.dataset.col === ordem.col) th.setAttribute('aria-sort', ordem.dir === 'asc' ? 'ascending' : 'descending'); else th.removeAttribute('aria-sort');
+    });
+    corpoCarteira.innerHTML = '';
+    if (erroCarga) { corpoCarteira.appendChild(linhaVazia(8, erroCarga)); return; }
+    if (!carregando && !(painelData.onboarders || []).length) { corpoCarteira.appendChild(linhaVazia(8, 'Nenhum analista no painel.')); return; }
+    if (!lista.length) {
+      const tr = linhaVazia(8, 'Nenhum analista para esses filtros.');
+      const b = h('button', 'btn-quiet', 'Limpar filtros'); b.type = 'button';
+      b.addEventListener('click', () => { nivelAtivo = 'todos'; analistasSel.clear(); sincronizarFiltros(); renderCarteira(); });
+      tr.firstChild.appendChild(document.createElement('br')); tr.firstChild.appendChild(b);
+      corpoCarteira.appendChild(tr); return;
+    }
+    lista.forEach(o => {
+      const pct = o.percentual_consumido;
+      const st = statusDe(pct);
+      const tr = h('tr', 'lin');
+      tr.appendChild(h('td', 'email', o.email || '—'));
+      const tdPod = h('td'); tdPod.appendChild(h('span', 'badge pod', 'POD ' + (o.pod ?? '—'))); tr.appendChild(tdPod);
+      const tdNv = h('td'); tdNv.appendChild(h('span', 'badge', o.level || '—')); tr.appendChild(tdNv);
+      const tdM = h('td'); const m = h('div', 'meter');
+      const trk = h('div', 'meter-track'); const fill = h('div', 'meter-fill'); fill.style.width = Math.min(pct ?? 0, 100) + '%'; fill.style.background = st.cor; trk.appendChild(fill);
+      const tx = h('span', 'meter-txt'); const bold = h('b', '', String(o.carteira_atual ?? 0)); tx.appendChild(bold); tx.appendChild(document.createTextNode(' / ' + (o.capacidade_maxima ?? '—')));
+      m.appendChild(trk); m.appendChild(tx); tdM.appendChild(m); tr.appendChild(tdM);
+      tr.appendChild(h('td', 'num', o.capacidade_livre == null ? '—' : String(o.capacidade_livre)));
+      tr.appendChild(h('td', 'num', String(o.pre_onboarding_atual ?? 0)));
+      tr.appendChild(h('td', 'mut', fmtDia(o.ultima_atribuicao_em)));
+      const tdS = h('td'); tdS.appendChild(h('span', 'status-tag ' + st.classe, (pct == null ? '' : pct + '% · ') + st.label)); tr.appendChild(tdS);
+      corpoCarteira.appendChild(tr);
+    });
+  }
+  function linhaVazia(cols, msg){
+    const tr = h('tr'); const td = h('td', 'vazio-tab', msg); td.colSpan = cols; tr.appendChild(td); return tr;
+  }
+  document.getElementById('cabCarteira').addEventListener('click', e => {
+    const th = e.target.closest('th'); if (!th || !e.target.closest('.ord')) return;
+    const col = th.dataset.col;
+    if (ordem.col === col) ordem.dir = ordem.dir === 'asc' ? 'desc' : 'asc';
+    else ordem = { col, dir: (col === 'email' || col === 'pod' || col === 'level' || col === 'ultima') ? 'asc' : 'desc' };
+    renderCarteira();
+  });
+  document.getElementById('filtroNivel').addEventListener('click', e => {
+    const b = e.target.closest('[data-nivel]'); if (!b) return;
+    nivelAtivo = b.dataset.nivel;
+    sincronizarFiltros(); renderCarteira();
+  });
+  function sincronizarFiltros(){
+    document.querySelectorAll('#filtroNivel [data-nivel]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.nivel === nivelAtivo)));
+    analistasBtn.textContent = analistasSel.size ? 'Analistas (' + analistasSel.size + ')' : 'Analistas';
+    analistasBtn.setAttribute('aria-pressed', String(analistasSel.size > 0));
+    if (!analistasPop.hidden) renderAnalistas();
+  }
+
+  // ── seletor de analistas (multisseleção) ──
+  function analistasListados(){
+    const t = analistasBusca.value.trim().toLowerCase();
+    return (painelData.onboarders || [])
+      .filter(o => (nivelAtivo === 'todos' || o.level === nivelAtivo) && (!t || String(o.email || '').toLowerCase().includes(t)))
+      .slice().sort((a, b) => String(a.email).localeCompare(String(b.email)));
+  }
+  function renderAnalistas(){
+    const l = analistasListados();
+    analistasLista.innerHTML = '';
+    if (!l.length) { analistasLista.appendChild(h('div', 'pop-vazio', 'Nenhum analista encontrado.')); return; }
+    l.forEach(o => {
+      const lab = h('label', 'pop-item');
+      const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = analistasSel.has(o.email); cb.value = o.email;
+      cb.addEventListener('change', () => { if (cb.checked) analistasSel.add(o.email); else analistasSel.delete(o.email); sincronizarBotao(); renderCarteira(); });
+      lab.appendChild(cb); lab.appendChild(h('span', '', o.email));
+      lab.appendChild(h('span', 'mut', 'POD ' + (o.pod ?? '—') + ' · ' + (o.level || '—')));
+      analistasLista.appendChild(lab);
+    });
+  }
+  function sincronizarBotao(){
+    analistasBtn.textContent = analistasSel.size ? 'Analistas (' + analistasSel.size + ')' : 'Analistas';
+    analistasBtn.setAttribute('aria-pressed', String(analistasSel.size > 0));
+  }
+  function abrirAnalistas(){
+    analistasPop.hidden = false; analistasBtn.setAttribute('aria-expanded', 'true');
+    analistasBusca.value = ''; renderAnalistas(); analistasBusca.focus();
+  }
+  function fecharAnalistas(devolver){
+    if (analistasPop.hidden) return;
+    analistasPop.hidden = true; analistasBtn.setAttribute('aria-expanded', 'false');
+    if (devolver) analistasBtn.focus();
+  }
+  analistasBtn.addEventListener('click', ev => { ev.stopPropagation(); if (analistasPop.hidden) abrirAnalistas(); else fecharAnalistas(); });
+  analistasBusca.addEventListener('input', renderAnalistas);
+  document.getElementById('analistasTodos').addEventListener('click', () => { analistasListados().forEach(o => analistasSel.add(o.email)); sincronizarBotao(); renderAnalistas(); renderCarteira(); });
+  document.getElementById('analistasLimpar').addEventListener('click', () => { analistasSel.clear(); sincronizarBotao(); renderAnalistas(); renderCarteira(); });
+  analistasPop.addEventListener('keydown', e => { if (e.key === 'Escape') { e.stopPropagation(); fecharAnalistas(true); } });
+  document.addEventListener('click', e => {
+    if (!analistasPop.hidden && !analistasPop.contains(e.target) && e.target !== analistasBtn) fecharAnalistas();
+    if (!userPop.hidden && !userPop.contains(e.target)) fecharMenuUsuario();
+  });
+
+  // ── atribuições ──
+  const hojeYmd = () => new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
+  function somaDias(ymd, n){ const d = new Date(ymd + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
+  // "11/10/2026, 21:46:30" → "2026-10-11" (compara só o dia, sem fuso)
+  function ymdDe(s){ const m = String(s || '').match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/); return m ? m[3] + '-' + m[2].padStart(2, '0') + '-' + m[1].padStart(2, '0') : ''; }
+  function atribFiltradas(){
+    const t = atribBusca.value.trim().toLowerCase();
+    return (painelData.ultimas_atribuicoes || []).filter(a => {
+      const y = ymdDe(a.data_atribuicao);
+      if (dataDe.value && (!y || y < dataDe.value)) return false;
+      if (dataAte.value && (!y || y > dataAte.value)) return false;
+      return !t || [a.cliente, a.onboarder, a.closer].some(v => String(v || '').toLowerCase().includes(t));
+    });
+  }
+  function aplicarPeriodo(p){
+    periodo = p; const hoje = hojeYmd();
+    if (p === 'hoje') { dataDe.value = hoje; dataAte.value = hoje; }
+    else if (p === '7') { dataDe.value = somaDias(hoje, -6); dataAte.value = hoje; }
+    else if (p === '30') { dataDe.value = somaDias(hoje, -29); dataAte.value = hoje; }
+    else if (p === 'tudo') { dataDe.value = ''; dataAte.value = ''; }
+    visiveisAtrib = POR_PAGINA;
+    sincronizarPeriodo(); renderAtrib();
+  }
+  function sincronizarPeriodo(){
+    document.querySelectorAll('[data-periodo]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.periodo === periodo)));
+  }
+  document.querySelectorAll('[data-periodo]').forEach(b => b.addEventListener('click', () => aplicarPeriodo(b.dataset.periodo)));
+  [dataDe, dataAte].forEach(i => i.addEventListener('input', () => { periodo = 'custom'; visiveisAtrib = POR_PAGINA; sincronizarPeriodo(); renderAtrib(); }));
+  atribBusca.addEventListener('input', () => { visiveisAtrib = POR_PAGINA; renderAtrib(); });
+
+  function renderAtrib(){
+    const todas = painelData.ultimas_atribuicoes || [];
+    const lista = atribFiltradas();
+    const vis = lista.slice(0, visiveisAtrib);
+    document.getElementById('atribCount').textContent = lista.length === todas.length ? todas.length + (todas.length === 1 ? ' atribuição' : ' atribuições') : lista.length + ' de ' + todas.length + ' atribuições';
+    corpoAtrib.innerHTML = '';
+    atribMais.hidden = true;
+    const datas = todas.map(a => ymdDe(a.data_atribuicao)).filter(Boolean).sort();
+    document.getElementById('atribNota').textContent = datas.length
+      ? 'O histórico carregado vai de ' + datas[0].split('-').reverse().join('/') + ' a ' + datas[datas.length - 1].split('-').reverse().join('/') + '.' : '';
+    if (erroCarga) { corpoAtrib.appendChild(linhaVazia(6, erroCarga)); return; }
+    if (!todas.length) { if (!carregando) corpoAtrib.appendChild(linhaVazia(6, 'Nenhuma atribuição registrada ainda.')); return; }
+    if (!lista.length) {
+      const tr = linhaVazia(6, 'Nenhuma atribuição nesse período.');
+      const b = h('button', 'btn-quiet', 'Limpar filtros'); b.type = 'button';
+      b.addEventListener('click', () => { atribBusca.value = ''; aplicarPeriodo('tudo'); });
+      tr.firstChild.appendChild(document.createElement('br')); tr.firstChild.appendChild(b);
+      corpoAtrib.appendChild(tr); return;
+    }
+    vis.forEach(a => {
+      const chave = a.row_number ?? (a.opp_id + '|' + a.data_atribuicao);
+      const aberta = expandidas.has(chave);
+      const tr = h('tr', 'lin');
+      const t0 = h('td'); const bt = h('button', 'exp'); bt.type = 'button'; bt.innerHTML = ICONE_SETA;
+      bt.setAttribute('aria-expanded', String(aberta)); bt.setAttribute('aria-label', 'Ver o racional da atribuição de ' + (a.cliente || 'cliente'));
+      t0.appendChild(bt); tr.appendChild(t0);
+      tr.appendChild(h('td', 'mut', a.data_atribuicao || '—'));
+      tr.appendChild(h('td', 'email', a.cliente || '—'));
+      tr.appendChild(h('td', '', a.onboarder || '—'));
+      tr.appendChild(h('td', 'mut', a.closer || '—'));
+      tr.appendChild(h('td', 'mut', a.segmentacao || '—'));
+      corpoAtrib.appendChild(tr);
+      let det = null;
+      const montarDet = () => { det = h('tr', 'det'); const td = h('td', '', a.racional || 'Sem racional registrado.'); td.colSpan = 6; det.appendChild(td); tr.after(det); };
+      if (aberta) montarDet();
+      bt.addEventListener('click', () => {
+        const abrir = bt.getAttribute('aria-expanded') !== 'true';
+        bt.setAttribute('aria-expanded', String(abrir));
+        if (abrir) { expandidas.add(chave); montarDet(); } else { expandidas.delete(chave); if (det) det.remove(); det = null; }
+      });
+    });
+    if (lista.length > vis.length) {
+      atribMais.hidden = false; atribMais.innerHTML = '';
+      const b = h('button', 'btn-quiet', 'Ver mais ' + Math.min(POR_PAGINA, lista.length - vis.length)); b.type = 'button';
+      b.addEventListener('click', () => { visiveisAtrib += POR_PAGINA; renderAtrib(); });
+      atribMais.appendChild(b);
+    }
+  }
+
+  // ── carregamento ──
+  function rotuloTempo(ms){
+    const seg = Math.max(0, Math.round((Date.now() - ms) / 1000));
+    if (seg < 60) return 'há ' + seg + (seg === 1 ? ' segundo' : ' segundos');
+    const min = Math.floor(seg / 60);
+    return 'há ' + min + (min === 1 ? ' minuto' : ' minutos');
+  }
+  function atualizarStatus(){
+    if (erroCarga) { geradoEm.textContent = 'Não foi possível atualizar o painel'; return; }
+    if (!atualizadoEm) { geradoEm.textContent = 'Carregando…'; return; }
+    geradoEm.textContent = carregando ? 'Atualizando…' : 'Atualizado ' + rotuloTempo(atualizadoEm);
+  }
+  setInterval(() => { if (appScreen.style.display !== 'none') atualizarStatus(); }, 1000);
+
   async function carregarPainel(){
-    onboarderList.innerHTML = '<div class="empty-note">Carregando dados do painel…</div>';
-    histBody.innerHTML = '<tr><td colspan="6" class="empty-note">Carregando…</td></tr>';
+    carregando = true; erroCarga = '';
+    refreshBtn.classList.add('girando');
+    atualizarStatus();
     try {
       const res = await apiFetch(WEBHOOK_PAINEL_URL, { method: 'GET' });
       if (!res.ok) throw new Error('status ' + res.status);
-      painelData = await res.json();
-
-      geradoEm.textContent = painelData.gerado_em
-        ? 'Atualizado em tempo real · ' + new Date(painelData.gerado_em).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
-        : '';
+      const d = await res.json();
+      painelData = { onboarders: Array.isArray(d.onboarders) ? d.onboarders : [], ultimas_atribuicoes: Array.isArray(d.ultimas_atribuicoes) ? d.ultimas_atribuicoes : [], gerado_em: d.gerado_em || null };
+      atualizadoEm = Date.now();
+      // analista que sumiu da lista não pode ficar selecionado
+      const emails = new Set(painelData.onboarders.map(o => o.email));
+      [...analistasSel].forEach(e => { if (!emails.has(e)) analistasSel.delete(e); });
     } catch (err) {
-      if (!getSession()) return; // sessão expirou: apiFetch já levou pra tela de login
-      // Sem dado de fallback embutido: a página é pública, então só o webhook (com sessão) entrega dados.
-      painelData = { onboarders: [], ultimas_atribuicoes: [] };
-      geradoEm.textContent = '⚠ Erro de autenticação. Saia e entre de novo; se persistir, avise o time de Sales Ops.';
-      onboarderList.innerHTML = '<div class="empty-note">Erro de autenticação. Não foi possível carregar os dados do painel.</div>';
-      histBody.innerHTML = '<tr><td colspan="6" class="empty-note">Erro de autenticação.</td></tr>';
-      renderKpis();
-      return;
+      if (!getSession()) { carregando = false; refreshBtn.classList.remove('girando'); return; }   // sessão expirou: apiFetch já levou ao login
+      // sem dado de fallback embutido: a página é pública, então só o webhook (com sessão) entrega dados
+      erroCarga = 'Não foi possível carregar o painel. Atualize ou saia e entre de novo; se persistir, avise o Sales Ops.';
+    } finally {
+      carregando = false; refreshBtn.classList.remove('girando');
     }
-    renderKpis();
-    renderOnboarders();
-    renderHist();
+    sincronizarFiltros(); renderCarteira(); renderAtrib(); atualizarStatus();
   }
+  refreshBtn.addEventListener('click', carregarPainel);
+  setInterval(() => {
+    if (appScreen.style.display === 'none' || carregando || document.visibilityState === 'hidden') return;
+    carregarPainel();
+  }, AUTO_ATUALIZAR_MS);
 
-  filterRow.addEventListener('click', (e) => {
-    const btn = e.target.closest('.filter-pill');
-    if (!btn) return;
-    levelAtivo = btn.dataset.level;
-    [...filterRow.children].forEach(b => b.classList.toggle('active', b === btn));
-    renderKpis();
-    renderOnboarders();
+  // ── menu do usuário ──
+  function iniciaisDoUsuario(){
+    const s = getSession() || {};
+    const nome = String(s.nome || '').trim();
+    const partes = nome ? nome.split(/\s+/) : String(s.email || '?').split('@')[0].split(/[._-]+/);
+    return ((partes[0] || '?')[0] + ((partes[1] || '')[0] || '')).toUpperCase();
+  }
+  function fecharMenuUsuario(devolver){
+    if (userPop.hidden) return;
+    userPop.hidden = true; avatarBtn.setAttribute('aria-expanded', 'false');
+    if (devolver) avatarBtn.focus();
+  }
+  avatarBtn.addEventListener('click', ev => {
+    ev.stopPropagation();
+    const abrir = userPop.hidden;
+    userPop.hidden = !abrir; avatarBtn.setAttribute('aria-expanded', String(abrir));
+    if (abrir) document.getElementById('logoutBtn').focus();
   });
-
-  function onboardersFiltrados(){
-    if (levelAtivo === 'todos') return painelData.onboarders;
-    return painelData.onboarders.filter(o => o.level === levelAtivo);
-  }
-
-  function statusDe(pct){
-    if (pct === null || pct === undefined) return { classe: 'status-tranquilo', label: 'sem limite', cor: 'var(--success)' };
-    if (pct >= 100) return { classe: 'status-limite', label: 'no limite', cor: 'var(--maroon)' };
-    if (pct >= 70)  return { classe: 'status-atencao', label: 'atenção', cor: 'var(--orange)' };
-    return { classe: 'status-tranquilo', label: 'tranquilo', cor: 'var(--success)' };
-  }
-
-  function renderKpis(){
-    const lista = onboardersFiltrados();
-    kpiTotalOnb.textContent = lista.length;
-    kpiCarteiraTotal.textContent = lista.reduce((s, o) => s + (o.carteira_atual || 0), 0);
-    kpiLivreTotal.textContent = lista.reduce((s, o) => s + (o.capacidade_livre ?? 0), 0);
-    kpiNoLimite.textContent = lista.filter(o => (o.percentual_consumido ?? 0) >= 100).length;
-  }
-
-  function renderOnboarders(){
-    const lista = onboardersFiltrados();
-    if (!lista.length){
-      onboarderList.innerHTML = '<div class="empty-note">Nenhum onboarder encontrado pra esse filtro.</div>';
-      return;
-    }
-    onboarderList.innerHTML = '';
-    lista.forEach(o => {
-      const pct = o.percentual_consumido ?? 0;
-      const st = statusDe(o.percentual_consumido);
-      const card = document.createElement('div');
-      card.className = 'onb-card';
-      card.innerHTML = `
-        <div>
-          <div class="onb-email">${o.email ?? '—'}</div>
-          <div class="badge-row">
-            <span class="badge pod">POD ${o.pod ?? '—'}</span>
-            <span class="badge">${o.level ?? '—'}</span>
-          </div>
-        </div>
-        <div class="onb-pre">
-          <b>${o.pre_onboarding_atual ?? 0}</b>
-          pré-onboarding
-        </div>
-        <div class="meter-wrap">
-          <div class="meter-track"><div class="meter-fill" style="width:${Math.min(pct, 100)}%; background:${st.cor};"></div></div>
-          <div class="meter-labels">
-            <span><b>${o.carteira_atual ?? 0}</b> / ${o.capacidade_maxima ?? '—'} contratos</span>
-            <span><b>${o.capacidade_livre ?? '—'}</b> livres</span>
-          </div>
-        </div>
-        <span class="status-tag ${st.classe}">${pct}% · ${st.label}</span>
-      `;
-      onboarderList.appendChild(card);
-    });
-  }
-
-  function renderHist(){
-    const lista = painelData.ultimas_atribuicoes || [];
-    if (!lista.length){
-      const msg = 'Nenhuma atribuição registrada ainda.';
-      histBody.innerHTML = '<tr><td colspan="6" class="empty-note">' + msg + '</td></tr>';
-      return;
-    }
-    histBody.innerHTML = '';
-    lista.forEach(h => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${h.cliente || '—'}</td>
-        <td>${h.onboarder || '—'}</td>
-        <td class="cell-muted">${h.closer || '—'}</td>
-        <td class="cell-muted">${h.segmentacao || '—'}</td>
-        <td class="cell-muted">${h.data_atribuicao || '—'}</td>
-        <td class="cell-racional" title="${(h.racional || '').replace(/"/g, '&quot;')}">${h.racional || '—'}</td>
-      `;
-      histBody.appendChild(tr);
-    });
-  }
+  userPop.addEventListener('keydown', e => { if (e.key === 'Escape') { e.stopPropagation(); fecharMenuUsuario(true); } });
 
   // Retoma a sessão da aba (mesmo SESSION_KEY do Onboarding Assignment)
+  selecionarAba((location.hash || '').replace('#', ''));
+  sincronizarFiltros(); sincronizarPeriodo();
   const savedSession = getSession();
   if (savedSession && isValidHotmartEmail(savedSession.email)) showApp(savedSession.email);
+
 </script>
 </body>
 </html>
