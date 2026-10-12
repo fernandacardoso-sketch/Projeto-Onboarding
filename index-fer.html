@@ -434,8 +434,7 @@
   .path{ flex:none; display:flex; background:var(--surface); color:var(--text); border:1px solid var(--border); border-bottom-color:var(--border-strong); border-radius:var(--r-md) var(--r-md) 0 0; }
   .path-step{ position:relative; flex:1 1 0; min-width:0; display:flex; align-items:center; justify-content:center; gap:8px; padding:7px 14px 9px; font-size:13px; white-space:nowrap; }
   .path-step + .path-step{ border-left:1px solid var(--border); }
-  .path-step::before{ content:""; position:absolute; left:50%; bottom:0; width:36px; height:3px; transform:translateX(-50%); background:var(--border-strong); border-radius:3px 3px 0 0; }
-  .path-step.tem-disp::before{ background:var(--orange); }
+  .path-step::before{ content:""; position:absolute; left:50%; bottom:0; width:36px; height:3px; transform:translateX(-50%); background:var(--orange); border-radius:3px 3px 0 0; }
   .ps-nome{ min-width:0; overflow:hidden; text-overflow:ellipsis; font-weight:700; }
   .path-count{ flex:none; min-width:22px; padding:1px 7px; font-size:12px; font-weight:700; line-height:1.5; text-align:center; color:var(--text); background:var(--surface-sunken); border:1px solid var(--border); border-radius:var(--r-pill); }
   .ps-total{ flex:none; font-size:12.5px; font-weight:500; color:var(--text-muted); }
@@ -505,9 +504,9 @@
 
   /* menu do usuário */
   .user-menu{ position:fixed; top:16px; right:64px; z-index:30; }
-  .avatar-btn{ width:40px; height:40px; padding:0; display:grid; place-items:center; font-size:14px; font-weight:700; letter-spacing:.02em; color:var(--text); background:var(--surface); border:1.5px solid var(--field-border); border-radius:var(--r-pill); }
-  .avatar-btn:hover{ border-color:var(--text-muted); background:var(--surface-sunken); }
-  .avatar-btn:focus-visible{ outline:2px solid var(--orange); outline-offset:2px; }
+  .avatar-btn{ width:40px; height:40px; padding:0; display:grid; place-items:center; font-size:14px; font-weight:700; letter-spacing:.02em; color:var(--black); background:var(--orange); border-radius:var(--r-pill); }
+  .avatar-btn:hover{ background:var(--orange-hover); }
+  .avatar-btn:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
   .user-pop{ position:absolute; top:46px; right:0; width:max-content; min-width:230px; max-width:min(340px,90vw); padding:6px; background:var(--surface); border:1px solid var(--field-border); border-radius:var(--r-sm); box-shadow:0 4px 14px rgba(13,13,13,.16); }
   .user-email{ padding:8px 10px; font-size:13px; font-weight:600; overflow-wrap:break-word; border-bottom:1px solid var(--border); margin-bottom:4px; }
 
@@ -1351,7 +1350,6 @@
       passos[i].querySelector('.path-count').textContent = esqueleto ? '–' : String(itens.length);
       passos[i].querySelector('.ps-total').textContent = esqueleto ? '' : total;
       passos[i].title = esqueleto ? e.nome : e.nome + ' · ' + itens.length + ' · ' + total;
-      passos[i].classList.toggle('tem-disp', itens.some(ehAcionavel));
       if (vazioGeral) return;
       // dentro da coluna, os que dá para atribuir vêm primeiro (a ordem original é mantida entre iguais)
       itens = itens.map((o, k) => [o, k]).sort((a, b) => rank(a[0]) - rank(b[0]) || a[1] - b[1]).map(x => x[0]);
