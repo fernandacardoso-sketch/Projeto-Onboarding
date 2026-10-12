@@ -378,14 +378,14 @@
      Onboarding Assignment — atribuição em Kanban (espelho do Funil do Salesforce)
      ============================================================ */
   :root{
-    --col-bg:#ECEAE5; --card-bg:#FFFFFF; --card-border:#D9D5CD; --card-sh:0 1px 2px rgba(13,13,13,.08); --ok-bar:#1E7A3D;
+    --col-bg:#ECEAE5; --card-bg:#FFFFFF; --card-border:#D9D5CD; --card-sh:0 1px 2px rgba(13,13,13,.08); --ok-bar:#1E7A3D; --thumb:#CFCAC1; --thumb-hover:#B5AFA5; --chev:#6B665E;
     --teal:#0B7A6C;
     --ok-bg:rgba(30,122,61,.12); --ok-text:#17632F;
     --mute-bg:#EFECE6; --mute-text:rgba(13,13,13,.72);
     --warn:#8A4B00; --overlay:rgba(13,13,13,.45);
   }
   :root[data-theme="dark"]{
-    --col-bg:#181818; --card-bg:#2D2D2D; --card-border:#4D4D4D; --card-sh:0 1px 2px rgba(0,0,0,.45); --ok-bar:#6FD08C;
+    --col-bg:#181818; --card-bg:#2D2D2D; --card-border:#4D4D4D; --card-sh:0 1px 2px rgba(0,0,0,.45); --ok-bar:#6FD08C; --thumb:#7E7E7E; --thumb-hover:#A3A3A3; --chev:#B4B0A9;
     --teal:#5CD6C0;
     --ok-bg:rgba(111,208,140,.16); --ok-text:#6FD08C;
     --mute-bg:#333333; --mute-text:rgba(245,243,239,.74);
@@ -411,8 +411,13 @@
   .chip-filtro:hover{ border-color:var(--ok-bar); }
   .chip-filtro[aria-pressed="true"]{ background:var(--ok-bg); border-color:var(--ok-bar); color:var(--ok-text); }
   .chip-filtro:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
-  .btn-quiet{ padding:8px 10px; font-size:13px; font-weight:600; color:var(--text-muted); background:none; border-radius:var(--r-sm); text-decoration:underline; text-decoration-color:transparent; text-underline-offset:3px; }
-  .btn-quiet:hover{ color:var(--text); text-decoration-color:currentColor; }
+  .chip-filtro:disabled{ opacity:.55; cursor:not-allowed; }
+  .chip-filtro:disabled:hover{ border-color:var(--field-border); }
+  .board-vazio{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:var(--sp-3); padding:var(--sp-7); font-size:14px; color:var(--text-muted); text-align:center; }
+  .board-vazio .btn-ghost{ width:auto; margin:0; padding:8px 16px; }
+  .demo-banner{ margin:0; padding:6px 12px; font-size:12.5px; font-weight:600; color:var(--black); background:var(--yellow); border-radius:var(--r-sm); }
+  .btn-quiet{ height:38px; padding:0 12px; font-size:13px; font-weight:600; color:var(--text); background:transparent; border:1.5px solid var(--border-strong); border-radius:var(--r-sm); }
+  .btn-quiet:hover{ color:var(--text); border-color:var(--field-border); }
   .btn-quiet:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
   input[type="search"]{ font-family:inherit; color:var(--text); background:var(--field-bg); border:1.5px solid var(--field-border); border-radius:var(--r-sm); outline:none; }
   input[type="search"]:focus-visible{ outline:2px solid var(--orange); outline-offset:1px; border-color:var(--orange); }
@@ -427,36 +432,38 @@
   .board-scroll{ flex:1; min-height:0; display:flex; flex-direction:column; overflow-x:auto; }
   @media (max-width:1023px){ .path, .board{ min-width:1310px; } }
   .path{ flex:none; display:flex; background:var(--surface); color:var(--text); border:1px solid var(--border); border-bottom-color:var(--border-strong); border-radius:var(--r-md) var(--r-md) 0 0; }
-  .path-step{ position:relative; flex:1 1 0; min-width:0; display:flex; align-items:baseline; justify-content:center; gap:6px; padding:6px 14px 6px; font-size:13px; white-space:nowrap; box-shadow:inset 0 -3px 0 var(--orange); }
+  .path-step{ position:relative; flex:1 1 0; min-width:0; display:flex; align-items:center; justify-content:center; gap:8px; padding:7px 14px 9px; font-size:13px; white-space:nowrap; }
   .path-step + .path-step{ border-left:1px solid var(--border); }
+  .path-step::before{ content:""; position:absolute; left:50%; bottom:0; width:36px; height:3px; transform:translateX(-50%); background:var(--border-strong); border-radius:3px 3px 0 0; }
+  .path-step.tem-disp::before{ background:var(--orange); }
   .ps-nome{ min-width:0; overflow:hidden; text-overflow:ellipsis; font-weight:700; }
-  .path-count{ font-weight:600; }
-  .path-count::before, .ps-total:not(:empty)::before{ content:"·"; margin-right:6px; font-weight:400; color:var(--text-muted); }
+  .path-count{ flex:none; min-width:22px; padding:1px 7px; font-size:12px; font-weight:700; line-height:1.5; text-align:center; color:var(--text); background:var(--surface-sunken); border:1px solid var(--border); border-radius:var(--r-pill); }
   .ps-total{ flex:none; font-size:12.5px; font-weight:500; color:var(--text-muted); }
-  .path-step:not(:last-child)::after{ content:""; position:absolute; right:-5px; top:50%; z-index:1; width:8px; height:8px; background:var(--surface); border-top:1.5px solid var(--text-muted); border-right:1.5px solid var(--text-muted); transform:translateY(-50%) rotate(45deg); }
+  .path-step:not(:last-child)::after{ content:""; position:absolute; right:-5px; top:50%; z-index:1; width:8px; height:8px; background:var(--surface); border-top:2px solid var(--chev); border-right:2px solid var(--chev); transform:translateY(-50%) rotate(45deg); }
   .board{ flex:1; min-height:0; display:flex; background:var(--col-bg); border:1px solid var(--border); border-top:0; border-radius:0 0 var(--r-md) var(--r-md); overflow:hidden; }
   .col{ flex:1 1 0; min-width:0; display:flex; flex-direction:column; background:var(--col-bg); border-left:1px solid var(--border); }
   .col:first-child{ border-left:0; }
-  .col-foot{ flex:none; padding:6px 10px 10px; }
+  .col-foot{ flex:none; padding:8px 12px 16px; }
   .col-foot .btn-ghost{ width:100%; margin:0; padding:7px 10px; }
-  .col-body{ flex:1; min-height:0; overflow-y:auto; padding:10px 10px 12px; display:flex; flex-direction:column; gap:10px; scrollbar-width:thin; scrollbar-color:var(--border-strong) transparent; }
+  .col-body{ flex:1; min-height:0; overflow-y:auto; padding:10px 10px 12px; display:flex; flex-direction:column; gap:10px; scrollbar-width:thin; scrollbar-color:var(--thumb) transparent; }
   .col-body::-webkit-scrollbar{ width:8px; }
-  .col-body::-webkit-scrollbar-thumb{ background:var(--border-strong); border-radius:var(--r-pill); }
+  .col-body::-webkit-scrollbar-thumb{ background:var(--thumb); border-radius:var(--r-pill); }
+  .col-body::-webkit-scrollbar-thumb:hover{ background:var(--thumb-hover); }
   .col-body::-webkit-scrollbar-track{ background:transparent; }
   .col-empty{ margin:auto; padding:var(--sp-5); font-size:13px; color:var(--text-muted); text-align:center; }
   .board-erro{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:var(--sp-3); padding:var(--sp-7); text-align:center; font-size:14px; }
   .board-erro .btn-ghost{ width:auto; margin:0; padding:9px 16px; }
 
   /* card da oportunidade */
-  .opp-card{ position:relative; display:flex; flex-direction:column; gap:3px; padding:10px 12px; background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--r-md); box-shadow:var(--card-sh); }
+  .opp-card{ position:relative; display:flex; flex-direction:column; gap:2px; padding:9px 12px; background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--r-md); box-shadow:var(--card-sh); }
   .opp-card:hover{ border-color:var(--field-border); }
   .opp-card.is-ok{ border-left:3px solid var(--ok-bar); padding-left:11px; }
   .opp-card.is-andamento{ border-left:3px solid var(--ink); padding-left:11px; }
   .opp-card.is-sel{ border-color:var(--orange); box-shadow:inset 3px 0 0 var(--orange); }
   .opp-card.is-off{ opacity:.7; }
   .opp-card:has(button.opp-name:focus-visible){ outline:2px solid var(--focus); outline-offset:2px; }
-  .opp-card-top{ display:flex; align-items:baseline; gap:8px; }
-  .opp-name{ flex:1; min-width:0; text-align:left; background:none; padding:0; font-family:inherit; font-size:14px; font-weight:600; line-height:1.3; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-decoration:none; }
+  .opp-card-top{ display:block; }
+  .opp-name{ display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; width:100%; text-align:left; background:none; padding:0; font-family:inherit; font-size:14px; font-weight:600; line-height:1.3; color:var(--text); overflow:hidden; overflow-wrap:anywhere; text-decoration:none; }
   button.opp-name{ cursor:pointer; }
   button.opp-name:hover, a.opp-name:hover{ text-decoration:underline; text-underline-offset:3px; }
   a.opp-name{ cursor:pointer; text-decoration:none; }
@@ -464,8 +471,11 @@
   button.opp-name:focus-visible{ outline:none; }
   button.opp-name::after{ content:""; position:absolute; inset:0; border-radius:var(--r-md); }
   .opp-valor{ flex:none; font-size:14px; font-weight:700; color:var(--text); white-space:nowrap; text-align:right; }
+  .opp-valor.vazio{ font-size:12.5px; font-weight:500; color:var(--text-muted); }
   .opp-conta{ font-size:12.5px; color:var(--text-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .opp-idrow{ display:flex; align-items:center; gap:4px; min-height:22px; font-family:var(--font-mono); font-size:11.5px; color:var(--text-muted); }
+  .opp-idrow{ display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:22px; }
+  .opp-id-esq{ display:flex; align-items:center; gap:4px; min-width:0; font-family:var(--font-mono); font-size:11.5px; color:var(--text-muted); }
+  .opp-id-dir{ display:flex; align-items:center; gap:6px; flex:none; margin-left:auto; }
   .opp-hid{ overflow-wrap:anywhere; }
   .copy-btn{ position:relative; z-index:2; flex:none; width:22px; height:22px; padding:0; display:grid; place-items:center; color:var(--text-muted); background:none; border-radius:var(--r-sm); }
   .copy-btn:hover{ color:var(--text); background:var(--surface-sunken); }
@@ -473,7 +483,7 @@
   .copy-btn svg{ width:13px; height:13px; display:block; }
   .copiado{ font-family:var(--font-sans); font-size:11.5px; font-weight:600; color:var(--ok-text); }
   mark.hit{ background:var(--yellow); color:var(--black); border-radius:2px; padding:0 1px; }
-  .opp-rodape{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px; margin-top:6px; min-height:26px; }
+  .opp-rodape{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px; margin-top:4px; }
   .opp-rodape-esq{ display:flex; align-items:center; gap:6px; min-width:0; flex-wrap:wrap; }
   .badge-sit{ font-size:11.5px; font-weight:700; line-height:1.2; padding:3px 8px; border-radius:var(--r-pill); }
   .badge-ok{ background:var(--ok-bg); color:var(--ok-text); }
@@ -495,9 +505,9 @@
 
   /* menu do usuário */
   .user-menu{ position:fixed; top:16px; right:64px; z-index:30; }
-  .avatar-btn{ width:40px; height:40px; padding:0; display:grid; place-items:center; font-size:14px; font-weight:700; letter-spacing:.02em; color:var(--black); background:var(--orange); border-radius:var(--r-pill); }
-  .avatar-btn:hover{ background:var(--orange-hover); }
-  .avatar-btn:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  .avatar-btn{ width:40px; height:40px; padding:0; display:grid; place-items:center; font-size:14px; font-weight:700; letter-spacing:.02em; color:var(--text); background:var(--surface); border:1.5px solid var(--field-border); border-radius:var(--r-pill); }
+  .avatar-btn:hover{ border-color:var(--text-muted); background:var(--surface-sunken); }
+  .avatar-btn:focus-visible{ outline:2px solid var(--orange); outline-offset:2px; }
   .user-pop{ position:absolute; top:46px; right:0; width:max-content; min-width:230px; max-width:min(340px,90vw); padding:6px; background:var(--surface); border:1px solid var(--field-border); border-radius:var(--r-sm); box-shadow:0 4px 14px rgba(13,13,13,.16); }
   .user-email{ padding:8px 10px; font-size:13px; font-weight:600; overflow-wrap:break-word; border-bottom:1px solid var(--border); margin-bottom:4px; }
 
@@ -637,6 +647,7 @@
           <button type="button" class="btn-quiet" id="manualBtn">Atribuir por ID</button>
         </div>
       </header>
+      <div class="demo-banner" id="demoBanner" role="status" hidden>Modo demonstração · dados fictícios · nada é gravado nem atribuído</div>
 
       <div class="board-scroll">
         <div class="path" id="path" role="list" aria-label="Estágios do funil">
@@ -1100,10 +1111,21 @@
   const fmtNum0 = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 });
   const fmtNum2 = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   function fmtBRL(v){
-    if (v === null || v === undefined || v === '' || !isFinite(Number(v))) return 'R$ —';
+    if (v === null || v === undefined || v === '' || !isFinite(Number(v))) return 'Sem valor';
     const n = Number(v);
     return 'R$ ' + (Math.round(n * 100) % 100 === 0 ? fmtNum0.format(n) : fmtNum2.format(n));
   }
+  // ?demo=1 → funil com dados fictícios (sem chamadas ao n8n/Salesforce), só para ver e validar a tela
+  const MODO_DEMO = /[?&]demo=1(&|$)/.test(location.search);
+  const DEMO_OPPS = [
+    { opp_id: '006DEMO00000000001', hotmart_id: '70000001', nome: 'Demo · Curso de Fotografia Avançada', conta: 'Estúdio Lume LTDA', estagio: 'Issues identified', amount_12m: 180000, ja_atribuida: false },
+    { opp_id: '006DEMO00000000002', hotmart_id: '70000002', nome: 'Demo · Nome muito longo de oportunidade para testar duas linhas de texto no card do funil', conta: 'Grupo Horizonte Educação e Treinamentos S.A.', estagio: 'SQL', amount_12m: 950000, ja_atribuida: false },
+    { opp_id: '006DEMO00000000003', hotmart_id: '70000003', nome: 'Demo · Sem valor definido', conta: '', estagio: 'SQL', amount_12m: null, ja_atribuida: false },
+    { opp_id: '006DEMO00000000004', hotmart_id: '', nome: 'Demo · Sem Hotmart ID', conta: 'Casa do Código Digital', estagio: 'Offer presented', amount_12m: 320000, ja_atribuida: false },
+    { opp_id: '006DEMO00000000005', hotmart_id: '70000005', nome: 'Demo · Já atribuída', conta: 'Mentoria Norte', estagio: 'Offer presented', amount_12m: 410000, ja_atribuida: true },
+    { opp_id: '006DEMO00000000006', hotmart_id: '70000006', nome: 'Demo · Em contrato', conta: 'Academia Prisma', estagio: 'Contract Sent', amount_12m: 2750000, ja_atribuida: false },
+    { opp_id: '006DEMO00000000007', hotmart_id: '70000007', nome: 'Demo · Fechada', conta: 'Clube do Vinho', estagio: 'Closed Won', amount_12m: 600000, ja_atribuida: true }
+  ];
   const CW_LIMITE = 5;                 // Closed Won mostra só os mais recentes até o usuário pedir "Ver todos"
   const AUTO_ATUALIZAR_MS = 3 * 60 * 1000;
   let cwExpandido = false;
@@ -1149,8 +1171,12 @@
   }
   function filtradas(){ const b = baseFiltrada(); return soDisponiveis ? b.filter(ehAcionavel) : b; }
   function atualizarChip(){
-    document.getElementById('chipDispN').textContent = String(baseFiltrada().filter(ehAcionavel).length);
+    const n = baseFiltrada().filter(ehAcionavel).length;
+    document.getElementById('chipDispN').textContent = String(n);
     chipDisp.setAttribute('aria-pressed', String(soDisponiveis));
+    const semNenhum = n === 0 && !soDisponiveis;
+    chipDisp.disabled = semNenhum;
+    if (semNenhum) chipDisp.title = 'Nenhuma oportunidade disponível agora'; else chipDisp.removeAttribute('title');
   }
 
   // texto com o trecho buscado destacado (sempre como texto, nunca como HTML)
@@ -1210,6 +1236,7 @@
     const termo = oppSearch.value.trim();
     const card = mk('article', 'opp-card' + (andamento ? ' is-andamento' : elegivel ? ' is-ok' : ' is-off') + ((oppEscolhida && oppEscolhida.opp_id === o.opp_id) ? ' is-sel' : ''));
     card.dataset.id = o.opp_id;
+    // linha 1: o nome ocupa a largura toda (até 2 linhas; o nome completo vai no tooltip)
     const topo = mk('div', 'opp-card-top');
     const titulo = o.nome || '(sem nome)';
     let nome;
@@ -1227,16 +1254,17 @@
     comDestaque(nome, titulo, termo);
     nome.title = titulo;
     topo.appendChild(nome);
-    topo.appendChild(mk('span', 'opp-valor', fmtBRL(o.amount_12m)));
     card.appendChild(topo);
     if (o.conta) {
       const conta = comDestaque(mk('div', 'opp-conta'), o.conta, termo);
       conta.title = o.conta;
       card.appendChild(conta);
     }
+    // linha 2: Hotmart ID (com copiar) à esquerda; ícones de status e valor à direita
+    const linha = mk('div', 'opp-idrow');
+    const esq = mk('div', 'opp-id-esq');
     if (o.hotmart_id) {
-      const linha = mk('div', 'opp-idrow');
-      linha.appendChild(comDestaque(mk('span', 'opp-hid'), o.hotmart_id, termo));
+      esq.appendChild(comDestaque(mk('span', 'opp-hid'), o.hotmart_id, termo));
       const cp = mk('button', 'copy-btn');
       cp.type = 'button'; cp.innerHTML = ICONE_COPIAR;
       cp.setAttribute('aria-label', 'Copiar Hotmart ID ' + o.hotmart_id);
@@ -1251,20 +1279,16 @@
           cp._t = setTimeout(() => { aviso.textContent = ''; }, 1500);
         }).catch(() => { aviso.textContent = 'Não foi possível copiar'; clearTimeout(cp._t); cp._t = setTimeout(() => { aviso.textContent = ''; }, 2500); });
       });
-      linha.appendChild(cp); linha.appendChild(aviso);
-      card.appendChild(linha);
+      esq.appendChild(cp); esq.appendChild(aviso);
     }
-    const rodape = mk('div', 'opp-rodape');
-    const esq = mk('div', 'opp-rodape-esq');
-    if (andamento) esq.appendChild(mk('span', 'badge-sit badge-andamento', 'Em andamento'));
-    else if (elegivel) esq.appendChild(mk('span', 'badge-sit badge-ok', 'Disponível para atribuir'));
-    else {
+    const dir = mk('div', 'opp-id-dir');
+    if (!elegivel && !andamento) {
       const ic = mk('span', 'opp-estado');
       ic.innerHTML = ESTAGIOS_ENCERRADOS.includes(chaveEstagio(o)) ? ICONE_CHECK : ICONE_CADEADO;
       ic.title = motivo;
       ic.setAttribute('role', 'img');
       ic.setAttribute('aria-label', motivo);
-      esq.appendChild(ic);
+      dir.appendChild(ic);
     }
     const pend = ESTAGIOS_ENCERRADOS.includes(chaveEstagio(o)) ? [] : pendencias(o);
     if (pend.length) {
@@ -1273,17 +1297,22 @@
       a.title = pend.join(' · ');
       a.setAttribute('role', 'img');
       a.setAttribute('aria-label', 'Pendência: ' + pend.join(', '));
-      esq.appendChild(a);
+      dir.appendChild(a);
     }
-    rodape.appendChild(esq);
+    dir.appendChild(Number(o.amount_12m) > 0 ? mk('span', 'opp-valor', fmtBRL(o.amount_12m)) : mk('span', 'opp-valor vazio', 'Sem valor'));
+    linha.appendChild(esq); linha.appendChild(dir);
+    card.appendChild(linha);
+    // rodapé só nos cards em que há o que fazer
     if (elegivel || andamento) {
+      const rodape = mk('div', 'opp-rodape');
+      rodape.appendChild(mk('span', 'badge-sit ' + (andamento ? 'badge-andamento' : 'badge-ok'), andamento ? 'Em andamento' : 'Disponível para atribuir'));
       const b = mk('button', 'opp-acao' + (andamento ? ' sec' : ''), andamento ? 'Continuar' : 'Atribuir');
       b.type = 'button';
       b.setAttribute('aria-label', (andamento ? 'Continuar o fluxo de ' : 'Atribuir onboarder: ') + titulo);
       b.addEventListener('click', ev => { ev.stopPropagation(); abrirDrawer(o); });
       rodape.appendChild(b);
+      card.appendChild(rodape);
     }
-    card.appendChild(rodape);
     return card;
   }
 
@@ -1314,6 +1343,7 @@
       return;
     }
     const rank = o => ehAcionavel(o) ? 0 : 1;
+    const vazioGeral = soDisponiveis && !lista.length && !esqueleto;
     ESTAGIOS_FUNIL.forEach((e, i) => {
       let itens = lista.filter(o => chaveEstagio(o) === e.chave);
       const soma = itens.reduce((t, o) => t + (Number(o.amount_12m) || 0), 0);
@@ -1321,6 +1351,8 @@
       passos[i].querySelector('.path-count').textContent = esqueleto ? '–' : String(itens.length);
       passos[i].querySelector('.ps-total').textContent = esqueleto ? '' : total;
       passos[i].title = esqueleto ? e.nome : e.nome + ' · ' + itens.length + ' · ' + total;
+      passos[i].classList.toggle('tem-disp', itens.some(ehAcionavel));
+      if (vazioGeral) return;
       // dentro da coluna, os que dá para atribuir vêm primeiro (a ordem original é mantida entre iguais)
       itens = itens.map((o, k) => [o, k]).sort((a, b) => rank(a[0]) - rank(b[0]) || a[1] - b[1]).map(x => x[0]);
       const cw = e.chave === 'closed won';
@@ -1334,7 +1366,7 @@
       col.appendChild(corpo);
       if (cw && !esqueleto && itens.length > CW_LIMITE) {
         const foot = mk('div', 'col-foot');
-        const b = mk('button', 'btn-ghost', cwExpandido ? 'Ver menos' : 'Ver todos (' + itens.length + ')');
+        const b = mk('button', 'btn-ghost', cwExpandido ? 'Mostrar menos' : 'Ver mais ' + (itens.length - CW_LIMITE));
         b.type = 'button';
         b.setAttribute('aria-expanded', String(cwExpandido));
         b.addEventListener('click', () => { cwExpandido = !cwExpandido; renderBoard(); });
@@ -1344,6 +1376,15 @@
       boardEl.appendChild(col);
       if (rolagens[i]) corpo.scrollTop = rolagens[i];
     });
+    if (vazioGeral) {
+      const v = mk('div', 'board-vazio');
+      v.appendChild(mk('div', '', 'Nada para atribuir agora'));
+      const b = mk('button', 'btn-ghost', 'Mostrar todas');
+      b.type = 'button';
+      b.addEventListener('click', () => { soDisponiveis = false; renderBoard(); });
+      v.appendChild(b);
+      boardEl.appendChild(v);
+    }
     atualizarStatus();
   }
 
@@ -1535,6 +1576,7 @@
 
   async function carregarOportunidades(){
     carregando = true; erroCarga = '';
+    if (MODO_DEMO) { oportunidades = DEMO_OPPS.map(x => ({ ...x })); atualizadoEm = Date.now(); carregando = false; renderBoard(); return; }
     oppRefreshBtn.classList.add('girando');
     renderBoard();
     try {
@@ -1554,6 +1596,7 @@
   }
 
   const chipDisp = document.getElementById('chipDisp');
+  document.getElementById('demoBanner').hidden = !MODO_DEMO;
   const oppSearchClear = document.getElementById('oppSearchClear');
   oppSearch.addEventListener('input', () => { oppSearchClear.hidden = !oppSearch.value; renderBoard(); });
   oppSearchClear.addEventListener('click', () => { oppSearch.value = ''; oppSearchClear.hidden = true; renderBoard(); oppSearch.focus(); });
@@ -1607,6 +1650,7 @@
     const closerEmail = (getSession() || {}).email;
     if (!closerEmail) { showLogin(); return; }
 
+    if (MODO_DEMO) { assignError.textContent = 'Modo demonstração: nada é atribuído de verdade. Saia de ?demo=1 para usar o funil real.'; assignError.classList.add('show'); return; }
     const oppId = oppIdInput.value.trim();
     if (!oppId) {
       assignError.textContent = 'Escolha uma Opportunity na lista (ou informe o ID manualmente) antes de atribuir.';
