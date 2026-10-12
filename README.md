@@ -226,5 +226,12 @@ Uma credencial OAuth2 (`GCal - sales.bizops`) autorizada por `sales.bizops@hotma
 Mostra o funil com 7 oportunidades fictícias (5 elegíveis, 1 já atribuída, 1 fechada), sem nenhuma chamada ao n8n ou ao Salesforce, com faixa amarela de aviso. Serve para validar o visual do card "Disponível para atribuir" quando o funil real não tem nenhum elegível. Atribuir é recusado nesse modo. O login continua sendo exigido.
 
 
-### Painel de Acompanhamento (painel.html, redesenhado em 12/10/2026)
-Três abas: **Carteira** (filtro por nível e por analistas, indicadores, tabela ordenável com barra de capacidade e status), **Atribuições** (filtro por data com atalhos Hoje/7/30 dias/Tudo e intervalo livre, busca por cliente/onboarder/closer, racional expansível, "Ver mais" de 25 em 25) e **Regras**. Status: tranquilo (<70%), atenção (70–99%), no limite (100%+, em vermelho aberto). O workflow 5 passou a devolver até **500** atribuições (antes 20); sem reimportá-lo, a aba Atribuições mostra só as 20 mais recentes e a nota abaixo da tabela informa o período carregado.
+### Painel de Acompanhamento (painel.html, v2 em 12/10/2026)
+Quatro abas (hash na URL: #visao-geral, #carteira, #atribuicoes, #regras; a última aba fica em localStorage):
+- **Visão geral:** 5 indicadores (onboarders/guardiões, contratos ativos, vagas livres *sem guardiões*, acima do limite >100%, no limite =100%), vagas por nível com os guardiões à parte, resumo por nível e por POD e o bloco "Atenção" (constante `LIMIAR_POUCOS_COM_VAGA` no JS).
+- **Carteira:** tabela (padrão) ou cards; filtros de nível, POD, status e nome; agrupar por POD; linha expansível com a carteira por subgrupo SG1/SG2/SG3 (x / 10); exportar CSV do que está filtrado.
+- **Atribuições:** Data/hora, cliente, Hotmart ID, onboarder, closer, segmentação (SG1/SG2/SG3 em badge, faixa oficial) e etapa da cascata (lida do início do racional: `[Guardião]`, `[Outro POD]`, senão "Mesmo POD"); filtros de período, closer, onboarder e nível; "Ocultar testes" (cliente com "teste" no nome ou closer em `CLOSERS_TESTE`).
+- **Regras:** cascata em 4 passos, uma tabela única de limites e subgrupos, desempate.
+Cabeçalho com links Atribuição/Painel, "Atualizado há N", atualizar (auto a cada 3 min), avatar com menu e tema. Ao imprimir, as 4 abas saem em sequência.
+**Workflow 5:** devolve até 500 atribuições, a carteira por subgrupo (`sg1_carteira`…) e, por atribuição, `hotmart_id` e `amount_12m` (consulta ao Salesforce; se falhar, o painel segue sem essas colunas). Sem reimportá-lo, o painel avisa o que falta.
+**Workflow 2:** os rótulos de segmentação gravados no histórico passaram a seguir a regra oficial (SG1 "< R$300k", SG3 "≥ R$600k" etc.); linhas antigas (ex.: "120k–300k") continuam sendo lidas e são exibidas na faixa oficial.

@@ -139,7 +139,7 @@
   :root[data-theme="dark"]{
     --card-bg:#242424; --card-border:#4D4D4D; --card-sh:0 1px 2px rgba(0,0,0,.45);
     --ok-bg:rgba(111,208,140,.16); --ok-text:#6FD08C; --ok-bar:#6FD08C;
-    --red-bg:rgba(255,107,94,.16); --red-text:#FF8A80; --red-bar:#FF6B5E;
+    --red-bg:rgba(255,143,133,.16); --red-text:#FF9A91; --red-bar:#FF8F85;
     --head-bg:#2D2D2D; --thumb:#7E7E7E; --thumb-hover:#A3A3A3;
   }
   [hidden]{ display:none !important; }
@@ -278,6 +278,126 @@
   @media (max-width:900px){ #appScreen{ padding:12px 16px 12px; } .app-head{ padding-right:112px; } }
   @media (prefers-reduced-motion:reduce){ .icon-btn.girando svg, .exp svg{ animation:none; transition:none; } }
 
+
+  /* ============ v2: 4 abas, visão geral, cards, impressão ============ */
+  :root{ --over-bg:rgba(142,27,20,.16); --over-text:#8E1B14; --over-bar:#8E1B14; --info-bg:#EFECE6; }
+  :root[data-theme="dark"]{ --over-bg:rgba(229,38,26,.34); --over-text:#FFB3AB; --over-bar:#E5261A; --info-bg:#2D2D2D; }
+  .st-acima{ background:var(--over-bg); color:var(--over-text); }
+  .st-acima::before{ border-radius:1px; }
+  .app-head{ align-items:flex-start; }
+  .nav-topo{ display:flex; gap:4px; padding:3px; margin-top:8px; width:max-content; background:var(--surface-sunken); border:1px solid var(--border); border-radius:var(--r-pill); }
+  .nav-topo a{ padding:6px 14px; font-size:13px; font-weight:600; color:var(--text-muted); text-decoration:none; border-radius:var(--r-pill); }
+  .nav-topo a:hover{ color:var(--text); }
+  .nav-topo a[aria-current="page"]{ background:var(--ink); color:var(--on-ink); }
+  .nav-topo a:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  .print-titulo{ display:none; }
+  .kpis{ grid-template-columns:repeat(5,1fr); }
+  @media (max-width:900px){ .kpis{ grid-template-columns:repeat(2,1fr); } }
+  .kpi.alerta-acima b{ color:var(--over-text); }
+  .kpi small{ display:block; margin-top:2px; font-size:11.5px; color:var(--text-muted); }
+
+  /* visão geral */
+  .vg{ flex:1; min-height:0; overflow-y:auto; display:flex; flex-direction:column; gap:14px; padding-bottom:8px; }
+  .bloco{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--r-md); box-shadow:var(--card-sh); padding:var(--sp-4) var(--sp-5); }
+  .bloco h2{ margin:0 0 var(--sp-3); font-size:15px; font-weight:700; }
+  .bloco h2 small{ font-size:12.5px; font-weight:500; color:var(--text-muted); margin-left:6px; }
+  .vagas{ display:grid; grid-template-columns:repeat(3,1fr) 1.3fr; gap:10px; }
+  @media (max-width:900px){ .vagas{ grid-template-columns:repeat(2,1fr); } }
+  .vaga{ padding:10px 14px; background:var(--surface-sunken); border-radius:var(--r-md); }
+  .vaga b{ display:block; font-size:24px; font-weight:700; line-height:1.15; }
+  .vaga span{ font-size:12.5px; color:var(--text-muted); }
+  .vaga.aparte{ background:transparent; border:1.5px dashed var(--border-strong); }
+  .vaga .tag{ display:inline-block; margin-bottom:2px; font-size:11.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--text); }
+  .duas{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media (max-width:1100px){ .duas{ grid-template-columns:1fr; } }
+  .mini{ width:100%; border-collapse:collapse; font-size:13px; }
+  .mini th{ position:static; padding:6px 8px; font-size:11.5px; background:none; border-bottom:1px solid var(--border-strong); }
+  .mini td{ padding:7px 8px; border-top:1px solid var(--border); }
+  .mini tr:first-child td{ border-top:0; }
+  .mini .aparte td{ color:var(--text-muted); border-top:1px dashed var(--border-strong); }
+  .mini .num{ text-align:right; font-variant-numeric:tabular-nums; }
+  .ocup{ display:flex; align-items:center; gap:8px; min-width:130px; }
+  .ocup .meter-track{ min-width:60px; }
+  .ocup span{ font-size:12px; color:var(--text-muted); white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .atencao{ display:flex; flex-direction:column; gap:8px; margin:0; padding:0; list-style:none; }
+  .atencao li{ display:flex; gap:10px; align-items:flex-start; padding:9px 12px; border-radius:var(--r-sm); background:var(--info-bg); font-size:13.5px; line-height:1.5; }
+  .atencao li.grave{ background:var(--over-bg); }
+  .atencao li.medio{ background:var(--red-bg); }
+  .atencao li.leve{ background:var(--warn-bg); color:var(--warn-text); }
+  .atencao .ico{ flex:none; width:18px; height:18px; margin-top:2px; }
+  .atencao .corpo{ flex:1; min-width:0; }
+  .atencao .btn-quiet{ height:auto; padding:3px 9px; font-size:12px; flex:none; }
+  .atencao-ok{ font-size:13.5px; color:var(--ok-text); font-weight:600; }
+
+  /* carteira: ferramentas, agrupamento, cards */
+  .toolbar select{ font-family:inherit; font-size:13px; font-weight:600; color:var(--text); background:var(--field-bg); border:1.5px solid var(--field-border); border-radius:var(--r-sm); padding:7px 9px; outline:none; max-width:190px; }
+  .toolbar select:focus-visible{ outline:2px solid var(--orange); outline-offset:1px; border-color:var(--orange); }
+  .seg{ display:inline-flex; padding:2px; background:var(--surface-sunken); border:1px solid var(--border); border-radius:var(--r-sm); }
+  .seg button{ padding:5px 11px; font-size:12.5px; font-weight:600; color:var(--text-muted); background:none; border-radius:5px; }
+  .seg button[aria-pressed="true"]{ background:var(--ink); color:var(--on-ink); }
+  .seg button:focus-visible{ outline:2px solid var(--focus); outline-offset:1px; }
+  tr.grupo td{ position:sticky; top:35px; z-index:1; background:var(--info-bg); font-size:12.5px; font-weight:700; padding:7px 12px; border-top:1px solid var(--border-strong); }
+  tr.grupo td .mut{ font-weight:500; margin-left:8px; }
+  .nome{ font-weight:600; }
+  .nome-wrap{ display:flex; align-items:center; gap:6px; }
+  .nome-wrap .exp{ flex:none; }
+  .nome-wrap small{ display:block; font-size:12px; color:var(--text-muted); font-weight:400; overflow-wrap:anywhere; }
+  .meter-track{ position:relative; }
+  .meter-track .marca{ position:absolute; left:70%; top:-2px; bottom:-2px; width:2px; background:var(--text); opacity:.55; }
+  tr.det .sgs{ display:flex; flex-wrap:wrap; gap:18px; align-items:center; }
+  .sg-item{ display:flex; align-items:center; gap:8px; font-size:13px; }
+  .sg-item .meter-track{ width:90px; min-width:0; flex:none; }
+  .sg-item b{ font-variant-numeric:tabular-nums; }
+  .cards{ flex:1; min-height:0; overflow-y:auto; display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:10px; align-content:start; padding-bottom:8px; }
+  .cards .grupo-cab{ grid-column:1 / -1; font-size:12.5px; font-weight:700; padding:6px 2px 0; }
+  .ccard{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--r-md); box-shadow:var(--card-sh); padding:12px 14px; display:flex; flex-direction:column; gap:8px; }
+  .ccard .topo{ display:flex; justify-content:space-between; gap:8px; align-items:flex-start; }
+  .ccard .badges{ display:flex; gap:6px; flex-wrap:wrap; }
+  .ccard .linha{ display:flex; justify-content:space-between; font-size:12.5px; color:var(--text-muted); }
+  .ccard .linha b{ color:var(--text); }
+
+  /* atribuições */
+  .nowrap{ white-space:nowrap; }
+  .cliente{ max-width:240px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:600; }
+  .hid{ font-family:var(--font-mono); font-size:12px; color:var(--text-muted); white-space:nowrap; }
+  .sg-badge{ display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
+  .sg-badge .badge{ font-weight:700; }
+  .sg-badge .faixa{ font-size:12px; color:var(--text-muted); }
+  .sg-badge .diverge{ color:var(--warn-text); background:var(--warn-bg); border-radius:50%; width:16px; height:16px; display:inline-grid; place-items:center; font-size:11px; font-weight:800; cursor:help; }
+  .etapa{ white-space:nowrap; font-size:13px; }
+  .toggle-teste[aria-pressed="true"]{ background:var(--ink); color:var(--on-ink); border-color:var(--ink); }
+
+  /* regras */
+  .passos{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; counter-reset:passo; }
+  @media (max-width:1100px){ .passos{ grid-template-columns:repeat(2,1fr); } }
+  .passo{ position:relative; background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--r-md); padding:12px 14px 12px 14px; font-size:13.5px; line-height:1.5; box-shadow:var(--card-sh); }
+  .passo .n{ display:inline-grid; place-items:center; width:24px; height:24px; margin-bottom:6px; font-size:13px; font-weight:800; color:var(--black); background:var(--orange); border-radius:50%; }
+  .passo h3{ margin:0 0 4px; font-size:14px; font-weight:700; }
+  .destaque-regra{ display:inline-flex; margin:2px 4px 2px 0; padding:3px 9px; font-size:12px; font-weight:700; color:var(--black); background:var(--warn-bg); border-radius:var(--r-pill); }
+  .regras{ grid-template-columns:repeat(auto-fit,minmax(360px,1fr)); }
+  .regra ol.curta{ padding-left:20px; margin:0; }
+
+  /* impressão: todas as abas em sequência */
+  @media print{
+    @page{ margin:12mm; }
+    html, body{ background:#fff !important; color:#000 !important; }
+    .theme-toggle, .user-menu, .tabs, .app-tools, .nav-topo, .toolbar, .mais, #atribMais, .exp, .btn-quiet, .search-clear{ display:none !important; }
+    #appScreen{ display:block !important; height:auto !important; padding:0 !important; }
+    .frame{ padding:0 !important; }
+    .panel, .panel[hidden], .vg{ display:flex !important; flex-direction:column; overflow:visible !important; height:auto !important; max-height:none !important; }
+    .vg{ gap:10px; }
+    .panel[hidden] ~ .panel, .panel{ break-before:page; }
+    #panel-visao-geral{ break-before:auto; }
+    .print-titulo{ display:block; margin:0 0 8px; font-size:16px; font-weight:700; }
+    .tabela{ overflow:visible !important; height:auto !important; flex:none !important; box-shadow:none; }
+    #tabelaCarteira[hidden]{ display:block !important; }
+    #carteiraCards{ display:none !important; }
+    th{ position:static !important; }
+    tr, .bloco, .passo, .regra, .kpi{ break-inside:avoid; }
+    tr.grupo td{ position:static; }
+    .card, .bloco, .kpi, .regra, .passo, .tabela{ box-shadow:none !important; }
+    .meter-fill, .status-tag, .badge, .passo .n, .destaque-regra, .atencao li{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  }
 
   /* ============================================================
      Tema claro/escuro + tela de login (split screen)
@@ -425,94 +545,128 @@
           <h1 class="app-h1">Painel de Acompanhamento</h1>
           <p class="app-sub">Carteira, atribuições e regras do Onboarding Assignment</p>
           <p class="app-status" id="geradoEm" aria-live="polite">Carregando…</p>
+          <nav class="nav-topo" aria-label="Navegação principal">
+            <a href="index-fer.html">Atribuição</a>
+            <a href="painel.html" aria-current="page">Painel</a>
+          </nav>
         </div>
         <div class="app-tools">
           <button type="button" class="icon-btn" id="refreshBtn" aria-label="Atualizar painel" title="Atualizar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 4v5h-5"/></svg></button>
-          <a class="btn-quiet" href="index-fer.html">Onboarding Assignment →</a>
         </div>
       </header>
 
       <div class="tabs" role="tablist" aria-label="Seções do painel">
-        <button type="button" class="tab" role="tab" id="tab-carteira" aria-controls="panel-carteira" aria-selected="true" data-aba="carteira">Carteira</button>
+        <button type="button" class="tab" role="tab" id="tab-visao-geral" aria-controls="panel-visao-geral" aria-selected="true" data-aba="visao-geral">Visão geral</button>
+        <button type="button" class="tab" role="tab" id="tab-carteira" aria-controls="panel-carteira" aria-selected="false" tabindex="-1" data-aba="carteira">Carteira</button>
         <button type="button" class="tab" role="tab" id="tab-atribuicoes" aria-controls="panel-atribuicoes" aria-selected="false" tabindex="-1" data-aba="atribuicoes">Atribuições</button>
         <button type="button" class="tab" role="tab" id="tab-regras" aria-controls="panel-regras" aria-selected="false" tabindex="-1" data-aba="regras">Regras</button>
       </div>
 
-      <!-- ===== ABA CARTEIRA ===== -->
-      <div class="panel" id="panel-carteira" role="tabpanel" aria-labelledby="tab-carteira">
-        <div class="toolbar" id="filtroNivel" role="group" aria-label="Filtrar por nível">
+      <!-- ===== VISÃO GERAL ===== -->
+      <div class="panel" id="panel-visao-geral" role="tabpanel" aria-labelledby="tab-visao-geral">
+        <h2 class="print-titulo">Visão geral</h2>
+        <div class="vg">
+          <div class="kpis" id="kpis">
+            <div class="kpi"><b id="kpiTotalOnb">—</b><span>Onboarders / Guardiões</span></div>
+            <div class="kpi"><b id="kpiCarteiraTotal">—</b><span>Contratos ativos</span></div>
+            <div class="kpi"><b id="kpiLivreTotal">—</b><span>Vagas livres</span><small>sem os guardiões</small></div>
+            <div class="kpi" id="kpiAcimaBox"><b id="kpiAcima">—</b><span>Acima do limite</span><small>carteira &gt; limite</small></div>
+            <div class="kpi" id="kpiLimiteBox"><b id="kpiNoLimite">—</b><span>No limite</span><small>carteira = limite</small></div>
+          </div>
+
+          <section class="bloco" aria-labelledby="h-vagas">
+            <h2 id="h-vagas">Vagas livres por nível <small>os guardiões ficam à parte: só recebem contratos quando o POD está no limite</small></h2>
+            <div class="vagas" id="vagasNivel"></div>
+          </section>
+
+          <div class="duas">
+            <section class="bloco" aria-labelledby="h-nivel">
+              <h2 id="h-nivel">Resumo por nível</h2>
+              <table class="mini"><thead><tr><th scope="col">Nível</th><th scope="col">Onboarders</th><th scope="col">Carteira / limite</th><th scope="col">Ocupação</th><th scope="col" class="num">Vagas</th><th scope="col" class="num">Com vaga</th></tr></thead><tbody id="resumoNivel"></tbody></table>
+            </section>
+            <section class="bloco" aria-labelledby="h-pod">
+              <h2 id="h-pod">Resumo por POD</h2>
+              <table class="mini"><thead><tr><th scope="col">POD</th><th scope="col">Nível</th><th scope="col">Onboarders</th><th scope="col">Carteira / limite</th><th scope="col">Ocupação</th><th scope="col" class="num">Vagas</th><th scope="col" class="num">Com vaga</th></tr></thead><tbody id="resumoPod"></tbody></table>
+            </section>
+          </div>
+
+          <section class="bloco" aria-labelledby="h-atencao">
+            <h2 id="h-atencao">Atenção</h2>
+            <ul class="atencao" id="atencaoLista"></ul>
+          </section>
+        </div>
+      </div>
+
+      <!-- ===== CARTEIRA ===== -->
+      <div class="panel" id="panel-carteira" role="tabpanel" aria-labelledby="tab-carteira" hidden>
+        <h2 class="print-titulo">Carteira por onboarder</h2>
+        <div class="toolbar" id="filtroNivel" role="group" aria-label="Filtros da carteira">
           <button type="button" class="pill" data-nivel="todos" aria-pressed="true">Todos</button>
           <button type="button" class="pill" data-nivel="N2-N3" aria-pressed="false">N2-N3</button>
           <button type="button" class="pill" data-nivel="N4-N5" aria-pressed="false">N4-N5</button>
           <button type="button" class="pill" data-nivel="N6+" aria-pressed="false">N6+</button>
           <button type="button" class="pill" data-nivel="Guardian" aria-pressed="false">Guardião</button>
           <span class="sep-v" aria-hidden="true"></span>
-          <div class="pop-wrap">
-            <button type="button" class="pill" id="analistasBtn" aria-haspopup="dialog" aria-expanded="false" aria-pressed="false">Analistas</button>
-            <div class="pop" id="analistasPop" role="dialog" aria-label="Escolher analistas" hidden>
-              <div class="pop-top">
-                <label class="busca"><span class="sr-only">Buscar analista</span>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-                  <input type="search" id="analistasBusca" placeholder="Buscar analista" autocomplete="off" /></label>
-              </div>
-              <div class="pop-lista" id="analistasLista"></div>
-              <div class="pop-pe"><button type="button" id="analistasTodos">Selecionar os listados</button><button type="button" id="analistasLimpar">Limpar</button></div>
-            </div>
-          </div>
+          <label class="campo-data">POD <select id="filtroPod" aria-label="Filtrar por POD"><option value="">Todos</option></select></label>
+          <label class="campo-data">Status <select id="filtroStatus" aria-label="Filtrar por status">
+            <option value="">Todos</option><option value="ok">Tranquilo</option><option value="atencao">Atenção</option><option value="limite">No limite</option><option value="acima">Acima do limite</option></select></label>
+          <label class="busca"><span class="sr-only">Buscar por nome</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input type="search" id="carteiraBusca" placeholder="Buscar por nome" autocomplete="off" /></label>
+          <button type="button" class="pill" id="agruparPod" aria-pressed="false">Agrupar por POD</button>
+          <span class="seg" role="group" aria-label="Modo de exibição"><button type="button" id="verTabela" aria-pressed="true">Tabela</button><button type="button" id="verCards" aria-pressed="false">Cards</button></span>
+          <button type="button" class="btn-quiet" id="exportarCsv">Exportar CSV</button>
           <span class="contagem grow" id="carteiraCount" aria-live="polite"></span>
         </div>
 
-        <div class="kpis" id="kpis">
-          <div class="kpi"><b id="kpiTotalOnb">—</b><span>Analistas</span></div>
-          <div class="kpi"><b id="kpiCarteiraTotal">—</b><span>Contratos ativos</span></div>
-          <div class="kpi"><b id="kpiLivreTotal">—</b><span>Vagas livres</span></div>
-          <div class="kpi" id="kpiLimiteBox"><b id="kpiNoLimite">—</b><span>No limite máximo</span></div>
-        </div>
-
-        <div class="tabela" id="tabelaCarteira" tabindex="0" aria-label="Carteira por analista">
+        <div class="tabela" id="tabelaCarteira" tabindex="0" aria-label="Carteira por onboarder">
           <table>
             <thead>
               <tr id="cabCarteira">
-                <th data-col="email" scope="col"><button type="button" class="ord">Analista</button></th>
-                <th data-col="pod" scope="col"><button type="button" class="ord">POD</button></th>
-                <th data-col="level" scope="col"><button type="button" class="ord">Nível</button></th>
-                <th data-col="carteira" scope="col"><button type="button" class="ord">Carteira</button></th>
-                <th data-col="livres" scope="col" class="num"><button type="button" class="ord">Livres</button></th>
-                <th data-col="pre" scope="col" class="num"><button type="button" class="ord" title="Pré-onboarding em andamento">Pré-onb.</button></th>
-                <th data-col="ultima" scope="col"><button type="button" class="ord">Última atribuição</button></th>
-                <th data-col="pct" scope="col"><button type="button" class="ord" title="Carteira ativa / limite do nível">Status</button></th>
+                <th scope="col" data-col="nome"><button type="button" class="ord">Onboarder</button></th>
+                <th scope="col" data-col="pod"><button type="button" class="ord">POD</button></th>
+                <th scope="col" data-col="level"><button type="button" class="ord">Nível</button></th>
+                <th scope="col" data-col="pct"><button type="button" class="ord" title="Carteira ativa / limite do nível. A marca fina indica 70%.">Carteira</button></th>
+                <th scope="col" data-col="livres" class="num"><button type="button" class="ord">Livres</button></th>
+                <th scope="col" data-col="pre" class="num"><button type="button" class="ord">Em pré-onboarding</button></th>
+                <th scope="col" data-col="status"><button type="button" class="ord">Status</button></th>
               </tr>
             </thead>
             <tbody id="corpoCarteira"></tbody>
           </table>
         </div>
+        <div class="cards" id="carteiraCards" hidden></div>
       </div>
 
-      <!-- ===== ABA ATRIBUIÇÕES ===== -->
+      <!-- ===== ATRIBUIÇÕES ===== -->
       <div class="panel" id="panel-atribuicoes" role="tabpanel" aria-labelledby="tab-atribuicoes" hidden>
-        <div class="toolbar" role="group" aria-label="Filtrar por data">
+        <h2 class="print-titulo">Atribuições</h2>
+        <div class="toolbar" role="group" aria-label="Filtros das atribuições">
           <button type="button" class="pill" data-periodo="hoje" aria-pressed="false">Hoje</button>
           <button type="button" class="pill" data-periodo="7" aria-pressed="false">7 dias</button>
           <button type="button" class="pill" data-periodo="30" aria-pressed="false">30 dias</button>
           <button type="button" class="pill" data-periodo="tudo" aria-pressed="true">Tudo</button>
-          <span class="sep-v" aria-hidden="true"></span>
           <label class="campo-data">De <input type="date" id="dataDe" /></label>
           <label class="campo-data">Até <input type="date" id="dataAte" /></label>
-          <label class="busca"><span class="sr-only">Buscar por cliente, onboarder ou closer</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-            <input type="search" id="atribBusca" placeholder="Cliente, onboarder ou closer" autocomplete="off" /></label>
+          <span class="sep-v" aria-hidden="true"></span>
+          <label class="campo-data">Closer <select id="filtroCloser" aria-label="Filtrar por closer"><option value="">Todos</option></select></label>
+          <label class="campo-data">Onboarder <select id="filtroOnboarder" aria-label="Filtrar por onboarder"><option value="">Todos</option></select></label>
+          <label class="campo-data">Nível <select id="filtroNivelAtrib" aria-label="Filtrar por nível"><option value="">Todos</option><option>N2-N3</option><option>N4-N5</option><option>N6+</option></select></label>
+          <button type="button" class="pill toggle-teste" id="ocultarTestes" aria-pressed="false" title="Esconde atribuições de teste (cliente com “teste” no nome ou closer de teste)">Ocultar testes</button>
           <span class="contagem grow" id="atribCount" aria-live="polite"></span>
         </div>
-        <div class="tabela" id="tabelaAtrib" tabindex="0" aria-label="Últimas atribuições">
+        <div class="tabela" id="tabelaAtrib" tabindex="0" aria-label="Atribuições">
           <table>
             <thead>
               <tr>
                 <th scope="col"><span class="sem-ord"><span class="sr-only">Detalhe</span></span></th>
-                <th scope="col"><span class="sem-ord">Data</span></th>
+                <th scope="col"><span class="sem-ord">Data / hora</span></th>
                 <th scope="col"><span class="sem-ord">Cliente</span></th>
+                <th scope="col"><span class="sem-ord">Hotmart ID</span></th>
                 <th scope="col"><span class="sem-ord">Onboarder</span></th>
                 <th scope="col"><span class="sem-ord">Closer</span></th>
                 <th scope="col"><span class="sem-ord">Segmentação</span></th>
+                <th scope="col"><span class="sem-ord">Etapa da cascata</span></th>
               </tr>
             </thead>
             <tbody id="corpoAtrib"></tbody>
@@ -522,46 +676,37 @@
         <div class="nota-dados" id="atribNota"></div>
       </div>
 
-      <!-- ===== ABA REGRAS ===== -->
+      <!-- ===== REGRAS ===== -->
       <div class="panel rola" id="panel-regras" role="tabpanel" aria-labelledby="tab-regras" hidden>
+        <h2 class="print-titulo">Regras de atribuição</h2>
+        <section class="bloco" aria-labelledby="h-cascata">
+          <h2 id="h-cascata">Cascata de decisão <small>quatro passos, sempre nesta ordem</small></h2>
+          <p style="margin:0 0 10px"><span class="destaque-regra">Nunca cruza nível</span><span class="destaque-regra">N6+ não tem guardião</span></p>
+          <ol class="passos" style="list-style:none;padding:0;margin:0">
+            <li class="passo"><span class="n" aria-hidden="true">1</span><h3>Mesmo POD</h3>Onboarders do POD do Closer com carteira abaixo do limite do nível.</li>
+            <li class="passo"><span class="n" aria-hidden="true">2</span><h3>Guardião</h3>Só se o POD estiver no limite. Vale para N2-N3 e N4-N5, nunca N6+. Escolhe o guardião com menor carteira (limite 150).</li>
+            <li class="passo"><span class="n" aria-hidden="true">3</span><h3>Outro POD, mesmo nível</h3>Mesma lógica do passo 1, em qualquer POD do nível do Closer.</li>
+            <li class="passo"><span class="n" aria-hidden="true">4</span><h3>Alerta ao coordenador</h3>Se todo o nível (guardiões inclusos) estiver no limite, é enviado e-mail ao coordenador e nada é atribuído.</li>
+          </ol>
+        </section>
         <div class="regras">
           <section class="regra">
-            <h3>Cascata de decisão <span class="mut">(nunca cruza nível)</span></h3>
-            <ol>
-              <li><b>Mesmo POD</b> — onboarders do POD do Closer com carteira abaixo do limite do nível.</li>
-              <li><b>Guardião</b> — só se o POD estiver no limite. Vale para <span class="pill-note">N2-N3</span> e <span class="pill-note">N4-N5</span> (nunca N6+). Escolhe o guardião com menor carteira, limite de 150.</li>
-              <li><b>Outro POD, mesmo nível</b> — mesma lógica da etapa 1, em qualquer POD do nível do Closer.</li>
-              <li><b>Alerta ao coordenador</b> — se todo o nível (guardiões inclusos) estiver no limite, é enviado e-mail ao coordenador e nada é atribuído.</li>
-            </ol>
-          </section>
-          <section class="regra">
-            <h3>Limite de carteira por nível</h3>
+            <h3>Limites e segmentação por receita (12 meses)</h3>
             <table>
-              <thead><tr><th scope="col">Nível</th><th scope="col">Limite total</th></tr></thead>
+              <thead><tr><th scope="col">Nível</th><th scope="col">Limite</th><th scope="col">SG1</th><th scope="col">SG2</th><th scope="col">SG3</th></tr></thead>
               <tbody>
-                <tr><td>N2-N3</td><td>75 contratos</td></tr>
-                <tr><td>N4-N5</td><td>50 contratos</td></tr>
-                <tr><td>N6+</td><td>25 contratos</td></tr>
-                <tr><td>Guardian</td><td>150 contratos</td></tr>
+                <tr><td>N2-N3</td><td>75 contratos</td><td>&lt; R$300k</td><td>R$300k a &lt; R$600k</td><td>≥ R$600k</td></tr>
+                <tr><td>N4-N5</td><td>50 contratos</td><td>&lt; R$2M</td><td>R$2M a &lt; R$3M</td><td>≥ R$3M</td></tr>
+                <tr><td>N6+</td><td>25 contratos</td><td>&lt; R$10M</td><td>R$10M a &lt; R$15M</td><td>≥ R$15M</td></tr>
+                <tr><td>Guardian</td><td>150 contratos</td><td colspan="3" class="mut">sem subgrupos</td></tr>
               </tbody>
             </table>
-            <p>Status: <span class="status-tag st-ok">tranquilo</span> abaixo de 70% · <span class="status-tag st-atencao">atenção</span> de 70% a 99% · <span class="status-tag st-limite">no limite</span> 100% ou mais.</p>
-          </section>
-          <section class="regra">
-            <h3>Subgrupo por receita (12 meses)</h3>
-            <table>
-              <thead><tr><th scope="col">Nível</th><th scope="col">sg1</th><th scope="col">sg2</th><th scope="col">sg3</th></tr></thead>
-              <tbody>
-                <tr><td>N2-N3</td><td>&lt; R$300k</td><td>R$300k a &lt; R$600k</td><td>≥ R$600k</td></tr>
-                <tr><td>N4-N5</td><td>&lt; R$2M</td><td>R$2M a &lt; R$3M</td><td>≥ R$3M</td></tr>
-                <tr><td>N6+</td><td>&lt; R$10M</td><td>R$10M a &lt; R$15M</td><td>≥ R$15M</td></tr>
-              </tbody>
-            </table>
-            <p>Limite inferior inclusive, superior exclusive. sg1 não tem piso e sg3 não tem teto. Cada subgrupo comporta 10 contratos por onboarder; se todos estiverem no limite, vale a menor carteira total.</p>
+            <p>Limite inferior inclusive, superior exclusive. SG1 não tem piso e SG3 não tem teto. Cada subgrupo comporta 10 contratos por onboarder; se todos estiverem no limite, vale a menor carteira total.</p>
+            <p>Status: <span class="status-tag st-ok">tranquilo</span> abaixo de 70% · <span class="status-tag st-atencao">atenção</span> 70% a 99% · <span class="status-tag st-limite">no limite</span> 100% · <span class="status-tag st-acima">acima do limite</span> mais de 100%.</p>
           </section>
           <section class="regra">
             <h3>Critério de desempate</h3>
-            <ol>
+            <ol class="curta">
               <li>Menor carteira do subgrupo (ou, no modo alternativo, menor carteira total).</li>
               <li>Empate → menor número de pré-onboardings do subgrupo.</li>
               <li>Empate final → quem está há mais tempo sem receber uma atribuição.</li>
@@ -730,43 +875,82 @@
   logoutBtn.addEventListener('click', () => { sessionStorage.removeItem(SESSION_KEY); showLogin(); });
 
   // ---------------------------------------------------------
-  // Painel: dados, abas e filtros
+  // Painel: configuração, dados, abas e filtros
   // ---------------------------------------------------------
   const AUTO_ATUALIZAR_MS = 3 * 60 * 1000;
   const POR_PAGINA = 25;
+  const FAIXA_ATENCAO = 70;               // % de ocupação a partir da qual o status vira "atenção"
+  const LIMIAR_POUCOS_COM_VAGA = 2;       // nível com este número (ou menos) de onboarders com vaga entra em "Atenção"
+  const LIMITE_SUBGRUPO = 10;             // contratos por subgrupo (SG1/SG2/SG3) de cada onboarder
+  const CLOSERS_TESTE = ['fernanda.cardoso@hotmart.com'];   // atribuições desses closers contam como teste
+  const PADRAO_TESTE = /\bteste|\btest\b/i;                 // ...e as de cliente com "teste" no nome
+  const CHAVE_ABA = 'painel_aba';
+  const ABAS = ['visao-geral', 'carteira', 'atribuicoes', 'regras'];
+  const NIVEIS = ['N2-N3', 'N4-N5', 'N6+'];
   const ORDEM_NIVEL = { 'N2-N3': 1, 'N4-N5': 2, 'N6+': 3, 'Guardian': 4 };
+  const ROTULO_NIVEL = { 'N2-N3': 'N2-N3', 'N4-N5': 'N4-N5', 'N6+': 'N6+', 'Guardian': 'Guardião' };
+  const ORDEM_STATUS = { acima: 5, limite: 4, atencao: 3, ok: 2, sem: 1 };
+  const STATUS = {
+    acima:   { rotulo: 'acima do limite', classe: 'st-acima',   cor: 'var(--over-bar)' },
+    limite:  { rotulo: 'no limite',       classe: 'st-limite',  cor: 'var(--red-bar)' },
+    atencao: { rotulo: 'atenção',         classe: 'st-atencao', cor: 'var(--orange)' },
+    ok:      { rotulo: 'tranquilo',       classe: 'st-ok',      cor: 'var(--ok-bar)' },
+    sem:     { rotulo: 'sem limite',      classe: 'st-ok',      cor: 'var(--ok-bar)' }
+  };
+  // Segmentação por receita: regra oficial (SG1 sem piso, SG3 sem teto) e rótulos antigos gravados no histórico
+  const FAIXAS = {
+    'N2-N3': { limites: [300000, 600000],     sg1: '< R$300k',  sg2: 'R$300k a < R$600k', sg3: '≥ R$600k', legado: { sg1: ['120k–300k'], sg2: ['300k–600k'], sg3: ['600k–1M'] } },
+    'N4-N5': { limites: [2000000, 3000000],   sg1: '< R$2M',    sg2: 'R$2M a < R$3M',     sg3: '≥ R$3M',   legado: { sg1: ['1M–2M'],    sg2: ['2M–3M'],    sg3: ['3M–5M'] } },
+    'N6+':   { limites: [10000000, 15000000], sg1: '< R$10M',   sg2: 'R$10M a < R$15M',   sg3: '≥ R$15M',  legado: { sg1: ['5M–10M'],   sg2: ['10M–15M'],  sg3: ['15M+'] } }
+  };
   const ICONE_SETA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>';
+  const ICONE_ALERTA = '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>';
 
   const geradoEm = document.getElementById('geradoEm');
   const refreshBtn = document.getElementById('refreshBtn');
   const corpoCarteira = document.getElementById('corpoCarteira');
+  const carteiraCards = document.getElementById('carteiraCards');
+  const tabelaCarteira = document.getElementById('tabelaCarteira');
   const corpoAtrib = document.getElementById('corpoAtrib');
-  const analistasBtn = document.getElementById('analistasBtn');
-  const analistasPop = document.getElementById('analistasPop');
-  const analistasLista = document.getElementById('analistasLista');
-  const analistasBusca = document.getElementById('analistasBusca');
+  const atribMais = document.getElementById('atribMais');
   const dataDe = document.getElementById('dataDe');
   const dataAte = document.getElementById('dataAte');
-  const atribBusca = document.getElementById('atribBusca');
-  const atribMais = document.getElementById('atribMais');
+  const filtroPod = document.getElementById('filtroPod');
+  const filtroStatus = document.getElementById('filtroStatus');
+  const carteiraBusca = document.getElementById('carteiraBusca');
+  const filtroCloser = document.getElementById('filtroCloser');
+  const filtroOnboarder = document.getElementById('filtroOnboarder');
+  const filtroNivelAtrib = document.getElementById('filtroNivelAtrib');
   const avatarBtn = document.getElementById('avatarBtn');
   const userPop = document.getElementById('userPop');
 
   let painelData = { onboarders: [], ultimas_atribuicoes: [], gerado_em: null };
   let carregando = false, erroCarga = '', atualizadoEm = 0;
-  let nivelAtivo = 'todos';
-  const analistasSel = new Set();
-  let ordem = { col: 'pct', dir: 'desc' };
-  let periodo = 'tudo';
+  let nivelAtivo = 'todos', agruparPod = false, modoCarteira = 'tabela';
+  let ordem = { col: 'status', dir: 'desc' };
+  let periodo = 'tudo', ocultarTestes = false;
   let visiveisAtrib = POR_PAGINA;
-  const expandidas = new Set();
+  const expandidasCarteira = new Set(), expandidasAtrib = new Set();
 
   function h(tag, cls, txt){ const e = document.createElement(tag); if (cls) e.className = cls; if (txt !== undefined) e.textContent = txt; return e; }
+  const num = v => (v === null || v === undefined || v === '' || isNaN(Number(v))) ? 0 : Number(v);
+  // "gabriel.galastro@hotmart.com" → "Gabriel Galastro"
+  function nomeDe(email){
+    const base = String(email || '').split('@')[0];
+    if (!base) return '—';
+    return base.split(/[._-]+/).filter(Boolean).map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+  }
+  const brl = n => 'R$ ' + new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 }).format(n);
 
-  // ── abas ──
-  const ABAS = ['carteira', 'atribuicoes', 'regras'];
+  // ── abas (hash na URL, última aba lembrada, setas do teclado) ──
+  function abaInicial(){
+    const hsh = (location.hash || '').replace('#', '');
+    if (ABAS.includes(hsh)) return hsh;
+    try { const s = localStorage.getItem(CHAVE_ABA); if (ABAS.includes(s)) return s; } catch (e) {}
+    return 'visao-geral';
+  }
   function selecionarAba(id, focar){
-    if (!ABAS.includes(id)) id = 'carteira';
+    if (!ABAS.includes(id)) id = 'visao-geral';
     ABAS.forEach(a => {
       const t = document.getElementById('tab-' + a), p = document.getElementById('panel-' + a), sel = a === id;
       t.setAttribute('aria-selected', String(sel));
@@ -775,6 +959,7 @@
       if (sel && focar) t.focus();
     });
     try { history.replaceState(null, '', '#' + id); } catch (e) {}
+    try { localStorage.setItem(CHAVE_ABA, id); } catch (e) {}
   }
   document.querySelector('.tabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (b) selecionarAba(b.dataset.aba); });
   document.querySelector('.tabs').addEventListener('keydown', e => {
@@ -787,162 +972,310 @@
     else if (e.key === 'End') j = ABAS.length - 1;
     if (j !== null) { e.preventDefault(); selecionarAba(ABAS[j], true); }
   });
+  window.addEventListener('hashchange', () => { const hsh = (location.hash || '').replace('#', ''); if (ABAS.includes(hsh)) selecionarAba(hsh); });
 
-  // ── status de capacidade ──
-  function statusDe(pct){
-    if (pct === null || pct === undefined) return { classe: 'st-ok', label: 'sem limite', cor: 'var(--ok-bar)' };
-    if (pct >= 100) return { classe: 'st-limite', label: 'no limite', cor: 'var(--red-bar)' };
-    if (pct >= 70)  return { classe: 'st-atencao', label: 'atenção', cor: 'var(--orange)' };
-    return { classe: 'st-ok', label: 'tranquilo', cor: 'var(--ok-bar)' };
+  // ── cálculo de status (carteira x limite do nível) ──
+  function statusDe(o){
+    const max = o.capacidade_maxima, c = num(o.carteira_atual);
+    if (!max) return { chave: 'sem', pct: null, ...STATUS.sem };
+    const pct = c / max * 100;
+    const chave = c > max ? 'acima' : c === max ? 'limite' : pct >= FAIXA_ATENCAO ? 'atencao' : 'ok';
+    return { chave, pct: Math.round(pct), ...STATUS[chave] };
+  }
+  const ehGuardiao = o => o.level === 'Guardian';
+  function agregar(lista){
+    const a = { n: lista.length, carteira: 0, limite: 0, livres: 0, comVaga: 0 };
+    lista.forEach(o => { a.carteira += num(o.carteira_atual); a.limite += num(o.capacidade_maxima); a.livres += num(o.capacidade_livre); if (num(o.capacidade_livre) > 0) a.comVaga++; });
+    a.pct = a.limite ? Math.round(a.carteira / a.limite * 100) : null;
+    return a;
+  }
+  function ocupBarra(pct, cor){
+    const w = h('div', 'ocup'); const t = h('div', 'meter-track'); const f = h('div', 'meter-fill');
+    f.style.width = Math.min(pct || 0, 100) + '%'; f.style.background = cor; t.appendChild(f); w.appendChild(t);
+    w.appendChild(h('span', '', pct == null ? '—' : pct + '%')); return w;
+  }
+  function corPct(pct){ return pct == null ? 'var(--ok-bar)' : pct > 100 ? 'var(--over-bar)' : pct === 100 ? 'var(--red-bar)' : pct >= FAIXA_ATENCAO ? 'var(--orange)' : 'var(--ok-bar)'; }
+
+  // ───────── VISÃO GERAL ─────────
+  function irParaCarteira(filtros){
+    nivelAtivo = filtros.nivel || 'todos'; filtroPod.value = filtros.pod || ''; filtroStatus.value = filtros.status || ''; carteiraBusca.value = '';
+    sincronizarFiltros(); renderCarteira(); selecionarAba('carteira', true);
+  }
+  function renderVisaoGeral(){
+    const todos = painelData.onboarders || [];
+    const reg = todos.filter(o => !ehGuardiao(o)), gua = todos.filter(ehGuardiao);
+    const st = todos.map(statusDe);
+    document.getElementById('kpiTotalOnb').textContent = String(todos.length);
+    document.getElementById('kpiCarteiraTotal').textContent = String(todos.reduce((s, o) => s + num(o.carteira_atual), 0));
+    document.getElementById('kpiLivreTotal').textContent = String(agregar(reg).livres);
+    const acima = st.filter(s => s.chave === 'acima').length, noLim = st.filter(s => s.chave === 'limite').length;
+    document.getElementById('kpiAcima').textContent = String(acima);
+    document.getElementById('kpiNoLimite').textContent = String(noLim);
+    document.getElementById('kpiAcimaBox').classList.toggle('alerta-acima', acima > 0);
+    document.getElementById('kpiLimiteBox').classList.toggle('alerta', noLim > 0);
+
+    // vagas por nível (guardiões à parte)
+    const vagas = document.getElementById('vagasNivel'); vagas.innerHTML = '';
+    NIVEIS.forEach(n => {
+      const a = agregar(reg.filter(o => o.level === n));
+      const d = h('div', 'vaga'); d.appendChild(h('b', '', String(a.livres))); d.appendChild(h('span', '', n + ' · ' + a.comVaga + ' de ' + a.n + ' com vaga')); vagas.appendChild(d);
+    });
+    const ag = agregar(gua);
+    const dg = h('div', 'vaga aparte'); dg.appendChild(h('span', 'tag', 'Guardião · à parte')); dg.appendChild(h('b', '', String(ag.livres)));
+    dg.appendChild(h('span', '', ag.comVaga + ' de ' + ag.n + ' com vaga · só entram quando o POD está no limite')); vagas.appendChild(dg);
+
+    // resumo por nível (guardiões numa linha à parte)
+    const rn = document.getElementById('resumoNivel'); rn.innerHTML = '';
+    const linhaResumo = (tr, a, rotuloTd) => {
+      tr.appendChild(rotuloTd); tr.appendChild(h('td', '', String(a.n)));
+      tr.appendChild(h('td', 'nowrap', a.carteira + ' / ' + a.limite));
+      const tdO = h('td'); tdO.appendChild(ocupBarra(a.pct, corPct(a.pct))); tr.appendChild(tdO);
+      tr.appendChild(h('td', 'num', String(a.livres))); tr.appendChild(h('td', 'num', a.comVaga + ' de ' + a.n));
+    };
+    NIVEIS.forEach(n => { const tr = h('tr'); linhaResumo(tr, agregar(reg.filter(o => o.level === n)), h('td', 'nome', n)); rn.appendChild(tr); });
+    if (gua.length) { const tr = h('tr', 'aparte'); linhaResumo(tr, ag, h('td', 'nome', 'Guardião (à parte)')); rn.appendChild(tr); }
+
+    // resumo por POD
+    const rp = document.getElementById('resumoPod'); rp.innerHTML = '';
+    const pods = [...new Set(reg.map(o => o.pod))].sort((a, b) => num(a) - num(b));
+    pods.forEach(p => {
+      const lista = reg.filter(o => o.pod === p), a = agregar(lista);
+      const tr = h('tr'); tr.appendChild(h('td', 'nome', 'POD ' + p));
+      tr.appendChild(h('td', '', [...new Set(lista.map(o => o.level))].join(', ')));
+      tr.appendChild(h('td', '', String(a.n))); tr.appendChild(h('td', 'nowrap', a.carteira + ' / ' + a.limite));
+      const tdO = h('td'); tdO.appendChild(ocupBarra(a.pct, corPct(a.pct))); tr.appendChild(tdO);
+      tr.appendChild(h('td', 'num', String(a.livres))); tr.appendChild(h('td', 'num', a.comVaga + ' de ' + a.n)); rp.appendChild(tr);
+    });
+    if (!pods.length) { const tr = h('tr'); const td = h('td', 'vazio-tab', 'Sem dados.'); td.colSpan = 7; tr.appendChild(td); rp.appendChild(tr); }
+
+    // atenção
+    const ul = document.getElementById('atencaoLista'); ul.innerHTML = '';
+    const item = (cls, texto, acao) => {
+      const li = h('li', cls); li.insertAdjacentHTML('afterbegin', ICONE_ALERTA);
+      const c = h('div', 'corpo', texto); li.appendChild(c);
+      if (acao) { const b = h('button', 'btn-quiet', 'Ver na carteira'); b.type = 'button'; b.addEventListener('click', () => irParaCarteira(acao)); li.appendChild(b); }
+      ul.appendChild(li);
+    };
+    const nomesDe = l => l.map(o => nomeDe(o.email)).join(', ');
+    const acimaL = todos.filter(o => statusDe(o).chave === 'acima'), limL = todos.filter(o => statusDe(o).chave === 'limite');
+    if (acimaL.length) item('grave', acimaL.length + (acimaL.length === 1 ? ' onboarder está ' : ' onboarders estão ') + 'acima do limite: ' + nomesDe(acimaL) + '.', { status: 'acima' });
+    if (limL.length) item('medio', limL.length + (limL.length === 1 ? ' onboarder está ' : ' onboarders estão ') + 'no limite: ' + nomesDe(limL) + '.', { status: 'limite' });
+    NIVEIS.forEach(n => {
+      const a = agregar(reg.filter(o => o.level === n));
+      if (!a.n) return;
+      if (a.comVaga === 0) item('grave', n + ': nenhum onboarder com vaga. ' + (n === 'N6+' ? 'N6+ não tem guardião: o próximo contrato dispara o alerta ao coordenador.' : 'Só resta o guardião; se ele também estiver no limite, dispara o alerta ao coordenador.'), { nivel: n });
+      else if (a.comVaga <= LIMIAR_POUCOS_COM_VAGA) item('leve', n + ': só ' + a.comVaga + ' de ' + a.n + ' onboarders com vaga (' + a.livres + ' vagas). Risco de disparar o alerta ao coordenador.', { nivel: n });
+    });
+    if (!ul.children.length) { const li = h('li'); li.appendChild(h('div', 'atencao-ok', 'Nenhum ponto de atenção agora.')); ul.appendChild(li); }
   }
 
-  // ── carteira ──
+  // ───────── CARTEIRA ─────────
   function listaCarteira(){
-    let l = painelData.onboarders || [];
-    if (nivelAtivo !== 'todos') l = l.filter(o => o.level === nivelAtivo);
-    if (analistasSel.size) l = l.filter(o => analistasSel.has(o.email));
-    return l;
+    const t = carteiraBusca.value.trim().toLowerCase();
+    return (painelData.onboarders || []).filter(o =>
+      (nivelAtivo === 'todos' || o.level === nivelAtivo) &&
+      (!filtroPod.value || String(o.pod) === filtroPod.value) &&
+      (!filtroStatus.value || statusDe(o).chave === filtroStatus.value) &&
+      (!t || nomeDe(o.email).toLowerCase().includes(t) || String(o.email || '').toLowerCase().includes(t)));
   }
   function valorOrdem(o, col){
     switch (col) {
-      case 'email': return String(o.email || '').toLowerCase();
-      case 'pod': return Number(o.pod) || 0;
+      case 'nome': return nomeDe(o.email).toLowerCase();
+      case 'pod': return num(o.pod);
       case 'level': return ORDEM_NIVEL[o.level] || 9;
-      case 'carteira': return o.carteira_atual || 0;
       case 'livres': return o.capacidade_livre == null ? -1 : o.capacidade_livre;
-      case 'pre': return o.pre_onboarding_atual || 0;
-      case 'ultima': return o.ultima_atribuicao_em ? Date.parse(o.ultima_atribuicao_em) || 0 : 0;
-      default: return o.percentual_consumido == null ? -1 : o.percentual_consumido;
+      case 'pre': return num(o.pre_onboarding_atual);
+      case 'status': { const s = statusDe(o); return ORDEM_STATUS[s.chave] * 1000 + (s.pct || 0); }
+      default: { const s = statusDe(o); return s.pct == null ? -1 : s.pct; }
     }
   }
-  function fmtDia(iso){
-    if (!iso) return '—';
-    const d = new Date(iso);
-    if (isNaN(d)) return '—';
-    return d.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit', year: 'numeric' });
-  }
-  function renderCarteira(){
-    const lista = listaCarteira().slice().sort((a, b) => {
+  function ordenar(lista){
+    return lista.slice().sort((a, b) => {
+      if (agruparPod) { const d = num(a.pod) - num(b.pod); if (d) return d; }
       const x = valorOrdem(a, ordem.col), y = valorOrdem(b, ordem.col);
       const c = x < y ? -1 : x > y ? 1 : 0;
       return (ordem.dir === 'asc' ? c : -c) || String(a.email).localeCompare(String(b.email));
     });
-    document.getElementById('kpiTotalOnb').textContent = String(lista.length);
-    document.getElementById('kpiCarteiraTotal').textContent = String(lista.reduce((s, o) => s + (o.carteira_atual || 0), 0));
-    document.getElementById('kpiLivreTotal').textContent = String(lista.reduce((s, o) => s + (o.capacidade_livre || 0), 0));
-    const noLimite = lista.filter(o => (o.percentual_consumido ?? 0) >= 100).length;
-    document.getElementById('kpiNoLimite').textContent = String(noLimite);
-    document.getElementById('kpiLimiteBox').classList.toggle('alerta', noLimite > 0);
-    document.getElementById('carteiraCount').textContent = analistasSel.size || nivelAtivo !== 'todos'
-      ? lista.length + ' de ' + (painelData.onboarders || []).length + ' analistas' : '';
-    document.querySelectorAll('#cabCarteira th').forEach(th => {
-      if (th.dataset.col === ordem.col) th.setAttribute('aria-sort', ordem.dir === 'asc' ? 'ascending' : 'descending'); else th.removeAttribute('aria-sort');
-    });
-    corpoCarteira.innerHTML = '';
-    if (erroCarga) { corpoCarteira.appendChild(linhaVazia(8, erroCarga)); return; }
-    if (!carregando && !(painelData.onboarders || []).length) { corpoCarteira.appendChild(linhaVazia(8, 'Nenhum analista no painel.')); return; }
-    if (!lista.length) {
-      const tr = linhaVazia(8, 'Nenhum analista para esses filtros.');
-      const b = h('button', 'btn-quiet', 'Limpar filtros'); b.type = 'button';
-      b.addEventListener('click', () => { nivelAtivo = 'todos'; analistasSel.clear(); sincronizarFiltros(); renderCarteira(); });
-      tr.firstChild.appendChild(document.createElement('br')); tr.firstChild.appendChild(b);
-      corpoCarteira.appendChild(tr); return;
-    }
-    lista.forEach(o => {
-      const pct = o.percentual_consumido;
-      const st = statusDe(pct);
-      const tr = h('tr', 'lin');
-      tr.appendChild(h('td', 'email', o.email || '—'));
-      const tdPod = h('td'); tdPod.appendChild(h('span', 'badge pod', 'POD ' + (o.pod ?? '—'))); tr.appendChild(tdPod);
-      const tdNv = h('td'); tdNv.appendChild(h('span', 'badge', o.level || '—')); tr.appendChild(tdNv);
-      const tdM = h('td'); const m = h('div', 'meter');
-      const trk = h('div', 'meter-track'); const fill = h('div', 'meter-fill'); fill.style.width = Math.min(pct ?? 0, 100) + '%'; fill.style.background = st.cor; trk.appendChild(fill);
-      const tx = h('span', 'meter-txt'); const bold = h('b', '', String(o.carteira_atual ?? 0)); tx.appendChild(bold); tx.appendChild(document.createTextNode(' / ' + (o.capacidade_maxima ?? '—')));
-      m.appendChild(trk); m.appendChild(tx); tdM.appendChild(m); tr.appendChild(tdM);
-      tr.appendChild(h('td', 'num', o.capacidade_livre == null ? '—' : String(o.capacidade_livre)));
-      tr.appendChild(h('td', 'num', String(o.pre_onboarding_atual ?? 0)));
-      tr.appendChild(h('td', 'mut', fmtDia(o.ultima_atribuicao_em)));
-      const tdS = h('td'); tdS.appendChild(h('span', 'status-tag ' + st.classe, (pct == null ? '' : pct + '% · ') + st.label)); tr.appendChild(tdS);
-      corpoCarteira.appendChild(tr);
-    });
   }
-  function linhaVazia(cols, msg){
-    const tr = h('tr'); const td = h('td', 'vazio-tab', msg); td.colSpan = cols; tr.appendChild(td); return tr;
+  function barraCarteira(o, st){
+    const m = h('div', 'meter'); const trk = h('div', 'meter-track'); const fill = h('div', 'meter-fill');
+    fill.style.width = Math.min(st.pct ?? 0, 100) + '%'; fill.style.background = st.cor; trk.appendChild(fill);
+    const marca = h('span', 'marca'); marca.setAttribute('aria-hidden', 'true'); trk.appendChild(marca);
+    m.appendChild(trk);
+    const tx = h('span', 'meter-txt'); tx.appendChild(h('b', '', String(num(o.carteira_atual)))); tx.appendChild(document.createTextNode(' / ' + (o.capacidade_maxima ?? '—')));
+    m.appendChild(tx); return m;
+  }
+  function tagStatus(st){ return h('span', 'status-tag ' + st.classe, (st.pct == null ? '' : st.pct + '% · ') + st.rotulo); }
+  function sgDetalhe(o){
+    const wrap = h('div', 'sgs');
+    if (o.sg1_carteira === undefined) { wrap.appendChild(h('span', 'mut', 'Distribuição por subgrupo indisponível: o workflow 5 precisa ser reimportado para enviar esse dado.')); return wrap; }
+    ['sg1', 'sg2', 'sg3'].forEach(k => {
+      const v = num(o[k + '_carteira']); const it = h('div', 'sg-item');
+      it.appendChild(h('span', 'badge', k.toUpperCase()));
+      const trk = h('div', 'meter-track'); const f = h('div', 'meter-fill'); f.style.width = Math.min(v / LIMITE_SUBGRUPO * 100, 100) + '%';
+      f.style.background = v >= LIMITE_SUBGRUPO ? 'var(--red-bar)' : 'var(--ok-bar)'; trk.appendChild(f); it.appendChild(trk);
+      const b = h('b', '', v + ' / ' + LIMITE_SUBGRUPO); it.appendChild(b);
+      const pre = num(o[k + '_pre_onboarding']); if (o[k + '_pre_onboarding'] !== undefined) it.appendChild(h('span', 'mut', pre + ' em pré'));
+      wrap.appendChild(it);
+    });
+    return wrap;
+  }
+  function linhasCarteira(lista){
+    const frag = []; let ultimoPod = null;
+    lista.forEach(o => {
+      if (agruparPod && o.pod !== ultimoPod) {
+        ultimoPod = o.pod;
+        const doPod = lista.filter(x => x.pod === o.pod), a = agregar(doPod);
+        const tr = h('tr', 'grupo'); const td = h('td', '', 'POD ' + (o.pod ?? '—')); td.colSpan = 7;
+        td.appendChild(h('span', 'mut', doPod.length + ' onboarders · carteira ' + a.carteira + ' / ' + a.limite + ' · ' + a.livres + ' vagas'));
+        tr.appendChild(td); frag.push({ tr });
+      }
+      frag.push({ o });
+    });
+    return frag;
+  }
+  function renderCarteira(){
+    const lista = ordenar(listaCarteira());
+    const total = (painelData.onboarders || []).length;
+    document.getElementById('carteiraCount').textContent = lista.length === total ? total + ' onboarders' : lista.length + ' de ' + total + ' onboarders';
+    document.querySelectorAll('#cabCarteira th').forEach(th => { if (th.dataset.col === ordem.col) th.setAttribute('aria-sort', ordem.dir === 'asc' ? 'ascending' : 'descending'); else th.removeAttribute('aria-sort'); });
+    corpoCarteira.innerHTML = ''; carteiraCards.innerHTML = '';
+    const vazio = msg => { const tr = h('tr'); const td = h('td', 'vazio-tab', msg); td.colSpan = 7; tr.appendChild(td); corpoCarteira.appendChild(tr); return td; };
+    if (erroCarga) { vazio(erroCarga); return; }
+    if (!carregando && !total) { vazio('Nenhum onboarder no painel.'); return; }
+    if (!lista.length) {
+      const td = vazio('Nenhum onboarder para esses filtros.');
+      const b = h('button', 'btn-quiet', 'Limpar filtros'); b.type = 'button';
+      b.addEventListener('click', () => { nivelAtivo = 'todos'; filtroPod.value = ''; filtroStatus.value = ''; carteiraBusca.value = ''; sincronizarFiltros(); renderCarteira(); });
+      td.appendChild(document.createElement('br')); td.appendChild(b);
+      carteiraCards.appendChild(h('div', 'vazio-tab', 'Nenhum onboarder para esses filtros.')); return;
+    }
+    linhasCarteira(lista).forEach(item => {
+      if (item.tr) { corpoCarteira.appendChild(item.tr); const c = h('div', 'grupo-cab', item.tr.textContent); carteiraCards.appendChild(c); return; }
+      const o = item.o, st = statusDe(o), aberto = expandidasCarteira.has(o.email);
+      // tabela
+      const tr = h('tr', 'lin');
+      const tdN = h('td'); const w = h('div', 'nome-wrap');
+      const bt = h('button', 'exp'); bt.type = 'button'; bt.innerHTML = ICONE_SETA; bt.setAttribute('aria-expanded', String(aberto));
+      bt.setAttribute('aria-label', 'Ver a carteira por subgrupo de ' + nomeDe(o.email));
+      w.appendChild(bt); const nm = h('div'); const nn = h('span', 'nome', nomeDe(o.email)); nn.title = o.email || ''; nm.appendChild(nn); nm.appendChild(h('small', '', o.email || '—')); w.appendChild(nm); tdN.appendChild(w); tr.appendChild(tdN);
+      const tdP = h('td'); tdP.appendChild(h('span', 'badge pod', 'POD ' + (o.pod ?? '—'))); tr.appendChild(tdP);
+      const tdV = h('td'); tdV.appendChild(h('span', 'badge', ROTULO_NIVEL[o.level] || o.level || '—')); tr.appendChild(tdV);
+      const tdM = h('td'); tdM.appendChild(barraCarteira(o, st)); tr.appendChild(tdM);
+      tr.appendChild(h('td', 'num', o.capacidade_livre == null ? '—' : String(o.capacidade_livre)));
+      tr.appendChild(h('td', 'num', String(num(o.pre_onboarding_atual))));
+      const tdS = h('td'); tdS.appendChild(tagStatus(st)); tr.appendChild(tdS);
+      corpoCarteira.appendChild(tr);
+      let det = null;
+      const montarDet = () => { det = h('tr', 'det'); const td = h('td'); td.colSpan = 7; td.appendChild(sgDetalhe(o)); det.appendChild(td); tr.after(det); };
+      if (aberto) montarDet();
+      bt.addEventListener('click', () => {
+        const abrir = bt.getAttribute('aria-expanded') !== 'true'; bt.setAttribute('aria-expanded', String(abrir));
+        if (abrir) { expandidasCarteira.add(o.email); montarDet(); } else { expandidasCarteira.delete(o.email); if (det) det.remove(); det = null; }
+      });
+      // cards
+      const cd = h('article', 'ccard'); const top = h('div', 'topo'); const tt = h('div');
+      const n2 = h('div', 'nome', nomeDe(o.email)); n2.title = o.email || ''; tt.appendChild(n2); tt.appendChild(h('small', 'mut', o.email || '—')); top.appendChild(tt); top.appendChild(tagStatus(st)); cd.appendChild(top);
+      const bd = h('div', 'badges'); bd.appendChild(h('span', 'badge pod', 'POD ' + (o.pod ?? '—'))); bd.appendChild(h('span', 'badge', ROTULO_NIVEL[o.level] || o.level || '—')); cd.appendChild(bd);
+      cd.appendChild(barraCarteira(o, st));
+      const l1 = h('div', 'linha'); l1.appendChild(h('span', '', 'Vagas livres')); l1.appendChild(h('b', '', o.capacidade_livre == null ? '—' : String(o.capacidade_livre))); cd.appendChild(l1);
+      const l2 = h('div', 'linha'); l2.appendChild(h('span', '', 'Em pré-onboarding')); l2.appendChild(h('b', '', String(num(o.pre_onboarding_atual)))); cd.appendChild(l2);
+      if (o.sg1_carteira !== undefined) cd.appendChild(sgDetalhe(o));
+      carteiraCards.appendChild(cd);
+    });
   }
   document.getElementById('cabCarteira').addEventListener('click', e => {
     const th = e.target.closest('th'); if (!th || !e.target.closest('.ord')) return;
     const col = th.dataset.col;
     if (ordem.col === col) ordem.dir = ordem.dir === 'asc' ? 'desc' : 'asc';
-    else ordem = { col, dir: (col === 'email' || col === 'pod' || col === 'level' || col === 'ultima') ? 'asc' : 'desc' };
+    else ordem = { col, dir: (col === 'nome' || col === 'pod' || col === 'level') ? 'asc' : 'desc' };
     renderCarteira();
   });
   document.getElementById('filtroNivel').addEventListener('click', e => {
     const b = e.target.closest('[data-nivel]'); if (!b) return;
-    nivelAtivo = b.dataset.nivel;
-    sincronizarFiltros(); renderCarteira();
+    nivelAtivo = b.dataset.nivel; sincronizarFiltros(); renderCarteira();
   });
+  [filtroPod, filtroStatus].forEach(s => s.addEventListener('change', renderCarteira));
+  carteiraBusca.addEventListener('input', renderCarteira);
+  document.getElementById('agruparPod').addEventListener('click', () => { agruparPod = !agruparPod; sincronizarFiltros(); renderCarteira(); });
+  function definirModo(m){
+    modoCarteira = m;
+    tabelaCarteira.hidden = m !== 'tabela'; carteiraCards.hidden = m !== 'cards';
+    document.getElementById('verTabela').setAttribute('aria-pressed', String(m === 'tabela'));
+    document.getElementById('verCards').setAttribute('aria-pressed', String(m === 'cards'));
+  }
+  document.getElementById('verTabela').addEventListener('click', () => definirModo('tabela'));
+  document.getElementById('verCards').addEventListener('click', () => definirModo('cards'));
   function sincronizarFiltros(){
     document.querySelectorAll('#filtroNivel [data-nivel]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.nivel === nivelAtivo)));
-    analistasBtn.textContent = analistasSel.size ? 'Analistas (' + analistasSel.size + ')' : 'Analistas';
-    analistasBtn.setAttribute('aria-pressed', String(analistasSel.size > 0));
-    if (!analistasPop.hidden) renderAnalistas();
+    document.getElementById('agruparPod').setAttribute('aria-pressed', String(agruparPod));
+  }
+  function preencherFiltrosPod(){
+    const atual = filtroPod.value;
+    const pods = [...new Set((painelData.onboarders || []).map(o => o.pod).filter(p => p !== null && p !== undefined && p !== ''))].sort((a, b) => num(a) - num(b));
+    filtroPod.innerHTML = ''; filtroPod.appendChild(new Option('Todos', ''));
+    pods.forEach(p => filtroPod.appendChild(new Option('POD ' + p, String(p))));
+    filtroPod.value = pods.map(String).includes(atual) ? atual : '';
   }
 
-  // ── seletor de analistas (multisseleção) ──
-  function analistasListados(){
-    const t = analistasBusca.value.trim().toLowerCase();
-    return (painelData.onboarders || [])
-      .filter(o => (nivelAtivo === 'todos' || o.level === nivelAtivo) && (!t || String(o.email || '').toLowerCase().includes(t)))
-      .slice().sort((a, b) => String(a.email).localeCompare(String(b.email)));
+  // exportação do que está filtrado e ordenado na tela
+  function csvCelula(v){
+    let s = String(v === null || v === undefined ? '' : v);
+    if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;           // evita que o Excel execute fórmulas vindas dos dados
+    return /[;"\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
   }
-  function renderAnalistas(){
-    const l = analistasListados();
-    analistasLista.innerHTML = '';
-    if (!l.length) { analistasLista.appendChild(h('div', 'pop-vazio', 'Nenhum analista encontrado.')); return; }
-    l.forEach(o => {
-      const lab = h('label', 'pop-item');
-      const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = analistasSel.has(o.email); cb.value = o.email;
-      cb.addEventListener('change', () => { if (cb.checked) analistasSel.add(o.email); else analistasSel.delete(o.email); sincronizarBotao(); renderCarteira(); });
-      lab.appendChild(cb); lab.appendChild(h('span', '', o.email));
-      lab.appendChild(h('span', 'mut', 'POD ' + (o.pod ?? '—') + ' · ' + (o.level || '—')));
-      analistasLista.appendChild(lab);
-    });
+  function gerarCsvCarteira(){
+    const cab = ['Onboarder', 'E-mail', 'POD', 'Nível', 'Carteira', 'Limite', 'Ocupação (%)', 'Vagas livres', 'Em pré-onboarding', 'Status', 'SG1', 'SG2', 'SG3'];
+    const linhas = ordenar(listaCarteira()).map(o => { const st = statusDe(o); return [nomeDe(o.email), o.email, o.pod, ROTULO_NIVEL[o.level] || o.level, num(o.carteira_atual), o.capacidade_maxima ?? '', st.pct ?? '', o.capacidade_livre ?? '', num(o.pre_onboarding_atual), st.rotulo, o.sg1_carteira ?? '', o.sg2_carteira ?? '', o.sg3_carteira ?? '']; });
+    return '﻿' + [cab].concat(linhas).map(l => l.map(csvCelula).join(';')).join('\r\n') + '\r\n';
   }
-  function sincronizarBotao(){
-    analistasBtn.textContent = analistasSel.size ? 'Analistas (' + analistasSel.size + ')' : 'Analistas';
-    analistasBtn.setAttribute('aria-pressed', String(analistasSel.size > 0));
-  }
-  function abrirAnalistas(){
-    analistasPop.hidden = false; analistasBtn.setAttribute('aria-expanded', 'true');
-    analistasBusca.value = ''; renderAnalistas(); analistasBusca.focus();
-  }
-  function fecharAnalistas(devolver){
-    if (analistasPop.hidden) return;
-    analistasPop.hidden = true; analistasBtn.setAttribute('aria-expanded', 'false');
-    if (devolver) analistasBtn.focus();
-  }
-  analistasBtn.addEventListener('click', ev => { ev.stopPropagation(); if (analistasPop.hidden) abrirAnalistas(); else fecharAnalistas(); });
-  analistasBusca.addEventListener('input', renderAnalistas);
-  document.getElementById('analistasTodos').addEventListener('click', () => { analistasListados().forEach(o => analistasSel.add(o.email)); sincronizarBotao(); renderAnalistas(); renderCarteira(); });
-  document.getElementById('analistasLimpar').addEventListener('click', () => { analistasSel.clear(); sincronizarBotao(); renderAnalistas(); renderCarteira(); });
-  analistasPop.addEventListener('keydown', e => { if (e.key === 'Escape') { e.stopPropagation(); fecharAnalistas(true); } });
-  document.addEventListener('click', e => {
-    if (!analistasPop.hidden && !analistasPop.contains(e.target) && e.target !== analistasBtn) fecharAnalistas();
-    if (!userPop.hidden && !userPop.contains(e.target)) fecharMenuUsuario();
+  document.getElementById('exportarCsv').addEventListener('click', () => {
+    const blob = new Blob([gerarCsvCarteira()], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob); const a = document.createElement('a');
+    a.href = url; a.download = 'carteira-onboarders-' + hojeYmd() + '.csv'; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
   });
 
-  // ── atribuições ──
+  // ───────── ATRIBUIÇÕES ─────────
   const hojeYmd = () => new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
   function somaDias(ymd, n){ const d = new Date(ymd + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
   // "11/10/2026, 21:46:30" → "2026-10-11" (compara só o dia, sem fuso)
   function ymdDe(s){ const m = String(s || '').match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/); return m ? m[3] + '-' + m[2].padStart(2, '0') + '-' + m[1].padStart(2, '0') : ''; }
+  const norm = s => String(s || '').replace(/[–—]/g, '–').replace(/\s+/g, ' ').trim();
+  function sgDeValor(nivel, amount){
+    const f = FAIXAS[nivel]; if (!f || !(amount >= 0)) return null;
+    return amount < f.limites[0] ? 'sg1' : amount < f.limites[1] ? 'sg2' : 'sg3';
+  }
+  // lê "N2-N3 · 120k–300k" (rótulo antigo) ou "N2-N3 · < R$300k" (padrão) e devolve nível, subgrupo e faixa oficial
+  function segInfo(seg){
+    const m = String(seg || '').match(/^\s*(N2-N3|N4-N5|N6\+)\s*·\s*(.+)$/);
+    if (!m) return { nivel: null, sg: null, faixa: seg || '—', legado: false };
+    const nivel = m[1], resto = norm(m[2]), f = FAIXAS[nivel];
+    for (const k of ['sg1', 'sg2', 'sg3']) {
+      if (norm(f[k]) === resto) return { nivel, sg: k, faixa: f[k], legado: false };
+      if (f.legado[k].some(x => norm(x) === resto)) return { nivel, sg: k, faixa: f[k], legado: true, original: m[2] };
+    }
+    return { nivel, sg: null, faixa: resto, legado: false };
+  }
+  // etapa da cascata, lida do início do racional que o fluxo de atribuição grava
+  function etapaDe(a){
+    const r = String(a.racional || '').trim();
+    if (/^\[Guardi[ãa]o\]/i.test(r)) return 'Guardião';
+    if (/^\[Outro POD\]/i.test(r)) return 'Outro POD';
+    if (!r) return '—';
+    return 'Mesmo POD';
+  }
+  const ehTeste = a => CLOSERS_TESTE.includes(String(a.closer || '').toLowerCase()) || PADRAO_TESTE.test(String(a.cliente || ''));
   function atribFiltradas(){
-    const t = atribBusca.value.trim().toLowerCase();
     return (painelData.ultimas_atribuicoes || []).filter(a => {
       const y = ymdDe(a.data_atribuicao);
       if (dataDe.value && (!y || y < dataDe.value)) return false;
       if (dataAte.value && (!y || y > dataAte.value)) return false;
-      return !t || [a.cliente, a.onboarder, a.closer].some(v => String(v || '').toLowerCase().includes(t));
+      if (filtroCloser.value && a.closer !== filtroCloser.value) return false;
+      if (filtroOnboarder.value && a.onboarder !== filtroOnboarder.value) return false;
+      if (filtroNivelAtrib.value && segInfo(a.segmentacao).nivel !== filtroNivelAtrib.value) return false;
+      if (ocultarTestes && ehTeste(a)) return false;
+      return true;
     });
   }
   function aplicarPeriodo(p){
@@ -951,66 +1284,74 @@
     else if (p === '7') { dataDe.value = somaDias(hoje, -6); dataAte.value = hoje; }
     else if (p === '30') { dataDe.value = somaDias(hoje, -29); dataAte.value = hoje; }
     else if (p === 'tudo') { dataDe.value = ''; dataAte.value = ''; }
-    visiveisAtrib = POR_PAGINA;
-    sincronizarPeriodo(); renderAtrib();
+    visiveisAtrib = POR_PAGINA; sincronizarPeriodo(); renderAtrib();
   }
-  function sincronizarPeriodo(){
-    document.querySelectorAll('[data-periodo]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.periodo === periodo)));
-  }
+  function sincronizarPeriodo(){ document.querySelectorAll('[data-periodo]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.periodo === periodo))); }
   document.querySelectorAll('[data-periodo]').forEach(b => b.addEventListener('click', () => aplicarPeriodo(b.dataset.periodo)));
   [dataDe, dataAte].forEach(i => i.addEventListener('input', () => { periodo = 'custom'; visiveisAtrib = POR_PAGINA; sincronizarPeriodo(); renderAtrib(); }));
-  atribBusca.addEventListener('input', () => { visiveisAtrib = POR_PAGINA; renderAtrib(); });
-
+  [filtroCloser, filtroOnboarder, filtroNivelAtrib].forEach(s => s.addEventListener('change', () => { visiveisAtrib = POR_PAGINA; renderAtrib(); }));
+  document.getElementById('ocultarTestes').addEventListener('click', e => { ocultarTestes = !ocultarTestes; e.currentTarget.setAttribute('aria-pressed', String(ocultarTestes)); visiveisAtrib = POR_PAGINA; renderAtrib(); });
+  function preencherFiltrosAtrib(){
+    const l = painelData.ultimas_atribuicoes || [];
+    const preencher = (sel, campo) => {
+      const atual = sel.value; const vals = [...new Set(l.map(a => a[campo]).filter(Boolean))].sort((a, b) => nomeDe(a).localeCompare(nomeDe(b)));
+      sel.innerHTML = ''; sel.appendChild(new Option('Todos', ''));
+      vals.forEach(v => sel.appendChild(new Option(nomeDe(v), v)));
+      sel.value = vals.includes(atual) ? atual : '';
+    };
+    preencher(filtroCloser, 'closer'); preencher(filtroOnboarder, 'onboarder');
+  }
+  function celulaPessoa(email){ const td = h('td', 'nowrap', nomeDe(email)); td.title = email || ''; return td; }
   function renderAtrib(){
     const todas = painelData.ultimas_atribuicoes || [];
-    const lista = atribFiltradas();
-    const vis = lista.slice(0, visiveisAtrib);
+    const lista = atribFiltradas(); const vis = lista.slice(0, visiveisAtrib);
     document.getElementById('atribCount').textContent = lista.length === todas.length ? todas.length + (todas.length === 1 ? ' atribuição' : ' atribuições') : lista.length + ' de ' + todas.length + ' atribuições';
-    corpoAtrib.innerHTML = '';
-    atribMais.hidden = true;
+    corpoAtrib.innerHTML = ''; atribMais.hidden = true;
     const datas = todas.map(a => ymdDe(a.data_atribuicao)).filter(Boolean).sort();
-    document.getElementById('atribNota').textContent = datas.length
-      ? 'O histórico carregado vai de ' + datas[0].split('-').reverse().join('/') + ' a ' + datas[datas.length - 1].split('-').reverse().join('/') + '.' : '';
-    if (erroCarga) { corpoAtrib.appendChild(linhaVazia(6, erroCarga)); return; }
-    if (!todas.length) { if (!carregando) corpoAtrib.appendChild(linhaVazia(6, 'Nenhuma atribuição registrada ainda.')); return; }
+    document.getElementById('atribNota').textContent = datas.length ? 'O histórico carregado vai de ' + datas[0].split('-').reverse().join('/') + ' a ' + datas[datas.length - 1].split('-').reverse().join('/') + '.' : '';
+    const vazio = msg => { const tr = h('tr'); const td = h('td', 'vazio-tab', msg); td.colSpan = 8; tr.appendChild(td); corpoAtrib.appendChild(tr); return td; };
+    if (erroCarga) { vazio(erroCarga); return; }
+    if (!todas.length) { if (!carregando) vazio('Nenhuma atribuição registrada ainda.'); return; }
     if (!lista.length) {
-      const tr = linhaVazia(6, 'Nenhuma atribuição nesse período.');
+      const td = vazio('Nenhuma atribuição para esses filtros.');
       const b = h('button', 'btn-quiet', 'Limpar filtros'); b.type = 'button';
-      b.addEventListener('click', () => { atribBusca.value = ''; aplicarPeriodo('tudo'); });
-      tr.firstChild.appendChild(document.createElement('br')); tr.firstChild.appendChild(b);
-      corpoAtrib.appendChild(tr); return;
+      b.addEventListener('click', () => { filtroCloser.value = ''; filtroOnboarder.value = ''; filtroNivelAtrib.value = ''; ocultarTestes = false; document.getElementById('ocultarTestes').setAttribute('aria-pressed', 'false'); aplicarPeriodo('tudo'); });
+      td.appendChild(document.createElement('br')); td.appendChild(b); return;
     }
     vis.forEach(a => {
-      const chave = a.row_number ?? (a.opp_id + '|' + a.data_atribuicao);
-      const aberta = expandidas.has(chave);
+      const chave = a.row_number ?? (a.opp_id + '|' + a.data_atribuicao), aberta = expandidasAtrib.has(chave);
       const tr = h('tr', 'lin');
       const t0 = h('td'); const bt = h('button', 'exp'); bt.type = 'button'; bt.innerHTML = ICONE_SETA;
-      bt.setAttribute('aria-expanded', String(aberta)); bt.setAttribute('aria-label', 'Ver o racional da atribuição de ' + (a.cliente || 'cliente'));
-      t0.appendChild(bt); tr.appendChild(t0);
-      tr.appendChild(h('td', 'mut', a.data_atribuicao || '—'));
-      tr.appendChild(h('td', 'email', a.cliente || '—'));
-      tr.appendChild(h('td', '', a.onboarder || '—'));
-      tr.appendChild(h('td', 'mut', a.closer || '—'));
-      tr.appendChild(h('td', 'mut', a.segmentacao || '—'));
+      bt.setAttribute('aria-expanded', String(aberta)); bt.setAttribute('aria-label', 'Ver o racional da atribuição de ' + (a.cliente || 'cliente')); t0.appendChild(bt); tr.appendChild(t0);
+      tr.appendChild(h('td', 'mut nowrap', a.data_atribuicao || '—'));
+      const tdC = h('td', 'cliente', a.cliente || '—'); tdC.title = a.cliente || ''; tr.appendChild(tdC);
+      tr.appendChild(h('td', 'hid', a.hotmart_id ? String(a.hotmart_id) : '—'));
+      tr.appendChild(celulaPessoa(a.onboarder)); const tdCl = celulaPessoa(a.closer); tdCl.classList.add('mut'); tr.appendChild(tdCl);
+      const si = segInfo(a.segmentacao); const tdS = h('td'); const sb = h('span', 'sg-badge');
+      if (si.sg) {
+        sb.appendChild(h('span', 'badge', si.sg.toUpperCase())); const fx = h('span', 'faixa', si.nivel + ' · ' + si.faixa); if (si.legado) fx.title = 'Registrado no histórico como “' + si.original + '”; exibido na faixa oficial'; sb.appendChild(fx);
+        const esp = a.amount_12m != null ? sgDeValor(si.nivel, num(a.amount_12m)) : null;
+        if (esp && esp !== si.sg) { const d = h('span', 'diverge', '!'); d.title = 'O Amount atual (' + brl(num(a.amount_12m)) + ') cai em ' + esp.toUpperCase() + ', mas a atribuição foi registrada como ' + si.sg.toUpperCase() + '. O Amount pode ter mudado depois.'; d.setAttribute('role', 'img'); d.setAttribute('aria-label', d.title); sb.appendChild(d); }
+      } else sb.appendChild(h('span', 'faixa', si.nivel ? si.nivel + ' · ' + si.faixa : (a.segmentacao || '—')));
+      tdS.appendChild(sb); tr.appendChild(tdS);
+      tr.appendChild(h('td', 'etapa', etapaDe(a)));
       corpoAtrib.appendChild(tr);
       let det = null;
-      const montarDet = () => { det = h('tr', 'det'); const td = h('td', '', a.racional || 'Sem racional registrado.'); td.colSpan = 6; det.appendChild(td); tr.after(det); };
+      const montarDet = () => { det = h('tr', 'det'); const td = h('td', '', a.racional || 'Sem racional registrado.'); td.colSpan = 8; det.appendChild(td); tr.after(det); };
       if (aberta) montarDet();
       bt.addEventListener('click', () => {
-        const abrir = bt.getAttribute('aria-expanded') !== 'true';
-        bt.setAttribute('aria-expanded', String(abrir));
-        if (abrir) { expandidas.add(chave); montarDet(); } else { expandidas.delete(chave); if (det) det.remove(); det = null; }
+        const abrir = bt.getAttribute('aria-expanded') !== 'true'; bt.setAttribute('aria-expanded', String(abrir));
+        if (abrir) { expandidasAtrib.add(chave); montarDet(); } else { expandidasAtrib.delete(chave); if (det) det.remove(); det = null; }
       });
     });
     if (lista.length > vis.length) {
       atribMais.hidden = false; atribMais.innerHTML = '';
-      const b = h('button', 'btn-quiet', 'Ver mais ' + Math.min(POR_PAGINA, lista.length - vis.length)); b.type = 'button';
-      b.addEventListener('click', () => { visiveisAtrib += POR_PAGINA; renderAtrib(); });
-      atribMais.appendChild(b);
+      const b = h('button', 'btn-quiet', 'Carregar mais ' + Math.min(POR_PAGINA, lista.length - vis.length)); b.type = 'button';
+      b.addEventListener('click', () => { visiveisAtrib += POR_PAGINA; renderAtrib(); }); atribMais.appendChild(b);
     }
   }
 
-  // ── carregamento ──
+  // ───────── carregamento ─────────
   function rotuloTempo(ms){
     const seg = Math.max(0, Math.round((Date.now() - ms) / 1000));
     if (seg < 60) return 'há ' + seg + (seg === 1 ? ' segundo' : ' segundos');
@@ -1023,34 +1364,34 @@
     geradoEm.textContent = carregando ? 'Atualizando…' : 'Atualizado ' + rotuloTempo(atualizadoEm);
   }
   setInterval(() => { if (appScreen.style.display !== 'none') atualizarStatus(); }, 1000);
+  function renderTudo(){ preencherFiltrosPod(); preencherFiltrosAtrib(); sincronizarFiltros(); renderVisaoGeral(); renderCarteira(); renderAtrib(); atualizarStatus(); }
 
   async function carregarPainel(){
     carregando = true; erroCarga = '';
-    refreshBtn.classList.add('girando');
-    atualizarStatus();
+    refreshBtn.classList.add('girando'); atualizarStatus();
     try {
       const res = await apiFetch(WEBHOOK_PAINEL_URL, { method: 'GET' });
       if (!res.ok) throw new Error('status ' + res.status);
       const d = await res.json();
       painelData = { onboarders: Array.isArray(d.onboarders) ? d.onboarders : [], ultimas_atribuicoes: Array.isArray(d.ultimas_atribuicoes) ? d.ultimas_atribuicoes : [], gerado_em: d.gerado_em || null };
       atualizadoEm = Date.now();
-      // analista que sumiu da lista não pode ficar selecionado
-      const emails = new Set(painelData.onboarders.map(o => o.email));
-      [...analistasSel].forEach(e => { if (!emails.has(e)) analistasSel.delete(e); });
     } catch (err) {
       if (!getSession()) { carregando = false; refreshBtn.classList.remove('girando'); return; }   // sessão expirou: apiFetch já levou ao login
       // sem dado de fallback embutido: a página é pública, então só o webhook (com sessão) entrega dados
       erroCarga = 'Não foi possível carregar o painel. Atualize ou saia e entre de novo; se persistir, avise o Sales Ops.';
-    } finally {
-      carregando = false; refreshBtn.classList.remove('girando');
+    } finally { carregando = false; refreshBtn.classList.remove('girando'); }
+    renderTudo();
+    if (erroCarga) {
+      const ul = document.getElementById('atencaoLista'); ul.innerHTML = ''; const li = h('li', 'grave'); li.appendChild(h('div', 'corpo', erroCarga)); ul.appendChild(li);
     }
-    sincronizarFiltros(); renderCarteira(); renderAtrib(); atualizarStatus();
   }
   refreshBtn.addEventListener('click', carregarPainel);
-  setInterval(() => {
-    if (appScreen.style.display === 'none' || carregando || document.visibilityState === 'hidden') return;
-    carregarPainel();
-  }, AUTO_ATUALIZAR_MS);
+  setInterval(() => { if (appScreen.style.display === 'none' || carregando || document.visibilityState === 'hidden') return; carregarPainel(); }, AUTO_ATUALIZAR_MS);
+
+  // ── impressão: todas as abas em sequência, com todas as linhas ──
+  let visiveisAntes = null;
+  window.addEventListener('beforeprint', () => { visiveisAntes = visiveisAtrib; visiveisAtrib = Infinity; renderAtrib(); });
+  window.addEventListener('afterprint', () => { if (visiveisAntes !== null) { visiveisAtrib = visiveisAntes; visiveisAntes = null; renderAtrib(); } });
 
   // ── menu do usuário ──
   function iniciaisDoUsuario(){
@@ -1066,15 +1407,15 @@
   }
   avatarBtn.addEventListener('click', ev => {
     ev.stopPropagation();
-    const abrir = userPop.hidden;
-    userPop.hidden = !abrir; avatarBtn.setAttribute('aria-expanded', String(abrir));
+    const abrir = userPop.hidden; userPop.hidden = !abrir; avatarBtn.setAttribute('aria-expanded', String(abrir));
     if (abrir) document.getElementById('logoutBtn').focus();
   });
   userPop.addEventListener('keydown', e => { if (e.key === 'Escape') { e.stopPropagation(); fecharMenuUsuario(true); } });
+  document.addEventListener('click', e => { if (!userPop.hidden && !userPop.contains(e.target)) fecharMenuUsuario(); });
 
   // Retoma a sessão da aba (mesmo SESSION_KEY do Onboarding Assignment)
-  selecionarAba((location.hash || '').replace('#', ''));
-  sincronizarFiltros(); sincronizarPeriodo();
+  selecionarAba(abaInicial());
+  sincronizarFiltros(); sincronizarPeriodo(); definirModo('tabela');
   const savedSession = getSession();
   if (savedSession && isValidHotmartEmail(savedSession.email)) showApp(savedSession.email);
 
