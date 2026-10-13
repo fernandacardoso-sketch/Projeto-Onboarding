@@ -774,16 +774,16 @@
         <div class="vg">
           <div class="banner-crit" id="bannerCrit" role="status" hidden></div>
           <div class="kpis" id="kpis">
-            <div class="kpi"><b id="kpiTotalOnb">-</b><span>Analistas (com guardiões)</span></div>
+            <div class="kpi"><b id="kpiTotalOnb">-</b><span>Analistas</span></div>
             <div class="kpi"><b id="kpiCarteiraTotal">-</b><span>Clientes em Onboarding</span></div>
-            <div class="kpi"><b id="kpiLivreTotal">-</b><span>Vagas livres (clientes)</span><small>sem os guardiões</small></div>
+            <div class="kpi"><b id="kpiLivreTotal">-</b><span>Vagas livres (clientes)</span></div>
             <div class="kpi" id="kpiAcimaBox"><b id="kpiAcima">-</b><span>Acima do limite</span><small>carteira &gt; limite</small></div>
             <div class="kpi" id="kpiLimiteBox"><b id="kpiNoLimite">-</b><span>No limite</span><small>carteira = limite</small></div>
           </div>
           <div class="legenda-status" data-legenda-status></div>
 
           <section class="bloco" aria-labelledby="h-vagas">
-            <h2 id="h-vagas">Vagas livres por nível <small>sem os guardiões, que não recebem atribuições</small></h2>
+            <h2 id="h-vagas">Vagas livres por nível <small>clientes que cada nível ainda comporta</small></h2>
             <div class="vagas" id="vagasNivel"></div>
           </section>
 
@@ -903,8 +903,7 @@
           <section class="bloco" aria-labelledby="h-cascata">
             <h2 id="h-cascata">Cascata de atribuição <small>quatro passos, sempre nesta ordem</small></h2>
             <div class="avisos" role="note" aria-label="Avisos da cascata">
-              <div class="aviso destaque-regra"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.01"/></svg><div><b>Nunca cruza nível</b><span>Um Closer N2-N3 só recebe onboarder N2-N3, e assim por diante.</span></div></div>
-              <div class="aviso destaque-regra"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.01"/></svg><div><b>Guardiões ficam fora</b><span>Não recebem atribuições e o tamanho da carteira deles não é considerado.</span></div></div>
+                            <div class="aviso destaque-regra"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.01"/></svg><div><b>Nunca cruza nível</b><span>Um Closer N2-N3 só recebe onboarder N2-N3, e assim por diante.</span></div></div>
               <div class="aviso destaque-regra"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.01"/></svg><div><b>N6+ só sugere</b><span>Nada é atribuído: o sistema calcula o onboarder sugerido e avisa o coordenador no Google Chat.</span></div></div>
             </div>
             <ol class="passos fluxo">
@@ -944,7 +943,6 @@
               <li><b>Faixas:</b> o valor inicial de cada faixa já pertence a ela, e o valor final pertence à faixa seguinte. Ex.: no N2-N3, R$300k é SG2, não SG1.</li>
               <li><b>Fora das faixas:</b> o valor abaixo do piso do nível entra no SG1 e o valor acima do teto entra no SG3.</li>
               <li><b>Quem concorre:</b> só os onboarders abaixo do limite de carteira, que são os do POD do Closer ou, na etapa de outro POD, os do mesmo nível.</li>
-              <li><b>Guardiões:</b> não recebem atribuições, não têm limite de carteira e ficam fora das vagas e da ocupação.</li>
             </ul>
             <div class="legenda-status" data-legenda-status></div>
           </section>
@@ -1506,7 +1504,7 @@
   function sgDetalhe(o){
     const wrap = h('div', 'sgs'); const sg = subgrupos(o);
     const topo = h('div', 'sgs-topo'); topo.appendChild(h('b', '', 'Carteira por subgrupo')); topo.appendChild(chipPre(num(o.pre_onboarding_atual))); wrap.appendChild(topo);
-    if (ehGuardiao(o)) { wrap.appendChild(h('p', 'mut sgs-msg', 'Guardião não tem subgrupos: a carteira é única.')); return wrap; }
+    if (ehGuardiao(o)) { wrap.appendChild(h('p', 'mut sgs-msg', 'Sem subgrupos: a carteira é única.')); return wrap; }
     if (!sg) { wrap.appendChild(h('p', 'mut sgs-msg', 'Distribuição por subgrupo indisponível: o workflow 5 precisa ser reimportado para enviar esse dado.')); return wrap; }
     const lim = num(o.capacidade_maxima), pctLim = n => lim ? Math.round(n / lim * 100) + '%' : '-';
     const tb = h('table', 'sgtab');
@@ -1683,7 +1681,7 @@
   // etapa da cascata, lida do início do racional que o fluxo de atribuição grava
   function etapaDe(a){
     const r = String(a.racional || '').trim();
-    if (/^\[Guardi[ãa]o\]/i.test(r)) return 'Guardião';
+    if (/^\[Guardi[ãa]o\]/i.test(r)) return 'Etapa antiga';
     if (/^\[Outro POD\]/i.test(r)) return 'Outro POD';
     if (/^\[Sugest[ãa]o/i.test(r)) return 'Sugestão N6+';
     if (!r) return '-';
@@ -1756,7 +1754,7 @@
     } else topo.appendChild(h('span', 'mut', 'Sem Hotmart ID registrado'));
     wrap.appendChild(topo);
     if (antigo) {   // histórico do tempo em que o guardião ainda recebia atribuições
-      wrap.appendChild(h('p', 'casc-txt mut', 'Atribuição antiga: nessa época o guardião ainda recebia Oportunidades. Hoje os guardiões ficam fora da distribuição.'));
+      wrap.appendChild(h('p', 'casc-txt mut', 'Atribuição antiga: foi feita por uma etapa que não existe mais na cascata.'));
       wrap.appendChild(h('p', 'casc-txt', SEM_TRAVESSAO(racional))); return wrap;
     }
     // etapa usada: 1 mesmo POD, 2 outro POD, 3 alerta ao coordenador
