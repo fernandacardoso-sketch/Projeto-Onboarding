@@ -489,6 +489,8 @@
   .badge-sit{ font-size:11.5px; font-weight:700; line-height:1.2; padding:3px 8px; border-radius:var(--r-pill); }
   .badge-ok{ background:var(--ok-bg); color:var(--ok-text); }
   .badge-andamento{ background:var(--ink); color:var(--on-ink); }
+  .badge-espera{ background:var(--yellow); color:#0D0D0D; }
+  .opp-resumo .sug-aceita{ margin-top:6px; padding:6px 10px; border-radius:var(--r-sm); background:var(--ok-bg); color:var(--ok-text); font-weight:600; }
   .opp-acao{ position:relative; z-index:2; padding:5px 12px; font-size:12.5px; font-weight:700; line-height:1.2; color:var(--black); background:var(--orange); border-radius:var(--r-sm); }
   .opp-acao:hover{ background:var(--orange-hover); }
   .opp-acao.sec{ color:var(--text); background:transparent; border:1.5px solid var(--field-border); padding:4px 10px; }
@@ -821,6 +823,7 @@
   const WEBHOOK_CONFIRM_URL  = "https://hotmart.app.n8n.cloud/webhook/confirmar-reuniao-onboarding";
   const WEBHOOK_CLOSEDWON_URL = "https://hotmart.app.n8n.cloud/webhook/closed-won-onboarding";
   const WEBHOOK_LOGIN_URL = "https://hotmart.app.n8n.cloud/webhook/carteira-login";
+  const WEBHOOK_SUGESTAO_URL = "https://hotmart.app.n8n.cloud/webhook/sugestao-n6";   // N6+: sugestão enviada ao coordenador, aceite e retomada
   // Sessão fica só na aba (sessionStorage) e expira em 8h; o token é validado pelo n8n em toda chamada.
   const SESSION_KEY = "carteira_sessao";
 
@@ -1274,8 +1277,12 @@
   function mk(tag, cls, txt){ const e = document.createElement(tag); if (cls) e.className = cls; if (txt !== undefined) e.textContent = txt; return e; }
   const chaveEstagio = o => String(o.estagio || '').trim().toLowerCase();
 
+  // N6+: o coordenador decide. Pendente = aguardando o aceite; aceita = o Closer continua daqui com o onboarder aceito
+  function statusSugestao(o){ return (o && o.sugestao && o.sugestao.status) || ''; }
   function motivoIndisponivel(o){
     if (ESTAGIOS_ENCERRADOS.includes(chaveEstagio(o))) return 'Estágio encerrado';
+    if (statusSugestao(o) === 'aceita') return '';
+    if (statusSugestao(o) === 'pendente' && !o.ja_atribuida) return 'Aguardando o coordenador aceitar a sugestão';
     if (o.ja_atribuida) return 'Já atribuída a um onboarder';
     return '';
   }
@@ -1431,12 +1438,18 @@
     linha.appendChild(esq); linha.appendChild(dir);
     card.appendChild(linha);
     // rodapé só nos cards em que há o que fazer
+    const aceita = statusSugestao(o) === 'aceita';
+    if (!elegivel && !andamento && statusSugestao(o) === 'pendente') {
+      const rodape = mk('div', 'opp-rodape');
+      rodape.appendChild(mk('span', 'badge-sit badge-espera', 'Aguardando coordenador'));
+      card.appendChild(rodape);
+    }
     if (elegivel || andamento) {
       const rodape = mk('div', 'opp-rodape');
-      rodape.appendChild(mk('span', 'badge-sit ' + (andamento ? 'badge-andamento' : 'badge-ok'), andamento ? 'Em andamento' : 'Disponível para atribuir'));
-      const b = mk('button', 'opp-acao' + (andamento ? ' sec' : ''), andamento ? 'Continuar' : 'Atribuir');
+      rodape.appendChild(mk('span', 'badge-sit ' + (andamento ? 'badge-andamento' : 'badge-ok'), andamento ? 'Em andamento' : aceita ? 'Sugestão aceita' : 'Disponível para atribuir'));
+      const b = mk('button', 'opp-acao' + (andamento ? ' sec' : ''), andamento || aceita ? 'Continuar' : 'Atribuir');
       b.type = 'button';
-      b.setAttribute('aria-label', (andamento ? 'Continuar o fluxo de ' : 'Atribuir onboarder: ') + titulo);
+      b.setAttribute('aria-label', (andamento || aceita ? 'Continuar o fluxo de ' : 'Atribuir onboarder: ') + titulo);
       b.addEventListener('click', ev => { ev.stopPropagation(); abrirDrawer(o); });
       rodape.appendChild(b);
       card.appendChild(rodape);
@@ -1532,6 +1545,7 @@
       const o = oppEscolhida;
       oppResumo.appendChild(mk('b', '', o.conta || 'Conta não informada'));
       oppResumo.appendChild(mk('div', 'linha', fmtBRL(o.amount_12m) + ' · ' + (o.estagio || '—')));
+      if (statusSugestao(o) === 'aceita') oppResumo.appendChild(mk('div', 'linha sug-aceita', 'Sugestão aceita pelo coordenador: ' + (o.sugestao.onboarder || 'onboarder definido') + '. Informe o e-mail do cliente e continue para o agendamento.'));
       drawerTitle.textContent = '';
       drawerTitle.appendChild(linkSF(o.opp_id, (o.nome || 'Abrir no Salesforce') + ' ↗'));
     } else if (manual) {
@@ -1542,7 +1556,9 @@
       oppResumo.appendChild(mk('div', 'linha', manualDetails.open ? 'Informe o ID da Opportunity.' : 'Escolha uma oportunidade no funil.'));
       drawerTitle.textContent = manualDetails.open ? 'Atribuir por ID' : 'Atribuir onboarder';
     }
+    if (!assignBtn.disabled) assignBtnText.textContent = rotuloAtribuir();
   }
+  function rotuloAtribuir(){ return oppEscolhida && statusSugestao(oppEscolhida) === 'aceita' ? 'Continuar com o onboarder aceito' : 'Atribuir onboarder'; }
 
   const amountBox   = document.getElementById('amountBox');
   const amountInput = document.getElementById('amountInput');
@@ -1701,6 +1717,17 @@
     if (o) { o.estagio = 'Closed Won'; o.ja_atribuida = true; renderBoard(); }
   }
 
+  // sugestões do N6+ deste Closer (pendentes e aceitas); se a consulta falhar, o funil segue sem esse recurso
+  async function carregarSugestoes(){
+    try {
+      const res = await apiFetch(WEBHOOK_SUGESTAO_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ acao: 'listar' }) });
+      if (!res.ok) return;
+      const d = await res.json();
+      const mapa = new Map((Array.isArray(d.sugestoes) ? d.sugestoes : []).map(s => [s.opp_id, s]));
+      oportunidades.forEach(o => { o.sugestao = mapa.get(o.opp_id) || null; });
+    } catch (e) { /* sem sugestões: o funil funciona normalmente */ }
+  }
+
   async function carregarOportunidades(){
     carregando = true; erroCarga = '';
     if (MODO_DEMO) { oportunidades = DEMO_OPPS.map(x => ({ ...x })); atualizadoEm = Date.now(); carregando = false; renderBoard(); return; }
@@ -1711,6 +1738,7 @@
       if (!res.ok) throw await erroDoServidor(res);
       const data = await res.json();
       oportunidades = Array.isArray(data.oportunidades) ? data.oportunidades : [];
+      await carregarSugestoes();
       atualizadoEm = Date.now();
     } catch (e) {
       if (!getSession()) { carregando = false; oppRefreshBtn.classList.remove('girando'); return; } // sessão expirou: apiFetch já levou pra tela de login
@@ -1810,13 +1838,11 @@
         mostrarAmount(false);
         assignBtnText.textContent = 'Atribuindo...';
       }
-      const res = await apiFetch(WEBHOOK_ASSIGN_URL, {
+      const retomar = !!(oppEscolhida && oppEscolhida.opp_id === oppId && statusSugestao(oppEscolhida) === 'aceita');   // N6+ aceita pelo coordenador: o onboarder já está definido
+      const res = await apiFetch(retomar ? WEBHOOK_SUGESTAO_URL : WEBHOOK_ASSIGN_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          opp_id: oppId,
-          email_closer: closerEmail
-        })
+        body: JSON.stringify(retomar ? { acao: 'retomar', opp_id: oppId, email_closer: closerEmail } : { opp_id: oppId, email_closer: closerEmail })
       });
 
       if (!res.ok) {
@@ -1831,7 +1857,7 @@
         document.getElementById('alertTitulo').textContent = 'Sugestão enviada ao coordenador';
         alertMsg.textContent = (data.mensagem || 'No N6+ a atribuição é feita pelo coordenador.') +
           (data.sem_sugestao ? ' Hoje não há onboarder N6+ disponível, então a mensagem avisa isso.' : '') +
-          ' Quando ele definir o onboarder, a Oportunidade aparece como já atribuída no seu funil.';
+          (data.sem_sugestao || data.chat_enviado === false ? '' : ' Quando ele aceitar a sugestão, a Oportunidade fica disponível aqui no funil para você continuar (agendamento e Closed Won).');
         assignFormWrap.style.display = 'none';
         alertWrap.style.display = 'block';
         return;
@@ -1890,7 +1916,7 @@
     } finally {
       assignBtn.disabled = false;
       assignSpinner.classList.remove('show');
-      assignBtnText.textContent = 'Atribuir onboarder';
+      assignBtnText.textContent = rotuloAtribuir();
     }
   }
   assignBtn.addEventListener('click', atribuir);
