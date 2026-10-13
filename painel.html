@@ -425,6 +425,61 @@
   .mini .ocup{ min-width:96px; }
   .mini .ocup .meter-track{ min-width:44px; }
 
+  /* ---- Carteira: barra empilhada, legenda, linha expandida e cards ---- */
+  :root{ --sg1:#1F2D4A; --sg2:#4A638F; --sg3:#6A83AB; --hatch:rgba(255,255,255,.75); }
+  :root[data-theme="dark"]{ --sg1:#D3DFF5; --sg2:#97ADD6; --sg3:#6F89B8; --hatch:rgba(13,13,13,.6); }
+  .pilha-wrap{ position:relative; flex:1; min-width:130px; padding:4px 0; }
+  .pilha{ display:flex; height:10px; border-radius:var(--r-pill); background:var(--surface-sunken); overflow:hidden; box-shadow:inset 0 0 0 1px var(--border); }
+  .pilha-wrap.acima .pilha{ box-shadow:inset 0 0 0 1.5px var(--over-bar); }
+  .fatia{ position:relative; display:block; height:100%; flex:none; border-right:1.5px solid var(--card-bg); }
+  .cor-sg1, .cor-tot{ background:var(--sg1); } .cor-sg2{ background:var(--sg2); } .cor-sg3{ background:var(--sg3); }
+  .fatia .pre{ position:absolute; right:0; top:0; bottom:0; background:repeating-linear-gradient(45deg, var(--hatch) 0 2px, transparent 2px 5px); }
+  .lim{ position:absolute; top:0; bottom:0; width:2px; margin-left:-1px; background:var(--text); border-radius:1px; }
+  .lim::before{ content:""; position:absolute; inset:0 -4px; }
+  .meter{ min-width:210px; }
+  .legenda{ flex:none; display:flex; flex-wrap:wrap; gap:6px 16px; align-items:center; font-size:12.5px; color:var(--text-muted); padding:0 2px; }
+  .lg{ display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
+  .sw{ display:inline-block; width:14px; height:10px; border-radius:3px; }
+  .sw.cor-sg1{ background:var(--sg1); } .sw.cor-sg2{ background:var(--sg2); } .sw.cor-sg3{ background:var(--sg3); }
+  .sw-pre{ background:repeating-linear-gradient(45deg, var(--hatch) 0 2px, transparent 2px 5px), var(--sg2); }
+  .sw-lim{ display:inline-block; width:2px; height:14px; background:var(--text); border-radius:1px; }
+  .chip-pre{ display:inline-flex; align-items:center; font-size:12px; font-weight:600; padding:3px 9px; border-radius:var(--r-pill); border:1px dashed var(--border-strong); color:var(--text); cursor:help; white-space:nowrap; }
+  .chip-pre:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  tr.det td{ padding:12px 16px 14px 50px; }
+  .sgs-topo{ display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+  .sgs-msg{ margin:0; }
+  .sgtab{ border-collapse:collapse; font-size:13px; min-width:420px; }
+  .sgtab th{ position:static; background:none; padding:4px 14px 6px 0; font-size:11.5px; border-bottom:1px solid var(--border-strong); }
+  .sgtab td{ padding:6px 14px 6px 0; border-top:1px solid var(--border); }
+  .sgtab tr:first-child td{ border-top:0; }
+  .sgtab td small{ margin-left:8px; font-size:12px; }
+  .sgtab th.num, .sgtab td.num{ text-align:right; padding-right:14px; }
+  .sgtab tr.total td{ border-top:1px solid var(--border-strong); font-weight:700; }
+  .cards{ grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; }
+  .ccard{ padding:18px 20px; gap:14px; transition:box-shadow .15s ease, transform .15s ease; }
+  .ccard:hover{ transform:translateY(-2px); box-shadow:0 6px 18px rgba(13,13,13,.14); }
+  .ccard .topo{ flex-direction:row; align-items:flex-start; justify-content:space-between; gap:10px; }
+  .ccard .topo .id{ min-width:0; flex:1; }
+  .ccard .topo .nome{ font-size:16px; font-weight:700; line-height:1.25; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .ccard .topo small{ display:block; font-size:12px; font-weight:400; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .status-tag.com-icone{ gap:5px; padding:5px 10px 5px 8px; }
+  .status-tag.com-icone::before{ display:none; }
+  .status-tag svg{ width:13px; height:13px; flex:none; }
+  .ccard .tags{ display:flex; gap:6px; flex-wrap:wrap; margin-top:-6px; }
+  .tag-s{ font-size:11.5px; font-weight:600; color:var(--text-muted); background:var(--surface-sunken); padding:3px 9px; border-radius:var(--r-pill); }
+  .ccard .princ{ display:flex; flex-direction:column; gap:6px; }
+  .ccard .grande{ display:flex; align-items:baseline; gap:2px; font-size:14px; color:var(--text-muted); }
+  .ccard .grande b{ font-size:30px; font-weight:700; line-height:1.1; color:var(--text); font-variant-numeric:tabular-nums; }
+  .ccard .grande .pct{ margin-left:auto; font-style:normal; font-size:15px; font-weight:700; color:var(--text); font-variant-numeric:tabular-nums; }
+  .ccard .duas-col{ display:grid; grid-template-columns:1fr 1fr; gap:12px; padding-top:12px; border-top:1px solid var(--border); }
+  .ccard .duas-col span{ display:block; font-size:12px; color:var(--text-muted); }
+  .ccard .duas-col b{ font-size:20px; font-weight:700; font-variant-numeric:tabular-nums; }
+  .ccard .sg-leg{ display:flex; flex-wrap:wrap; gap:6px 14px; font-size:12.5px; color:var(--text-muted); }
+  .sg-chip{ display:inline-flex; align-items:center; gap:6px; white-space:nowrap; cursor:default; }
+  .sg-chip b{ color:var(--text); font-variant-numeric:tabular-nums; }
+  @media (prefers-reduced-motion:reduce){ .ccard{ transition:none; } .ccard:hover{ transform:none; } }
+  @media print{ .fatia, .fatia .pre, .sw, .sw-pre, .sw-lim, .lim{ -webkit-print-color-adjust:exact; print-color-adjust:exact; } }
+
   .regra ul.notas{ margin:10px 0 0; padding-left:18px; font-size:12.5px; line-height:1.55; color:var(--text-muted); }
   .regra ul.notas li{ margin-bottom:5px; }
   .regra ul.notas b{ color:var(--text); font-weight:600; }
@@ -639,7 +694,7 @@
           <span class="sep-v" aria-hidden="true"></span>
           <label class="campo-data">POD <select id="filtroPod" aria-label="Filtrar por POD"><option value="">Todos</option></select></label>
           <label class="campo-data">Status <select id="filtroStatus" aria-label="Filtrar por status">
-            <option value="">Todos</option><option value="ok">Tranquilo</option><option value="atencao">Atenção</option><option value="limite">No limite</option><option value="acima">Acima do limite</option></select></label>
+            <option value="">Todos</option><option value="ok">Ok</option><option value="atencao">Atenção</option><option value="limite">No limite</option><option value="acima">Acima do limite</option></select></label>
           <label class="busca"><span class="sr-only">Buscar por nome</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
             <input type="search" id="carteiraBusca" placeholder="Buscar por nome" autocomplete="off" /></label>
@@ -649,6 +704,14 @@
           <span class="contagem grow" id="carteiraCount" aria-live="polite"></span>
         </div>
 
+        <div class="legenda" id="legendaCarteira" role="group" aria-label="Legenda das barras">
+          <span class="lg"><i class="sw cor-sg1"></i>SG1</span>
+          <span class="lg"><i class="sw cor-sg2"></i>SG2</span>
+          <span class="lg"><i class="sw cor-sg3"></i>SG3</span>
+          <span class="lg" title="Pré-onboarding: clientes com status Pre Onboarding no Salesforce. Eles já estão contados na carteira."><i class="sw sw-pre"></i>Pré-onboarding</span>
+          <span class="lg"><i class="sw-lim"></i>Limite</span>
+        </div>
+
         <div class="tabela" id="tabelaCarteira" tabindex="0" aria-label="Carteira por onboarder">
           <table>
             <thead>
@@ -656,9 +719,9 @@
                 <th scope="col" data-col="nome"><button type="button" class="ord">Onboarder</button></th>
                 <th scope="col" data-col="pod"><button type="button" class="ord">POD</button></th>
                 <th scope="col" data-col="level"><button type="button" class="ord">Nível</button></th>
-                <th scope="col" data-col="pct"><button type="button" class="ord" title="Carteira ativa / limite do nível. A marca fina indica 70%.">Carteira</button></th>
-                <th scope="col" data-col="livres" class="num"><button type="button" class="ord">Livres</button></th>
-                <th scope="col" data-col="pre" class="num"><button type="button" class="ord">Em pré-onboarding</button></th>
+                <th scope="col" data-col="pct"><button type="button" class="ord" title="Clientes por subgrupo (SG1, SG2, SG3) e limite do nível. A linha vertical marca o limite.">Carteira</button></th>
+                <th scope="col" data-col="livres" class="num"><button type="button" class="ord" title="Vagas livres: limite do nível menos clientes na carteira.">Livres</button></th>
+                <th scope="col" data-col="pre" class="num"><button type="button" class="ord" title="Pré-onboarding: clientes com status Pre Onboarding no Salesforce. Eles já estão contados na carteira.">Em pré-onboarding</button></th>
                 <th scope="col" data-col="status"><button type="button" class="ord">Status</button></th>
               </tr>
             </thead>
@@ -928,7 +991,7 @@
     acima:   { rotulo: 'acima do limite', classe: 'st-acima',   cor: 'var(--over-bar)' },
     limite:  { rotulo: 'no limite',       classe: 'st-limite',  cor: 'var(--red-bar)' },
     atencao: { rotulo: 'atenção',         classe: 'st-atencao', cor: 'var(--orange)' },
-    ok:      { rotulo: 'tranquilo',       classe: 'st-ok',      cor: 'var(--ok-bar)' },
+    ok:      { rotulo: 'ok',              classe: 'st-ok',      cor: 'var(--ok-bar)' },
     sem:     { rotulo: 'sem limite',      classe: 'st-ok',      cor: 'var(--ok-bar)' }
   };
   // Segmentação por receita: regra oficial (SG1 sem piso, SG3 sem teto) e rótulos antigos gravados no histórico
@@ -1131,29 +1194,97 @@
       return (ordem.dir === 'asc' ? c : -c) || String(a.email).localeCompare(String(b.email));
     });
   }
+  // ── barra empilhada por subgrupo: SG1/SG2/SG3 em tons de uma cor, hachura = pré-onboarding (já contado nos clientes), traço = limite ──
+  const SGS = ['sg1', 'sg2', 'sg3'];
+  const plural = (n, s, p) => n + ' ' + (n === 1 ? s : p);
+  const TXT_PRE = 'Pré-onboarding: clientes com status Pre Onboarding no Salesforce. Eles já estão contados na carteira.';
+  const ICONES_STATUS = {
+    ok:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
+    atencao: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4 2.8 20h18.4L12 4z"/><path d="M12 10v4.5M12 17.5v.01"/></svg>',
+    limite:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16v.01"/></svg>',
+    acima:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.3 3h7.4L21 8.3v7.4L15.7 21H8.3L3 15.7V8.3L8.3 3z"/><path d="M12 8v5M12 16.5v.01"/></svg>'
+  };
+  ICONES_STATUS.sem = ICONES_STATUS.ok;
+  const maiuscula = s => s.charAt(0).toUpperCase() + s.slice(1);
+  // subgrupos do onboarder; guardiões não têm subgrupos e o workflow 5 antigo não manda o dado
+  function subgrupos(o){
+    if (ehGuardiao(o) || o.sg1_carteira === undefined) return null;
+    return SGS.map(k => ({ k, cli: num(o[k + '_carteira']), pre: num(o[k + '_pre_onboarding']) }));
+  }
+  function resumoCarteira(o){
+    const sg = subgrupos(o), lim = o.capacidade_maxima;
+    let t = nomeDe(o.email) + ': ' + num(o.carteira_atual) + (lim ? ' de ' + lim : '') + ' clientes';
+    if (sg) t += '. ' + sg.map(p => p.k.toUpperCase() + ' ' + p.cli).join(', ');
+    t += '. ' + plural(num(o.pre_onboarding_atual), 'cliente', 'clientes') + ' em pré-onboarding.';
+    return t;
+  }
+  function barraEmpilhada(o, st){
+    const lim = num(o.capacidade_maxima), cart = num(o.carteira_atual);
+    const sg = subgrupos(o);
+    const partes = sg || [{ k: 'tot', cli: cart, pre: num(o.pre_onboarding_atual) }];
+    const soma = partes.reduce((s, p) => s + p.cli, 0);
+    const esc = Math.max(lim, cart, soma, 1) * 1.12;           // folga à direita: o marcador do limite nunca fica colado na borda
+    const wrap = h('div', 'pilha-wrap' + (st.chave === 'acima' ? ' acima' : '')); wrap.setAttribute('role', 'img'); wrap.setAttribute('aria-label', resumoCarteira(o));
+    const pilha = h('div', 'pilha');
+    partes.forEach(p => {
+      if (!p.cli) return;
+      const s = h('span', 'fatia cor-' + p.k); s.style.width = (p.cli / esc * 100) + '%';
+      s.title = (p.k === 'tot' ? 'Carteira' : p.k.toUpperCase()) + ': ' + plural(p.cli, 'cliente', 'clientes') + ' (' + plural(p.pre, 'em pré-onboarding', 'em pré-onboarding') + ')';
+      if (p.pre) { const q = h('i', 'pre'); q.style.width = Math.min(p.pre / p.cli * 100, 100) + '%'; s.appendChild(q); }
+      pilha.appendChild(s);
+    });
+    wrap.appendChild(pilha);
+    if (lim) { const m = h('span', 'lim'); m.style.left = (lim / esc * 100) + '%'; m.title = 'Limite do nível: ' + plural(lim, 'cliente', 'clientes'); wrap.appendChild(m); }
+    return wrap;
+  }
   function barraCarteira(o, st){
-    const m = h('div', 'meter'); const trk = h('div', 'meter-track'); const fill = h('div', 'meter-fill');
-    fill.style.width = Math.min(st.pct ?? 0, 100) + '%'; fill.style.background = st.cor; trk.appendChild(fill);
-    const marca = h('span', 'marca'); marca.setAttribute('aria-hidden', 'true'); trk.appendChild(marca);
-    m.appendChild(trk);
+    const m = h('div', 'meter'); m.appendChild(barraEmpilhada(o, st));
     const tx = h('span', 'meter-txt'); tx.appendChild(h('b', '', String(num(o.carteira_atual)))); tx.appendChild(document.createTextNode(' / ' + (o.capacidade_maxima ?? '-')));
     m.appendChild(tx); return m;
   }
   function tagStatus(st){ return h('span', 'status-tag ' + st.classe, (st.pct == null ? '' : st.pct + '% · ') + st.rotulo); }
+  function tagStatusCard(st){ const t = h('span', 'status-tag com-icone ' + st.classe); t.insertAdjacentHTML('afterbegin', ICONES_STATUS[st.chave] || ''); t.appendChild(document.createTextNode(maiuscula(st.rotulo))); return t; }
+  function chipPre(n){
+    const c = h('span', 'chip-pre', n + ' pré-onb.'); c.tabIndex = 0; c.title = TXT_PRE;
+    c.setAttribute('aria-label', plural(n, 'cliente', 'clientes') + ' em pré-onboarding. ' + TXT_PRE); return c;
+  }
   function sgDetalhe(o){
-    const wrap = h('div', 'sgs');
-    if (o.sg1_carteira === undefined) { wrap.appendChild(h('span', 'mut', 'Distribuição por subgrupo indisponível: o workflow 5 precisa ser reimportado para enviar esse dado.')); return wrap; }
-    const maior = Math.max(1, num(o.sg1_carteira), num(o.sg2_carteira), num(o.sg3_carteira));   // a barra compara os três subgrupos entre si
-    ['sg1', 'sg2', 'sg3'].forEach(k => {
-      const v = num(o[k + '_carteira']); const it = h('div', 'sg-item');
-      it.appendChild(h('span', 'badge', k.toUpperCase()));
-      const trk = h('div', 'meter-track'); const f = h('div', 'meter-fill'); f.style.width = (v / maior * 100) + '%';
-      f.style.background = 'var(--ok-bar)'; trk.appendChild(f); it.appendChild(trk);
-      const b = h('b', '', v + (v === 1 ? ' cliente' : ' clientes')); it.appendChild(b);
-      const pre = num(o[k + '_pre_onboarding']); if (o[k + '_pre_onboarding'] !== undefined) it.appendChild(h('span', 'mut', pre + ' em pré'));
-      wrap.appendChild(it);
+    const wrap = h('div', 'sgs'); const sg = subgrupos(o);
+    const topo = h('div', 'sgs-topo'); topo.appendChild(h('b', '', 'Carteira por subgrupo')); topo.appendChild(chipPre(num(o.pre_onboarding_atual))); wrap.appendChild(topo);
+    if (ehGuardiao(o)) { wrap.appendChild(h('p', 'mut sgs-msg', 'Guardião não tem subgrupos: a carteira é única.')); return wrap; }
+    if (!sg) { wrap.appendChild(h('p', 'mut sgs-msg', 'Distribuição por subgrupo indisponível: o workflow 5 precisa ser reimportado para enviar esse dado.')); return wrap; }
+    const lim = num(o.capacidade_maxima), pctLim = n => lim ? Math.round(n / lim * 100) + '%' : '-';
+    const tb = h('table', 'sgtab');
+    tb.innerHTML = '<thead><tr><th scope="col">Subgrupo</th><th scope="col" class="num">Clientes</th><th scope="col" class="num">Pré-onboarding</th><th scope="col" class="num">% do limite</th></tr></thead>';
+    const body = h('tbody');
+    const linha = (rotulo, faixa, cli, pre, pct, cls) => {
+      const tr = h('tr', cls || ''); const td = h('td'); td.appendChild(h('span', rotulo === 'Total' ? 'nome' : 'badge', rotulo));
+      if (faixa) td.appendChild(h('small', 'mut', faixa)); tr.appendChild(td);
+      tr.appendChild(h('td', 'num', String(cli))); tr.appendChild(h('td', 'num', String(pre))); tr.appendChild(h('td', 'num', pct)); body.appendChild(tr);
+    };
+    sg.forEach(p => linha(p.k.toUpperCase(), (FAIXAS[o.level] || {})[p.k], p.cli, p.pre, pctLim(p.cli)));
+    linha('Total', '', num(o.carteira_atual), num(o.pre_onboarding_atual), pctLim(num(o.carteira_atual)), 'total');
+    tb.appendChild(body); wrap.appendChild(tb); return wrap;
+  }
+  function cardCarteira(o, st){
+    const cd = h('article', 'ccard'); const top = h('div', 'topo'); const tt = h('div', 'id');
+    const n2 = h('div', 'nome', nomeDe(o.email)); n2.title = o.email || ''; tt.appendChild(n2); const em = h('small', 'mut', o.email || '-'); em.title = o.email || ''; tt.appendChild(em);
+    top.appendChild(tt); top.appendChild(tagStatusCard(st)); cd.appendChild(top);
+    const tg = h('div', 'tags'); tg.appendChild(h('span', 'tag-s', 'POD ' + (o.pod ?? '-'))); tg.appendChild(h('span', 'tag-s', ROTULO_NIVEL[o.level] || o.level || '-')); cd.appendChild(tg);
+    const pr = h('div', 'princ'); const big = h('div', 'grande'); big.appendChild(h('b', '', String(num(o.carteira_atual))));
+    big.appendChild(h('span', '', ' / ' + (o.capacidade_maxima ?? '-') + ' clientes')); if (st.pct != null) big.appendChild(h('em', 'pct', st.pct + '%'));
+    pr.appendChild(big); pr.appendChild(barraEmpilhada(o, st)); cd.appendChild(pr);
+    const c2 = h('div', 'duas-col');
+    const a = h('div'); a.appendChild(h('span', '', 'Vagas livres')); a.appendChild(h('b', '', o.capacidade_livre == null ? '-' : String(o.capacidade_livre))); c2.appendChild(a);
+    const b = h('div'); b.appendChild(h('span', '', 'Em pré-onboarding')); b.appendChild(h('b', '', String(num(o.pre_onboarding_atual)))); b.title = TXT_PRE; c2.appendChild(b);
+    cd.appendChild(c2);
+    const sg = subgrupos(o); const lg = h('div', 'sg-leg');
+    if (sg) sg.forEach(p => {
+      const it = h('span', 'sg-chip'); it.title = p.k.toUpperCase() + ': ' + plural(p.cli, 'cliente', 'clientes') + ' (' + p.pre + ' em pré-onboarding)';
+      const sw = h('i', 'sw cor-' + p.k); it.appendChild(sw); it.appendChild(document.createTextNode(p.k.toUpperCase() + ' ')); it.appendChild(h('b', '', String(p.cli))); lg.appendChild(it);
     });
-    return wrap;
+    else lg.appendChild(h('span', 'mut', ehGuardiao(o) ? 'Sem subgrupos' : 'Subgrupos indisponíveis'));
+    cd.appendChild(lg); return cd;
   }
   function linhasCarteira(lista){
     const frag = []; let ultimoPod = null;
@@ -1209,13 +1340,7 @@
         if (abrir) { expandidasCarteira.add(o.email); montarDet(); } else { expandidasCarteira.delete(o.email); if (det) det.remove(); det = null; }
       });
       // cards
-      const cd = h('article', 'ccard'); const top = h('div', 'topo'); const tt = h('div');
-      const n2 = h('div', 'nome', nomeDe(o.email)); n2.title = o.email || ''; tt.appendChild(n2); tt.appendChild(h('small', 'mut', o.email || '-')); top.appendChild(tt); top.appendChild(tagStatus(st)); cd.appendChild(top);
-      const bd = h('div', 'badges'); bd.appendChild(h('span', 'badge pod', 'POD ' + (o.pod ?? '-'))); bd.appendChild(h('span', 'badge', ROTULO_NIVEL[o.level] || o.level || '-')); cd.appendChild(bd);
-      cd.appendChild(barraCarteira(o, st));
-      const l1 = h('div', 'linha'); l1.appendChild(h('span', '', 'Vagas livres')); l1.appendChild(h('b', '', o.capacidade_livre == null ? '-' : String(o.capacidade_livre))); cd.appendChild(l1);
-      const l2 = h('div', 'linha'); l2.appendChild(h('span', '', 'Em pré-onboarding')); l2.appendChild(h('b', '', String(num(o.pre_onboarding_atual)))); cd.appendChild(l2);
-      if (o.sg1_carteira !== undefined) cd.appendChild(sgDetalhe(o));
+      const cd = cardCarteira(o, st);
       carteiraCards.appendChild(cd);
     });
   }
