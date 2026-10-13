@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Treinamento · Onboarding Assignment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --orange:#FF4000; --black:#0D0D0D; --off:#F5F3EF; --white:#FFFFFF; --yellow:#FFD450;
+    --muted:rgba(13,13,13,.62); --line:#D9D5CD; --sunken:#ECEAE5; --ok:#1E7A3D; --ok-bg:rgba(30,122,61,.12);
+    --red:#B3261E; --red-bg:rgba(217,48,37,.12);
+    --font:"DM Sans","Arial",sans-serif; --mono:"DM Mono",ui-monospace,monospace;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; height:100%; background:#111; color:var(--black); font-family:var(--font); -webkit-font-smoothing:antialiased; overflow:hidden; }
+  button{ font-family:inherit; cursor:pointer; border:0; }
+
+  /* ===== palco 16:9 (1280x720), escalado para caber na janela ===== */
+  #palco{ position:absolute; left:50%; top:50%; width:1280px; height:720px; transform-origin:center; }
+  .cel{ position:absolute; inset:0; visibility:hidden; }
+  .cel.ativo{ visibility:visible; }
+  .slide{ position:absolute; inset:0; padding:56px 72px 64px; background:var(--off); overflow:hidden; display:flex; flex-direction:column; }
+  .slide.laranja{ background:var(--orange); }
+  .slide.preto{ background:var(--black); color:var(--off); }
+  .rodape{ position:absolute; left:72px; right:72px; bottom:22px; display:flex; justify-content:space-between; font-size:13px; color:var(--muted); }
+  .laranja .rodape{ color:rgba(13,13,13,.7); } .preto .rodape{ color:rgba(245,243,239,.6); }
+
+  /* ===== tipografia ===== */
+  .kicker{ font-size:14px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--orange); margin:0 0 10px; }
+  .laranja .kicker{ color:var(--black); }
+  h1{ font-size:76px; line-height:1.02; letter-spacing:-.03em; font-weight:700; margin:0 0 20px; }
+  h2{ font-size:44px; line-height:1.1; letter-spacing:-.02em; font-weight:700; margin:0 0 22px; max-width:1050px; }
+  h3{ font-size:22px; font-weight:700; margin:0 0 6px; }
+  p{ margin:0 0 12px; }
+  .lead{ font-size:24px; line-height:1.45; max-width:900px; }
+  .sub{ font-size:19px; color:var(--muted); line-height:1.5; }
+  .preto .sub{ color:rgba(245,243,239,.7); }
+  ul.pontos{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:14px; font-size:22px; line-height:1.4; }
+  ul.pontos li{ position:relative; padding-left:28px; }
+  ul.pontos li::before{ content:""; position:absolute; left:2px; top:.5em; width:11px; height:11px; border-radius:2px; background:var(--orange); }
+  .laranja ul.pontos li::before{ background:var(--black); }
+  ul.pontos.menor{ font-size:19px; gap:10px; }
+  b, strong{ font-weight:700; }
+  .mono{ font-family:var(--mono); font-size:.88em; background:var(--sunken); padding:2px 8px; border-radius:6px; }
+  .muted{ color:var(--muted); }
+
+  /* ===== blocos ===== */
+  .cols{ display:grid; gap:28px; flex:1; min-height:0; align-content:start; }
+  .cols.c2{ grid-template-columns:1fr 1fr; } .cols.c3{ grid-template-columns:repeat(3,1fr); } .cols.c4{ grid-template-columns:repeat(4,1fr); }
+  .cols.c1-2{ grid-template-columns:1fr 1.35fr; }
+  .cartao{ background:var(--white); border:1px solid var(--line); border-radius:14px; padding:22px 24px; font-size:18px; line-height:1.45; box-shadow:0 1px 2px rgba(13,13,13,.06); }
+  .cartao h3{ font-size:20px; }
+  .cartao.destaque{ border-left:6px solid var(--orange); }
+  .num{ display:inline-grid; place-items:center; width:38px; height:38px; margin-bottom:10px; border-radius:50%; background:var(--orange); color:var(--black); font-size:20px; font-weight:800; }
+  .chip{ display:inline-flex; align-items:center; gap:6px; font-size:14px; font-weight:700; line-height:1; padding:6px 12px; border-radius:999px; border:1px solid var(--line); background:var(--white); white-space:nowrap; }
+  .chip.ok{ background:var(--ok-bg); color:#17632F; border-color:transparent; }
+  .chip.red{ background:var(--red-bg); color:var(--red); border-color:transparent; }
+  .chip.amarelo{ background:var(--yellow); border-color:transparent; }
+  .chip.cinza{ background:var(--sunken); color:var(--muted); }
+  .aviso{ margin-top:16px; padding:14px 18px; border-radius:12px; background:var(--yellow); font-size:18px; font-weight:600; line-height:1.4; }
+  .aviso.claro{ background:var(--sunken); font-weight:500; }
+  .seta{ align-self:center; font-size:38px; color:var(--orange); font-weight:800; }
+  table.t{ width:100%; border-collapse:collapse; font-size:18px; background:var(--white); border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  table.t th{ text-align:left; font-size:13px; letter-spacing:.06em; text-transform:uppercase; background:var(--sunken); padding:10px 14px; color:var(--muted); }
+  table.t td{ padding:11px 14px; border-top:1px solid var(--line); vertical-align:top; line-height:1.35; }
+
+  /* ===== miniaturas de tela (dados fictícios) ===== */
+  .tela{ background:var(--white); border:1px solid var(--line); border-radius:14px; box-shadow:0 6px 24px rgba(13,13,13,.12); overflow:hidden; font-size:13px; }
+  .tela .barra{ display:flex; gap:6px; padding:9px 12px; background:var(--sunken); border-bottom:1px solid var(--line); }
+  .tela .barra i{ width:10px; height:10px; border-radius:50%; background:#C3BFB8; }
+  .kb{ display:grid; grid-template-columns:repeat(5,1fr); }
+  .kb .col{ border-left:1px solid var(--line); background:var(--sunken); min-height:340px; min-width:0; }
+  .kb .col:first-child{ border-left:0; }
+  .kb .cab{ background:var(--white); padding:9px 8px; font-weight:700; text-align:center; border-bottom:3px solid var(--orange); font-size:12.5px; white-space:nowrap; }
+  .kb .cab span{ display:inline-block; margin-left:4px; padding:0 7px; border-radius:99px; background:var(--sunken); font-size:11.5px; }
+  .kb .corpo{ padding:9px; display:flex; flex-direction:column; gap:8px; }
+  .mc{ background:var(--white); border:1px solid #D9D5CD; border-radius:9px; padding:8px 9px; box-shadow:0 1px 2px rgba(13,13,13,.08); font-size:12px; line-height:1.35; }
+  .mc.ok{ border-left:4px solid var(--ok); } .mc.off{ opacity:.7; }
+  .mc b{ display:block; font-size:12.5px; }
+  .mc .l2{ display:flex; flex-wrap:wrap; justify-content:space-between; gap:0 6px; color:var(--muted); font-family:var(--mono); font-size:10.5px; margin-top:2px; }
+  .mc .l2 strong{ color:var(--black); font-family:var(--font); font-size:12px; white-space:nowrap; }
+  .mc .l3{ display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:4px; margin-top:6px; }
+  .mc .tag{ font-size:10.5px; font-weight:700; padding:2px 7px; border-radius:99px; background:var(--ok-bg); color:#17632F; }
+  .mc .bt{ font-size:11px; font-weight:700; padding:3px 9px; border-radius:6px; background:var(--orange); color:var(--black); }
+  .gaveta{ display:grid; grid-template-columns:1fr; }
+  .gaveta .topo{ padding:14px 16px 10px; border-bottom:1px solid var(--line); }
+  .gaveta .eyebrow{ font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:600; }
+  .gaveta .tit{ font-size:16px; font-weight:700; text-decoration:underline; text-underline-offset:3px; }
+  .passos3{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px; padding:10px 16px 0; }
+  .passos3 i{ display:block; height:6px; border-radius:99px; background:#D3CEC5; } .passos3 i.on{ background:var(--orange); } .passos3 i.feito{ background:var(--black); }
+  .passos3 span{ font-size:11px; font-weight:600; color:var(--muted); text-align:center; display:block; margin-top:4px; }
+  .gaveta .corp{ padding:14px 16px 16px; display:flex; flex-direction:column; gap:10px; }
+  .campo{ border:1.5px solid #D3CEC5; border-radius:7px; padding:8px 10px; font-size:13px; background:var(--white); }
+  .campo small{ display:block; font-size:11px; font-weight:700; color:var(--muted); margin-bottom:2px; }
+  .campo.obrig{ border-color:var(--red); }
+  .botao{ display:block; text-align:center; font-weight:700; font-size:14px; padding:10px; border-radius:8px; background:var(--orange); color:var(--black); }
+  .botao.escuro{ background:var(--black); color:#fff; }
+  .botao.fantasma{ background:transparent; border:1.5px solid #8A857C; color:var(--black); }
+  .resultado{ background:var(--sunken); border-left:4px solid var(--orange); border-radius:9px; padding:11px 13px; }
+  .resultado .k{ font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); font-weight:600; }
+  .resultado .v{ font-size:15px; font-weight:700; margin:2px 0 6px; }
+  .horarios{ display:flex; flex-wrap:wrap; gap:7px; }
+  .horarios span{ font-family:var(--mono); font-size:12.5px; padding:7px 11px; border:1.5px solid #D3CEC5; border-radius:7px; background:var(--white); }
+  .horarios span.sel{ background:var(--orange); border-color:var(--orange); }
+  .abas{ display:flex; gap:4px; border-bottom:1px solid #8A857C; padding:0 10px; }
+  .abas span{ padding:9px 14px; font-weight:600; color:var(--muted); font-size:13px; position:relative; } .abas span.on{ color:var(--black); } .abas span.on::after{ content:""; position:absolute; left:10px; right:10px; bottom:-1px; height:3px; background:var(--orange); border-radius:3px 3px 0 0; }
+  .mini-kpis{ display:grid; grid-template-columns:repeat(5,1fr); gap:8px; padding:12px; }
+  .mini-kpis div{ border:1px solid var(--line); border-radius:9px; padding:8px 10px; font-size:11.5px; color:var(--muted); } .mini-kpis b{ display:block; font-size:21px; color:var(--black); }
+  .barra-cap{ height:8px; border-radius:99px; background:var(--sunken); overflow:hidden; } .barra-cap i{ display:block; height:100%; border-radius:99px; }
+
+  /* ===== battle cards (cenários) ===== */
+  .bcards{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; flex:1; min-height:0; }
+  .bcard{ display:flex; flex-direction:column; background:var(--white); border:1px solid var(--line); border-radius:14px; padding:16px 18px; box-shadow:0 1px 2px rgba(13,13,13,.06); font-size:15.5px; line-height:1.4; }
+  .bcard .topo{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .bcard .letra{ flex:none; display:grid; place-items:center; width:30px; height:30px; border-radius:8px; background:var(--black); color:#fff; font-weight:800; font-size:16px; }
+  .bcard h3{ margin:0; font-size:18px; line-height:1.2; }
+  .bcard table{ width:100%; border-collapse:collapse; font-size:14.5px; margin-bottom:10px; }
+  .bcard th{ text-align:left; font-size:11.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); padding:0 8px 5px; font-weight:700; }
+  .bcard th.n, .bcard td.n{ text-align:right; font-variant-numeric:tabular-nums; }
+  .bcard td{ padding:7px 8px; border-top:1px solid var(--line); }
+  .bcard tr.vence td{ background:var(--ok-bg); font-weight:700; }
+  .bcard tr.vence td:first-child{ border-radius:8px 0 0 8px; } .bcard tr.vence td:last-child{ border-radius:0 8px 8px 0; }
+  .bcard tr.fora td{ color:var(--muted); text-decoration:line-through; }
+  .bcard .res{ font-weight:700; margin:2px 0 6px; }
+  .bcard .res::before{ content:"RESULTADO  "; font-size:11px; letter-spacing:.06em; color:var(--orange); }
+  .bcard .pq{ color:var(--muted); font-size:14.5px; }
+  .bcard .pq b{ color:var(--black); }
+  .contrato-ex{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:0 0 14px; font-size:16px; }
+  .vence-tag{ display:inline-block; margin-left:6px; padding:1px 7px; font-size:11px; font-weight:800; border-radius:99px; background:var(--ok); color:#fff; text-decoration:none; }
+
+  /* ===== navegação ===== */
+  #progresso{ position:fixed; left:0; top:0; height:4px; background:var(--orange); width:0; transition:width .25s; z-index:20; }
+  #dica{ position:fixed; right:16px; top:10px; font-size:12px; color:rgba(245,243,239,.55); z-index:20; }
+  #notas{ position:fixed; left:0; right:0; bottom:0; z-index:30; max-height:34vh; overflow:auto; padding:16px 28px 22px; background:rgba(13,13,13,.94); color:#F5F3EF; font-size:17px; line-height:1.55; display:none; }
+  #notas.on{ display:block; }
+  #notas b{ color:var(--yellow); }
+  body.grade #palco{ position:static; transform:none !important; width:auto; height:auto; padding:24px; display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; overflow:auto; max-height:100vh; }
+  body.grade{ overflow:auto; }
+  body.grade .cel{ position:relative; inset:auto; visibility:visible; width:300px; height:169px; overflow:hidden; border-radius:8px; outline:2px solid transparent; cursor:pointer; }
+  body.grade .cel.ativo{ outline-color:var(--orange); }
+  body.grade .slide{ width:1280px; height:720px; transform:scale(.234375); transform-origin:0 0; pointer-events:none; }
+  body.grade #dica, body.grade #notas{ display:none !important; }
+  @media (prefers-reduced-motion:reduce){ #progresso{ transition:none; } }
+
+  /* ===== impressão: um slide por página ===== */
+  @page{ size:1280px 720px; margin:0; }
+  @media print{
+    html,body{ overflow:visible; height:auto; background:#fff; }
+    #palco{ position:static; transform:none !important; width:1280px; height:auto; }
+    .cel{ position:relative; inset:auto; visibility:visible; width:1280px; height:720px; break-after:page; page-break-after:always; }
+    .slide{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    #progresso, #dica, #notas{ display:none !important; }
+  }
+</style>
+</head>
+<body>
+<div id="progresso"></div>
+<main id="palco" aria-live="polite">
+
+<!-- 1 · CAPA -->
+<section class="slide laranja" data-titulo="Capa">
+  <div style="margin-top:130px">
+    <p class="kicker">New Business · Hotmart</p>
+    <h1>Onboarding<br>Assignment</h1>
+    <p class="lead">O onboarder certo e o welcome já marcado na hora de dar o Closed Won, em um só lugar.</p>
+  </div>
+  <div class="rodape"><span>Treinamento para o time</span><span>[data do treinamento]</span></div>
+  <aside class="nota hidden" hidden><b>Abertura.</b> Boas-vindas. Objetivo: ao final, cada pessoa consegue atribuir um cliente, agendar o welcome e fechar a Oportunidade sozinha. Combine que as dúvidas podem ser feitas durante, e que haverá uma prática guiada no final.</aside>
+</section>
+
+<!-- 2 · PAUTA -->
+<section class="slide" data-titulo="Pauta">
+  <p class="kicker">Pauta</p>
+  <h2>O que vamos ver hoje</h2>
+  <div class="cols c3" style="grid-template-columns:repeat(3,1fr);gap:20px;flex:none">
+    <div class="cartao"><div style="display:flex;justify-content:space-between;align-items:center"><div class="num" style="margin-bottom:0">1</div></div>
+      <h3 style="margin-top:12px;font-size:24px">Entender</h3>
+      <ul class="pontos menor" style="font-size:18px;gap:7px"><li>Por que mudou</li><li>O fluxo em 3 etapas</li><li>Como entrar</li></ul></div>
+    <div class="cartao"><div style="display:flex;justify-content:space-between;align-items:center"><div class="num" style="margin-bottom:0">2</div></div>
+      <h3 style="margin-top:12px;font-size:24px">Usar</h3>
+      <ul class="pontos menor" style="font-size:18px;gap:7px"><li>O funil e os cards</li><li>Etapa 1: atribuir o onboarder</li><li>Etapa 2: agendar o welcome</li><li>Etapa 3: dar o Closed Won</li></ul></div>
+    <div class="cartao"><div style="display:flex;justify-content:space-between;align-items:center"><div class="num" style="margin-bottom:0">3</div></div>
+      <h3 style="margin-top:12px;font-size:24px">Resolver e praticar</h3>
+      <ul class="pontos menor" style="font-size:18px;gap:7px"><li>Erros comuns e o que fazer</li><li>Painel de acompanhamento</li><li>Prática guiada no modo demonstração</li></ul></div>
+  </div>
+  <div class="aviso" style="margin-top:22px">Ao final, você sabe conduzir uma Oportunidade do início ao fim: <b>atribuir o onboarder</b>, <b>agendar o welcome</b> e <b>dar o Closed Won</b>.</div>
+  <div class="rodape"><span>Onboarding Assignment</span><span>2</span></div>
+  <aside class="nota" hidden><b>Pauta.</b> Se o time for só de Closers, os slides do painel podem ser rápidos; se for liderança, dê mais tempo a eles. Destaque o resultado esperado: ao final, cada pessoa sabe conduzir uma Oportunidade do início ao fim.</aside>
+</section>
+
+<!-- 3 · POR QUE MUDOU -->
+<section class="slide" data-titulo="Por que mudou">
+  <p class="kicker">Contexto</p>
+  <h2>Uma regra clara, carteiras equilibradas e o welcome já marcado.</h2>
+  <div class="cols c2" style="gap:24px">
+    <div class="cartao"><h3>Antes</h3>
+      <ul class="pontos menor"><li>O Closer dava o Closed Won na Oportunidade no Salesforce</li><li>O <b>critério</b> de atribuição do onboarder <b>não era claro</b></li><li>As <b>carteiras</b> dos onboarders podiam ficar <b>desequilibradas</b></li><li>O onboarder entrava em contato depois para agendar o welcome, e o cliente podia <b>perder o timing</b></li></ul></div>
+    <div class="cartao destaque"><h3>Agora</h3>
+      <ul class="pontos menor"><li>O Closer vê o funil do Salesforce e dá o Closed Won na mesma tela</li><li>O onboarder é definido por uma <b>regra clara</b>, igual para todos</li><li>As carteiras ficam <b>equilibradas</b> automaticamente</li><li>O welcome é marcado na agenda do onboarder, ainda com o cliente quente</li></ul></div>
+  </div>
+  <div class="aviso claro">O Salesforce continua sendo a fonte da verdade. A ferramenta lê e grava nele por você.</div>
+  <div class="rodape"><span>Onboarding Assignment</span><span>3</span></div>
+  <aside class="nota" hidden><b>Mensagem central.</b> Antes, o critério para escolher o onboarder não era claro e as carteiras podiam ficar desequilibradas. Agora existe uma regra única, que o sistema aplica sempre (cascata: mesmo POD, guardião, outro POD, e menor carteira no subgrupo do cliente). Isso deixa a distribuição previsível e justa. Ganho adicional: o onboarder e o horário do welcome já ficam definidos na hora do Closed Won, em vez de o onboarder entrar em contato depois, quando o cliente podia perder o timing. Reforce que nada sai do Salesforce; é uma tela por cima dele.</aside>
+</section>
+
+<!-- 4 · FLUXO -->
+<section class="slide" data-titulo="O fluxo em 3 etapas">
+  <p class="kicker">Visão geral</p>
+  <h2>O fluxo em 3 etapas</h2>
+  <div style="display:grid;grid-template-columns:1fr 50px 1fr 50px 1fr;gap:6px;align-items:stretch;margin-top:8px">
+    <div class="cartao"><div class="num">1</div><h3>Atribuir</h3>Escolha a Oportunidade no funil. O sistema define o onboarder pela regra e grava no Salesforce.</div>
+    <div class="seta">›</div>
+    <div class="cartao"><div class="num">2</div><h3>Agendar welcome</h3>Escolha um horário livre na agenda do onboarder. O cliente recebe o convite.</div>
+    <div class="seta">›</div>
+    <div class="cartao"><div class="num">3</div><h3>Closed Won</h3>Preencha os campos obrigatórios e feche a Oportunidade no Salesforce.</div>
+  </div>
+  <p class="sub" style="margin-top:30px">O painel lateral mostra em que etapa você está. Se você fechar o painel no meio, o card fica como <span class="chip">Em andamento</span> e você retoma de onde parou.</p>
+  <div class="rodape"><span>Onboarding Assignment</span><span>4</span></div>
+  <aside class="nota" hidden><b>Mostrar o fluxo inteiro antes dos detalhes.</b> As três etapas são sempre nessa ordem. Não dá para dar o Closed Won sem atribuir e agendar. Se alguém fechar a janela no meio, não perde nada.</aside>
+</section>
+
+<!-- 5 · ACESSO -->
+<section class="slide" data-titulo="Como entrar">
+  <p class="kicker">Primeiro acesso</p>
+  <h2>Como entrar</h2>
+  <div class="cols c2" style="gap:28px">
+    <div>
+      <ul class="pontos">
+        <li>Use o seu e-mail <b>@hotmart.com</b> e a senha padrão do time</li>
+        <li>A sessão dura <b>8 horas</b>. Depois, é só entrar de novo</li>
+        <li>Alternador de <b>tema claro e escuro</b> no canto superior direito</li>
+        <li>O menu com as suas iniciais mostra o e-mail e o botão <b>Sair</b></li>
+      </ul>
+      <div class="aviso">Você só enxerga e mexe nas Oportunidades em que <b>você é o dono</b> no Salesforce.</div>
+    </div>
+    <div class="cartao"><h3>Dois endereços</h3>
+      <p><span class="chip">Atribuição</span> onde você trabalha no dia a dia</p>
+      <p style="margin-bottom:18px"><span class="chip">Painel</span> acompanhamento da carteira e do histórico</p>
+      <p class="sub">Os links aparecem no topo do painel. Salve os dois nos favoritos.</p>
+      <p class="mono" style="display:inline-block">fernandacardoso-sketch.github.io/Projeto-Onboarding/</p></div>
+  </div>
+  <div class="rodape"><span>Onboarding Assignment</span><span>5</span></div>
+  <aside class="nota" hidden><b>Acesso.</b> Se alguém não conseguir entrar, o e-mail precisa estar na lista de acessos: avise o responsável. Reforce a regra de dono: se a Oportunidade não aparece, quase sempre é porque o dono dela no Salesforce é outra pessoa. [Confirme os links finais antes do treinamento.]</aside>
+</section>
+
+<!-- 6 · FUNIL -->
+<section class="slide" data-titulo="O funil">
+  <p class="kicker">A tela principal</p>
+  <h2>O seu funil do Salesforce, em colunas</h2>
+  <div class="cols c1-2" style="gap:26px;grid-template-columns:.8fr 1.5fr">
+    <ul class="pontos menor">
+      <li>Cada coluna é um <b>estágio</b>. No topo: quantas Oportunidades tem e a <b>soma do Amount 12m</b> delas</li>
+      <li>Cada card é uma <b>Oportunidade sua</b>, com nome, conta, Hotmart ID e <b>Amount 12m</b></li>
+      <li>A <b>busca</b> acha por nome, cliente ou Hotmart ID. Atalho: tecla <span class="mono">/</span></li>
+      <li>O filtro <b>Disponíveis para atribuir</b> mostra só o que dá para atribuir agora</li>
+      <li>A tela se <b>atualiza sozinha</b> a cada 3 minutos</li>
+    </ul>
+    <div class="tela"><div class="barra"><i></i><i></i><i></i></div>
+      <div class="kb">
+        <div class="col"><div class="cab">Issues identified <span>2</span></div><div class="corpo">
+          <div class="mc ok"><b>Estúdio Lume | Curso</b>Estúdio Lume LTDA<div class="l2"><span>70000001</span><strong>R$ 180.000</strong></div><div class="l3"><span class="tag">Disponível</span><span class="bt">Atribuir</span></div></div>
+          <div class="mc ok"><b>Casa do Código</b><div class="l2"><span>70000004</span><strong>R$ 320.000</strong></div><div class="l3"><span class="tag">Disponível</span><span class="bt">Atribuir</span></div></div></div></div>
+        <div class="col"><div class="cab">SQL <span>0</span></div><div class="corpo"></div></div>
+        <div class="col"><div class="cab">Offer presented <span>1</span></div><div class="corpo">
+          <div class="mc off"><b>Mentoria Norte</b><div class="l2"><span>70000005</span><strong>R$ 410.000</strong></div></div></div></div>
+        <div class="col"><div class="cab">Contract Sent <span>1</span></div><div class="corpo">
+          <div class="mc ok"><b>Academia Prisma</b><div class="l2"><span>70000006</span><strong>R$ 2.750.000</strong></div><div class="l3"><span class="tag">Disponível</span><span class="bt">Atribuir</span></div></div></div></div>
+        <div class="col"><div class="cab">Closed Won <span>1</span></div><div class="corpo">
+          <div class="mc off"><b>Clube do Vinho</b><div class="l2"><span>70000007</span><strong>R$ 600.000</strong></div></div></div></div>
+      </div></div>
+  </div>
+  <div class="rodape"><span>Onboarding Assignment · dados fictícios</span><span>6</span></div>
+  <aside class="nota" hidden><b>Navegue ao vivo se possível.</b> Mostre a busca com a tecla /, o chip de disponíveis, e o Closed Won recolhido (mostra 5 e tem "Ver mais"). Explique que o funil é só das Oportunidades do usuário logado.</aside>
+</section>
+
+<!-- 7 · ESTADOS DO CARD -->
+<section class="slide" data-titulo="Estados do card">
+  <p class="kicker">Lendo os cards</p>
+  <h2>O que cada card está dizendo</h2>
+  <div class="cols c3" style="gap:22px">
+    <div><div class="tela" style="padding:14px"><div class="mc ok" style="font-size:14px"><b style="font-size:15px">Estúdio Lume | Curso</b>Estúdio Lume LTDA<div class="l2" style="font-size:12px"><span>70000001</span><strong style="font-size:14px">R$ 180.000</strong></div><div class="l3"><span class="tag" style="font-size:12px">Disponível para atribuir</span><span class="bt" style="font-size:12.5px">Atribuir</span></div></div></div>
+      <h3 style="margin-top:14px">Borda verde e botão</h3><p class="sub" style="font-size:17px">Dá para atribuir. Clique em <b>Atribuir</b> ou no nome do card.</p></div>
+    <div><div class="tela" style="padding:14px"><div class="mc off" style="font-size:14px"><b style="font-size:15px">Mentoria Norte</b>Mentoria Norte<div class="l2" style="font-size:12px"><span>70000005</span><strong style="font-size:14px">🔒 R$ 410.000</strong></div></div></div>
+      <h3 style="margin-top:14px">Esmaecido, com cadeado</h3><p class="sub" style="font-size:17px">Já tem onboarder. O nome vira um link para abrir a Oportunidade no Salesforce.</p></div>
+    <div><div class="tela" style="padding:14px"><div class="mc ok" style="font-size:14px"><b style="font-size:15px">Casa do Código</b><div class="l2" style="font-size:12px"><span>70000004</span><strong style="font-size:14px">⚠ Sem valor</strong></div><div class="l3"><span class="tag" style="font-size:12px">Disponível para atribuir</span><span class="bt" style="font-size:12.5px">Atribuir</span></div></div></div>
+      <h3 style="margin-top:14px">Triângulo de alerta</h3><p class="sub" style="font-size:17px">Falta um dado (por exemplo, Amount ou Hotmart ID). Passe o mouse para ver qual.</p></div>
+  </div>
+  <p class="sub" style="margin-top:16px">Cards em <b>Closed Won</b> aparecem esmaecidos com um check: a Oportunidade já está em Closed Won.</p>
+  <div class="rodape"><span>Onboarding Assignment · dados fictícios</span><span>7</span></div>
+  <aside class="nota" hidden><b>Dica.</b> O botão de copiar ao lado do Hotmart ID mostra "Copiado" por 1,5 segundo. Um card "Em andamento" é uma atribuição que você começou e não terminou: ele tem o botão "Continuar".</aside>
+</section>
+
+<!-- 8 · ETAPA 1 -->
+<section class="slide" data-titulo="Etapa 1 · Atribuir">
+  <p class="kicker">Etapa 1 de 3</p>
+  <h2>Atribuir o onboarder</h2>
+  <div class="cols c1-2" style="gap:36px">
+    <ol style="margin:0;padding-left:26px;font-size:21px;line-height:1.5;display:flex;flex-direction:column;gap:12px">
+      <li>Clique em <b>Atribuir</b> no card. O painel lateral abre.</li>
+      <li>Se a Oportunidade está <b>sem Amount 12 months</b>, informe o valor. Ele é obrigatório: define o subgrupo.</li>
+      <li>Digite o <b>e-mail do cliente</b>. É para ele que vai o convite do welcome.</li>
+      <li>Clique em <b>Atribuir onboarder</b>.</li>
+      <li>Veja o resultado: <b>onboarder, POD, nível, subgrupo</b> e a carteira dele antes e depois.</li>
+    </ol>
+    <div class="tela gaveta"><div class="topo"><div class="eyebrow">Etapa 1 de 3 · Atribuir</div><div class="tit">Estúdio Lume | Curso ↗</div></div>
+      <div class="passos3"><div><i class="on"></i><span>Atribuir</span></div><div><i></i><span>Agendar welcome</span></div><div><i></i><span>Closed Won</span></div></div>
+      <div class="corp">
+        <div class="campo obrig"><small>Amount 12 months (R$) · obrigatório</small>180000</div>
+        <div class="campo"><small>E-mail do cliente</small>contato@estudiolume.com.br</div>
+        <div class="botao">Atribuir onboarder</div>
+        <div class="resultado"><div class="k">Onboarder atribuído</div><div class="v">onboarder.exemplo@hotmart.com</div><span class="chip">POD 1</span> <span class="chip">N2-N3</span> <span class="chip">SG1</span> <span class="chip ok">Carteira 41 → 42</span></div>
+      </div></div>
+  </div>
+  <div class="rodape"><span>Onboarding Assignment · dados fictícios</span><span>8</span></div>
+  <aside class="nota" hidden><b>Ponto crítico.</b> O Amount define o subgrupo (SG1, SG2 ou SG3) e, com ele, quem recebe. Por isso não dá para atribuir sem. Depois de atribuir, a atribuição já está gravada no Salesforce (Onboarding Owner). Se você fechar o painel agora, o card fica "Em andamento".</aside>
+</section>
+
+<!-- 9 · REGRA DE ATRIBUIÇÃO -->
+<section class="slide" data-titulo="A regra de atribuição">
+  <p class="kicker">Por trás da atribuição</p>
+  <h2 style="margin-bottom:14px">A regra de atribuição</h2>
+  <h3 style="font-size:19px;margin:0 0 10px;color:var(--muted)">PASSO A: ONDE PROCURAR, NESTA ORDEM</h3>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
+    <div class="cartao" style="padding:16px 18px;font-size:16.5px"><div class="num" style="width:32px;height:32px;font-size:17px;margin-bottom:6px">1</div><h3 style="font-size:19px">Mesmo POD</h3>Onboarders do POD do Closer.<p class="muted" style="margin:8px 0 0;font-size:15px">Se todos estão no limite de carteira, vai para o 2.</p></div>
+    <div class="cartao" style="padding:16px 18px;font-size:16.5px"><div class="num" style="width:32px;height:32px;font-size:17px;margin-bottom:6px">2</div><h3 style="font-size:19px">Guardião</h3>Só para N2-N3 e N4-N5.<p class="muted" style="margin:8px 0 0;font-size:15px">Se todos estão no limite de carteira, vai para o 3.</p></div>
+    <div class="cartao" style="padding:16px 18px;font-size:16.5px"><div class="num" style="width:32px;height:32px;font-size:17px;margin-bottom:6px">3</div><h3 style="font-size:19px">Outro POD</h3>Onboarders de outros PODs, do mesmo nível.<p class="muted" style="margin:8px 0 0;font-size:15px">Se todos estão no limite de carteira, vai para o 4.</p></div>
+    <div class="cartao" style="padding:16px 18px;font-size:16.5px"><div class="num" style="width:32px;height:32px;font-size:17px;margin-bottom:6px">4</div><h3 style="font-size:19px">Alerta</h3>Ninguém disponível: o coordenador recebe um e-mail e <b>nada é atribuído</b>.</div>
+  </div>
+  <div style="margin:12px 0 18px"><span class="chip amarelo">Nunca cruza nível</span> <span class="chip amarelo">N6+ não tem guardião: pula o passo 2</span></div>
+  <h3 style="font-size:19px;margin:0 0 10px;color:var(--muted)">PASSO B: DENTRO DA ETAPA, QUEM RECEBE</h3>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
+    <div class="cartao destaque" style="padding:16px 18px;font-size:16.5px"><h3 style="font-size:19px">1º  Menos no subgrupo</h3>Conta só o subgrupo da Oportunidade (SG1, SG2 ou SG3). Quem tem <b>menos clientes nele</b> recebe.</div>
+    <div class="cartao destaque" style="padding:16px 18px;font-size:16.5px"><h3 style="font-size:19px">2º  Empate</h3>A <b>menor carteira total</b>.</div>
+    <div class="cartao destaque" style="padding:16px 18px;font-size:16.5px"><h3 style="font-size:19px">3º  Empate</h3><b>Menos pré-onboardings</b> no subgrupo.</div>
+    <div class="cartao destaque" style="padding:16px 18px;font-size:16.5px"><h3 style="font-size:19px">4º  Empate final</h3>Quem está <b>há mais tempo sem receber</b> uma atribuição.</div>
+  </div>
+  <div class="rodape"><span>Onboarding Assignment</span><span>9</span></div>
+  <aside class="nota" hidden><b>Não precisa decorar: o sistema decide.</b> O Passo A define em qual grupo de onboarders o sistema procura, sempre nesta ordem, e só passa para o próximo quando todos do grupo estão no limite de carteira. O Passo B escolhe a pessoa dentro do grupo. Elegível quer dizer: ainda está abaixo do limite de carteira do nível (próximo slide). Não existe um limite fixo por subgrupo: o que conta é quem tem menos clientes naquele subgrupo. Guardiões são escolhidos só pela menor carteira total. Quem quiser saber por que um cliente foi para determinada pessoa encontra o racional na aba Atribuições do painel.</aside>
+</section>
+
+<!-- 10 · LIMITES E FAIXAS -->
+<section class="slide" data-titulo="Limites e faixas">
+  <p class="kicker">Os números da regra</p>
+  <h2>Limites e faixas por nível</h2>
+  <table class="t" style="font-size:19px">
+    <thead><tr><th>Nível do Closer</th><th>Limite de carteira</th><th>SG1</th><th>SG2</th><th>SG3</th></tr></thead>
+    <tbody>
+      <tr><td><b>N2-N3</b><br><small class="muted" style="font-size:13px">N2: R$120k–599k · N3: R$600k–999k</small></td><td>75</td><td>R$120k a R$299k</td><td>R$300k a R$599k</td><td>R$600k a R$999k</td></tr>
+      <tr><td><b>N4-N5</b><br><small class="muted" style="font-size:13px">N4: R$1M–1,9M · N5: R$2M–4,9M</small></td><td>50</td><td>R$1M a R$1,9M</td><td>R$2M a R$2,9M</td><td>R$3M a R$4,9M</td></tr>
+      <tr><td><b>N6+</b><br><small class="muted" style="font-size:13px">N6: acima de R$5M</small></td><td>25</td><td>R$5M a R$9,9M</td><td>R$10M a R$14,9M</td><td>a partir de R$15M</td></tr>
+      <tr><td><b>Guardião</b></td><td>150</td><td colspan="3" class="muted">sem subgrupos</td></tr>
+    </tbody>
+  </table>
+  <p class="sub" style="margin:10px 0 0;font-size:16px">Limites em clientes por onboarder. Faixas pelo <b>Amount 12 months</b> da Oportunidade.</p>
+  <div class="cols c2" style="gap:16px;margin-top:16px;flex:none">
+    <div class="cartao" style="font-size:17px"><h3>Onde cada faixa começa e termina</h3>O valor inicial de cada faixa já pertence a ela, e o valor final pertence à faixa seguinte. Ex.: no N2-N3, <b>R$300k é SG2</b>, não SG1.</div>
+    <div class="cartao" style="font-size:17px"><h3>Fora das faixas</h3>Abaixo do piso do nível: <b>SG1</b>. Acima do teto: <b>SG3</b>. Ex.: R$80k no N2-N3 é <b>SG1</b>.</div>
+  </div>
+  <div class="rodape"><span>Onboarding Assignment</span><span>10</span></div>
+  <aside class="nota" hidden><b>Complemento do slide anterior.</b> Aqui estão só os números. Limite de carteira é o total de clientes que o onboarder pode ter. Não há limite por subgrupo: o subgrupo só define quem tem menos clientes daquele tipo. Se o Amount da Oportunidade estiver vazio, a tela pede o valor antes de atribuir, justamente porque ele define o subgrupo.</aside>
+</section>
+
+<!-- CENÁRIOS 1 -->
+<section class="slide" data-titulo="Cenários dentro do POD">
+  <p class="kicker">Cenários</p>
+  <h2 style="font-size:38px;margin-bottom:12px">Cenários dentro do POD</h2>
+  <p class="contrato-ex"><span class="chip">Closer N2-N3 · POD 1</span> <span class="chip">Oportunidade de R$ 450.000 = <b>SG2</b></span> <span class="chip">Limite de carteira: 75</span> <span class="muted">Nas tabelas: clientes no <b>SG2</b> e carteira <b>total</b> de cada onboarder.</span></p>
+  <div class="bcards">
+    <div class="bcard"><div class="topo"><span class="letra">A</span><h3>Empate no subgrupo e no total</h3></div>
+      <table><thead><tr><th>Onboarder</th><th class="n">No SG2</th><th class="n">Total</th></tr></thead><tbody>
+        <tr><td>Fernanda</td><td class="n">10</td><td class="n">30</td></tr><tr><td>Gabriel</td><td class="n">10</td><td class="n">30</td></tr></tbody></table>
+      <div class="res">Fica no POD da Fernanda, entre ela e o Gabriel: decide o desempate.</div>
+      <div class="pq">Os dois têm 10 no SG2 e 30 no total. Vai para quem tem <b>menos pré-onboardings no SG2</b>; se igualar, para quem está <b>há mais tempo sem receber</b>. O POD tem vaga (30 de 75), então o cliente <b>não sai dele</b>.</div></div>
+    <div class="bcard"><div class="topo"><span class="letra">B</span><h3>O colega tem menos no subgrupo</h3></div>
+      <table><thead><tr><th>Onboarder</th><th class="n">No SG2</th><th class="n">Total</th></tr></thead><tbody>
+        <tr class="fora"><td>Fernanda</td><td class="n">10</td><td class="n">30</td></tr><tr class="vence"><td>Gabriel <span class="vence-tag">RECEBE</span></td><td class="n">8</td><td class="n">50</td></tr></tbody></table>
+      <div class="res">Gabriel recebe, mesmo com mais clientes no total.</div>
+      <div class="pq">O que vale primeiro é o <b>subgrupo do cliente</b>: Gabriel tem 8 no SG2 e Fernanda tem 10. A carteira total só entra no <b>empate</b>.</div></div>
+    <div class="bcard"><div class="topo"><span class="letra">C</span><h3>Empate no subgrupo, total diferente</h3></div>
+      <table><thead><tr><th>Onboarder</th><th class="n">No SG2</th><th class="n">Total</th></tr></thead><tbody>
+        <tr class="fora"><td>Fernanda</td><td class="n">10</td><td class="n">40</td></tr><tr class="vence"><td>Gabriel <span class="vence-tag">RECEBE</span></td><td class="n">10</td><td class="n">30</td></tr></tbody></table>
+      <div class="res">Gabriel recebe.</div>
+      <div class="pq">Os dois têm 10 no SG2, então desempata a <b>menor carteira total</b> (30 contra 40). Não existe um limite fixo por subgrupo: o 10 aqui é só o número de cada um.</div></div>
+  </div>
+  <div class="rodape"><span>Onboarding Assignment · exemplos ilustrativos</span><span>11</span></div>
+  <aside class="nota" hidden><b>Responde à dúvida mais comum.</b> "Tenho 30 clientes, 10 em cada subgrupo, e o colega também. Esse cliente vai para ele antes de vir para mim?" Não automaticamente, e ele não sai do POD. Como os dois têm o mesmo número no subgrupo do cliente, desempata a menor carteira total; se empatar de novo, menos pré-onboardings no subgrupo; depois, quem está há mais tempo sem receber. Se tudo empatar, o sistema fica com o primeiro da lista da planilha de carteira, então um empate perfeito é raro e não é decidido por um critério de justiça. Se o colega tiver menos clientes no subgrupo (cenário B), ele recebe antes, mesmo com carteira total maior. Não existe mais um limite fixo de 10 por subgrupo. Conferi todos esses cenários rodando o código da atribuição. Os nomes e números são ilustrativos.</aside>
+</section>
+
+<!-- CENÁRIOS 2 -->
+<section class="slide" data-titulo="Cenários quando o POD enche">
+  <p class="kicker">Cenários</p>
+  <h2 style="font-size:38px;margin-bottom:12px">Cenários quando a carteira enche</h2>
+  <p class="contrato-ex"><span class="chip">Closer N2-N3 · POD 1</span> <span class="chip">Oportunidade de R$ 450.000 = <b>SG2</b></span> <span class="muted">O <b>limite de carteira</b> (75 no N2-N3) é teto: quem chega nele sai da disputa.</span></p>
+  <div class="bcards">
+    <div class="bcard"><div class="topo"><span class="letra">D</span><h3>Um colega bateu o limite de carteira</h3></div>
+      <table><thead><tr><th>Onboarder</th><th class="n">No SG2</th><th class="n">Total</th></tr></thead><tbody>
+        <tr class="vence"><td>Fernanda <span class="vence-tag">RECEBE</span></td><td class="n">12</td><td class="n">40</td></tr><tr class="fora"><td>Gabriel</td><td class="n">0</td><td class="n">75</td></tr></tbody></table>
+      <div class="res">Fernanda recebe.</div>
+      <div class="pq">Gabriel chegou a 75 e <b>não é mais elegível</b>, mesmo com 0 no SG2. O limite de carteira vale antes de qualquer comparação.</div></div>
+    <div class="bcard"><div class="topo"><span class="letra">E</span><h3>O POD inteiro está cheio</h3></div>
+      <table><thead><tr><th>Quem</th><th class="n">Total</th><th class="n">Limite</th></tr></thead><tbody>
+        <tr class="fora"><td>Fernanda</td><td class="n">75</td><td class="n">75</td></tr><tr class="fora"><td>Gabriel</td><td class="n">75</td><td class="n">75</td></tr>
+        <tr><td>Guardião 1</td><td class="n">120</td><td class="n">150</td></tr><tr class="vence"><td>Guardião 2 <span class="vence-tag">RECEBE</span></td><td class="n">90</td><td class="n">150</td></tr></tbody></table>
+      <div class="res">Vai para o guardião de menor carteira.</div>
+      <div class="pq">Só para <b>N2-N3 e N4-N5</b>. No <b>N6+</b> não existe guardião: essa etapa é pulada.</div></div>
+    <div class="bcard"><div class="topo"><span class="letra">F</span><h3>Guardiões cheios, e depois ninguém</h3></div>
+      <table><thead><tr><th>Quem</th><th class="n">Total</th><th class="n">Limite</th></tr></thead><tbody>
+        <tr class="fora"><td>POD da Fernanda e guardiões</td><td class="n">cheios</td><td class="n"></td></tr><tr class="vence"><td>Duda, POD 2 (N2-N3) <span class="vence-tag">RECEBE</span></td><td class="n">20</td><td class="n">75</td></tr></tbody></table>
+      <div class="res">Vai para outro POD do mesmo nível.</div>
+      <div class="pq"><b>Nunca cruza nível.</b> Se todo o nível e os guardiões estiverem cheios, <b>ninguém recebe</b>: o coordenador é avisado por e-mail e a atribuição é manual.</div></div>
+  </div>
+  <div class="rodape"><span>Onboarding Assignment · exemplos ilustrativos</span><span>12</span></div>
+  <aside class="nota" hidden><b>A cascata em ação.</b> Primeiro o POD do Closer (cenários A a D), depois os guardiões (E), depois os outros PODs do mesmo nível (F) e, por fim, o alerta ao coordenador. Mesmo que exista alguém em outro POD com carteira bem menor, o cliente fica no POD do Closer enquanto o POD tiver vaga: a proximidade de POD vem antes do equilíbrio entre PODs. Conferi estes cenários rodando o código da atribuição. Nomes e números são ilustrativos.</aside>
+</section>
+
+<!-- 10 · ETAPA 2 -->
+<section class="slide" data-titulo="Etapa 2 · Agendar welcome">
+  <p class="kicker">Etapa 2 de 3</p>
+  <h2>Agendar a reunião de welcome</h2>
+  <div class="cols c1-2" style="gap:36px">
+    <div>
+      <ul class="pontos menor">
+        <li>Os horários vêm da <b>agenda real do onboarder</b>, nos próximos 30 dias, em horário comercial</li>
+        <li>Escolha um horário e clique em <b>Confirmar reunião</b></li>
+        <li>O evento é criado na agenda do onboarder e o <b>cliente recebe o convite</b> no e-mail informado</li>
+        <li>Sem horário livre? A tela avisa. Combine direto com o onboarder</li>
+      </ul>
+      <div class="aviso">Só avance para o Closed Won depois de confirmar a reunião.</div>
+    </div>
+    <div class="tela gaveta"><div class="topo"><div class="eyebrow">Etapa 2 de 3 · Agendar welcome</div><div class="tit">Estúdio Lume | Curso ↗</div></div>
+      <div class="passos3"><div><i class="feito"></i><span>Atribuir</span></div><div><i class="on"></i><span>Agendar welcome</span></div><div><i></i><span>Closed Won</span></div></div>
+      <div class="corp"><div class="muted" style="font-size:13px">Agenda de <b style="color:#0D0D0D">onboarder.exemplo@hotmart.com</b></div>
+        <div><div class="muted" style="font-size:12px;font-weight:600;margin-bottom:6px">quarta-feira, 14/10</div><div class="horarios"><span>10:00</span><span class="sel">11:00</span><span>14:00</span><span>15:00</span><span>16:00</span></div></div>
+        <div><div class="muted" style="font-size:12px;font-weight:600;margin-bottom:6px">quinta-feira, 15/10</div><div class="horarios"><span>09:00</span><span>10:00</span><span>14:00</span></div></div>
+        <div class="botao escuro">Confirmar reunião</div></div></div>
+  </div>
+  <div class="rodape"><span>Onboarding Assignment · dados fictícios</span><span>10</span></div>
+  <aside class="nota" hidden><b>Atenção.</b> O horário escolhido fica "preso" ao confirmar: se o cliente pedir outro, ajuste direto na agenda do evento. O convite sai pela agenda corporativa da área, então o cliente vê o convite vindo de um e-mail da Hotmart.</aside>
+</section>
+
+<!-- 11 · ETAPA 3 -->
+<section class="slide" data-titulo="Etapa 3 · Closed Won">
+  <p class="kicker">Etapa 3 de 3</p>
+  <h2>Fechar a Oportunidade (Closed Won)</h2>
+  <div class="cols c2" style="gap:26px">
+    <div class="cartao"><h3>Campos obrigatórios</h3>
+      <ul class="pontos menor" style="gap:6px;font-size:17px">
+        <li>Price Policy e Negotiated Fee</li><li>Amount 12 months</li><li>Onboarding Segmentation</li><li>WhatsApp Support Needed</li><li>Closed Reason Detail</li><li>Number of products to be migrated</li><li>Sales Start Date</li><li><b>Proven revenue from the last year</b></li></ul></div>
+    <div>
+      <div class="cartao" style="margin-bottom:14px;font-size:17px"><h3>Também precisa</h3><b>Conta com User ID</b> vinculada na Oportunidade. E, só quando a plataforma atual é "Other", o campo <b>Other Platform</b>.</div>
+      <ol style="margin:0;padding-left:24px;font-size:19px;line-height:1.5;display:flex;flex-direction:column;gap:8px">
+        <li>Preencha o que aparece em <b>vermelho (vazio)</b></li>
+        <li>Clique em <b>Salvar campos no Salesforce</b></li>
+        <li>Clique em <b>Marcar como Closed Won</b></li></ol>
+    </div>
+  </div>
+  <p class="sub" style="margin-top:12px">Os campos que já estão preenchidos ficam recolhidos em "Campos preenchidos".</p>
+  <div class="rodape"><span>Onboarding Assignment</span><span>11</span></div>
+  <aside class="nota" hidden><b>Esta é a etapa em que mais aparecem dúvidas.</b> O Salesforce exige esses campos para dar o Closed Won. A tela mostra "Faltam: ..." com o que está vazio. O Onboarding Owner não precisa ser preenchido: ele vem da etapa 1.</aside>
+</section>
+
+<!-- 12 · CAMPOS QUE TRAVAM -->
+<section class="slide" data-titulo="Campos que costumam travar">
+  <p class="kicker">Atenção a estes campos</p>
+  <h2>Os campos que mais travam o Closed Won</h2>
+  <div class="cols c2" style="gap:20px">
+    <div class="cartao destaque"><h3>Price Policy × Negotiated Fee</h3>O fee depende da política. Escolha a <b>Price Policy primeiro</b>: a lista de fees mostra só os valores aceitos, do maior para o menor.</div>
+    <div class="cartao destaque"><h3>Conta com User ID</h3>A Oportunidade precisa estar ligada a uma <b>Conta que tenha User ID</b>. Use "Trocar" e busque por nome, e-mail ou User ID.</div>
+    <div class="cartao destaque"><h3>Proven revenue</h3>Escreva o texto e, se precisar, <b>cole prints com Ctrl+V</b> (até 3 imagens). Se o campo já estiver preenchido no Salesforce, a tela não altera.</div>
+    <div class="cartao destaque"><h3>Other Platform</h3>Só aparece quando a plataforma atual da Oportunidade é <b>"Other"</b>. Nesse caso, é obrigatório informar qual.</div>
+  </div>
+  <div class="rodape"><span>Onboarding Assignment</span><span>12</span></div>
+  <aside class="nota" hidden><b>Demonstre cada um ao vivo se der.</b> No Negotiated Fee, mostre que ao trocar a Price Policy a lista muda. Nos prints, o limite é o espaço do campo: imagem muito grande é reduzida automaticamente, e a tela avisa se não couber.</aside>
+</section>
+
+<!-- 13 · ERROS -->
+<section class="slide" data-titulo="Quando algo dá errado">
+  <p class="kicker">Resolvendo problemas</p>
+  <h2>Quando algo dá errado</h2>
+  <table class="t">
+    <thead><tr><th style="width:42%">O que aparece</th><th>O que fazer</th></tr></thead>
+    <tbody>
+      <tr><td>A Oportunidade não aparece no funil</td><td>Confira se você é o <b>dono</b> dela no Salesforce e se o estágio é do funil.</td></tr>
+      <tr><td>"Informe o Amount 12 months"</td><td>Digite o valor no painel. Sem ele não há como definir o subgrupo.</td></tr>
+      <tr><td>"Esta Opportunity não pertence a você"</td><td>Só o dono atribui e dá o Closed Won. Peça ao dono ou ajuste o dono no Salesforce.</td></tr>
+      <tr><td>"Capacidade máxima atingida"</td><td>Todos do nível estão no limite. O coordenador já foi avisado por e-mail.</td></tr>
+      <tr><td>"O Salesforce recusou…" ao salvar ou dar o Closed Won</td><td>Leia o motivo na mensagem: quase sempre é um <b>campo obrigatório</b> ou uma combinação inválida (Price Policy × Fee).</td></tr>
+      <tr><td>"Sessão expirada"</td><td>Entre de novo. O que já foi atribuído e salvo permanece.</td></tr>
+    </tbody></table>
+  <div class="rodape"><span>Onboarding Assignment</span><span>13</span></div>
+  <aside class="nota" hidden><b>Mensagem-chave.</b> A tela traz o motivo real devolvido pelo Salesforce. Peça às pessoas para <b>ler a mensagem inteira antes de pedir ajuda</b>; geralmente ela já diz o que falta. Se persistir, enviar um print ao responsável.</aside>
+</section>
+
+<!-- 14 · PAINEL -->
+<section class="slide" data-titulo="Painel de acompanhamento">
+  <p class="kicker">Acompanhamento</p>
+  <h2>O Painel de Acompanhamento</h2>
+  <div class="cols c1-2" style="gap:30px">
+    <ul class="pontos menor">
+      <li><b>Visão geral:</b> clientes em onboarding, vagas livres, quem está no limite e onde há risco</li>
+      <li><b>Carteira:</b> cada onboarder, com a barra de capacidade, filtros e exportação em CSV</li>
+      <li><b>Atribuições:</b> histórico com filtro de data, closer e onboarder, e o racional de cada escolha</li>
+      <li><b>Regras:</b> a cascata, os limites e os subgrupos, sempre à mão</li>
+    </ul>
+    <div class="tela"><div class="abas"><span class="on">Visão geral</span><span>Carteira</span><span>Atribuições</span><span>Regras</span></div>
+      <div class="mini-kpis"><div><b>23</b>Onboarders</div><div><b>747</b>Clientes em Onboarding</div><div><b>483</b>Vagas</div><div><b style="color:#8E1B14">2</b>Acima do limite</div><div><b style="color:#B3261E">4</b>No limite</div></div>
+      <div style="padding:2px 14px 16px;display:flex;flex-direction:column;gap:9px">
+        <div style="display:grid;grid-template-columns:130px 1fr 120px;gap:10px;align-items:center"><span>Onboarder A</span><div class="barra-cap"><i style="width:100%;background:#8E1B14"></i></div><span class="chip red">104% · acima</span></div>
+        <div style="display:grid;grid-template-columns:130px 1fr 120px;gap:10px;align-items:center"><span>Onboarder B</span><div class="barra-cap"><i style="width:78%;background:#FF4000"></i></div><span class="chip amarelo">78% · atenção</span></div>
+        <div style="display:grid;grid-template-columns:130px 1fr 120px;gap:10px;align-items:center"><span>Onboarder C</span><div class="barra-cap"><i style="width:42%;background:#1E7A3D"></i></div><span class="chip ok">42% · tranquilo</span></div></div></div>
+  </div>
+  <p class="sub" style="margin-top:14px">Status: tranquilo (abaixo de 70%), atenção (70% a 99%), no limite (100%) e acima do limite (mais de 100%).</p>
+  <div class="rodape"><span>Onboarding Assignment · dados fictícios</span><span>14</span></div>
+  <aside class="nota" hidden><b>Para quem é.</b> Principalmente líderes e onboarders, mas o Closer também pode consultar para entender a distribuição. Mostre os filtros e o "Exportar CSV". Ao imprimir (Ctrl+P), as quatro abas saem em sequência.</aside>
+</section>
+
+<!-- 15 · BOAS PRÁTICAS -->
+<section class="slide" data-titulo="Boas práticas">
+  <p class="kicker">Para levar</p>
+  <h2>Regras de ouro</h2>
+  <div class="cols c2" style="gap:18px">
+    <div class="cartao"><h3>Faça</h3>
+      <ul class="pontos menor" style="gap:8px;font-size:18px"><li>Confira o <b>Amount</b> antes de atribuir</li><li>Informe o <b>e-mail correto do cliente</b></li><li>Confirme a <b>reunião</b> antes de dar o Closed Won</li><li>Leia a mensagem de erro até o fim</li></ul></div>
+    <div class="cartao"><h3>Evite</h3>
+      <ul class="pontos menor" style="gap:8px;font-size:18px"><li>Atribuir a mesma Oportunidade duas vezes</li><li>Escolher onboarder por fora da ferramenta</li><li>Deixar o painel aberto no meio do fluxo e esquecer</li><li>Compartilhar a senha fora do time</li></ul></div>
+  </div>
+  <div class="aviso claro">Dúvida sobre quem recebeu e por quê? A resposta está no <b>racional</b>, na aba Atribuições do painel.</div>
+  <div class="rodape"><span>Onboarding Assignment</span><span>15</span></div>
+  <aside class="nota" hidden><b>Resumo.</b> Revise rapidamente: atribuir, agendar, dar o Closed Won. Se ficar um card "Em andamento", é só reabrir e continuar.</aside>
+</section>
+
+<!-- 16 · PRÁTICA -->
+<section class="slide preto" data-titulo="Prática guiada">
+  <p class="kicker">Mão na massa</p>
+  <h2>Prática guiada</h2>
+  <div class="cols c2" style="gap:28px">
+    <div>
+      <p class="lead" style="font-size:22px">Abra a demonstração: ela percorre o fluxo inteiro com dados fictícios, sem login e sem risco de gravar nada:</p>
+      <p><span class="mono" style="background:rgba(245,243,239,.12);color:#F5F3EF;font-size:17px">…/Projeto-Onboarding/index-fer.html<b style="color:var(--yellow)">?demo=1</b></span></p>
+      <p class="sub">Uma faixa amarela avisa que é demonstração. Para recomeçar, clique em <b>Reiniciar a demonstração</b>.</p>
+    </div>
+    <div>
+      <ol style="margin:0;padding-left:24px;font-size:19px;line-height:1.5;display:flex;flex-direction:column;gap:7px">
+        <li>Ache uma Oportunidade pela <b>busca</b> (tecla /)</li>
+        <li><b>Atribua</b> o onboarder e veja o resultado</li>
+        <li><b>Agende</b> o welcome</li>
+        <li>Preencha os campos e <b>dê o Closed Won</b></li>
+        <li>Treine os casos especiais: <b>sem Amount</b>, <b>Conta sem User ID</b> e <b>plataforma Other</b></li>
+        <li>Abra o <b>Painel</b> e filtre as atribuições por data</li>
+      </ol>
+    </div>
+  </div>
+  <div class="rodape"><span>Onboarding Assignment</span><span>16</span></div>
+  <aside class="nota" hidden><b>Prática.</b> Circule pela sala. Na demonstração o sistema aplica a regra real de atribuição sobre um time fictício de 4 onboarders, então o resultado é parecido com o de verdade. Para treinar os casos especiais: a Oportunidade "Sem valor definido" pede o Amount; a "Curso de Fotografia" e a "Sem Hotmart ID" começam com a Conta sem User ID (use "Trocar" e busque "Lume"); a "Plataforma Other" exige o campo Other Platform. Para praticar com dados reais, combinar uma Oportunidade de teste com cada pessoa.</aside>
+</section>
+
+<!-- 17 · ENCERRAMENTO -->
+<section class="slide laranja" data-titulo="Dúvidas e suporte">
+  <div style="margin-top:110px">
+    <p class="kicker">Dúvidas e suporte</p>
+    <h1 style="font-size:64px">Perguntas?</h1>
+    <ul class="pontos" style="font-size:24px;margin-top:20px">
+      <li>Responsáveis pela ferramenta: <b>Fernanda Cardoso e Gabriel Botini</b></li>
+      <li>Canal para dúvidas e erros: <b>Google Chat Sales Ops &lt;&gt; Closers</b></li>
+      <li>Ao reportar um erro, envie o <b>print da mensagem</b> e o <b>ID da Oportunidade</b></li>
+    </ul>
+  </div>
+  <div class="rodape"><span>Onboarding Assignment</span><span>17</span></div>
+  <aside class="nota" hidden><b>Fechamento.</b> Os contatos já estão preenchidos (Fernanda Cardoso, Gabriel Botini e o Google Chat Sales Ops &lt;&gt; Closers). Agradeça e lembre que o painel e a tela de atribuição estão nos favoritos de todos.</aside>
+</section>
+
+</main>
+
+<div id="notas" role="region" aria-label="Notas do apresentador"></div>
+<div id="dica">← → navegar · G visão geral dos slides · N notas · F tela cheia</div>
+
+<script>
+(function(){
+  const palco = document.getElementById('palco');
+  const slides = [...palco.querySelectorAll('.slide')];
+  const notasEl = document.getElementById('notas');
+  const prog = document.getElementById('progresso');
+  // cada slide vai dentro de uma "célula" (serve para a grade e para a impressão)
+  const celulas = slides.map(s => { const c = document.createElement('div'); c.className = 'cel'; s.parentNode.insertBefore(c, s); c.appendChild(s); return c; });
+  const notas = slides.map(s => { const n = s.querySelector('.nota'); const t = n ? n.innerHTML : ''; if (n) n.remove(); return t; });
+  slides.forEach((sl, i) => { const r = sl.querySelector('.rodape span:last-child'); if (r) r.textContent = String(i + 1); });
+  let atual = 0, mostrarNotas = false;
+
+  function ajustar(){
+    if (document.body.classList.contains('grade')) { palco.style.transform = ''; return; }
+    const k = Math.min(innerWidth / 1280, innerHeight / 720);
+    palco.style.transform = 'translate(-50%,-50%) scale(' + k + ')';
+  }
+  function ir(i, atualizarHash){
+    atual = Math.max(0, Math.min(slides.length - 1, i));
+    celulas.forEach((c, j) => { c.classList.toggle('ativo', j === atual); c.setAttribute('aria-hidden', String(j !== atual)); });
+    prog.style.width = ((atual + 1) / slides.length * 100) + '%';
+    notasEl.innerHTML = notas[atual] ? '<b>Slide ' + (atual + 1) + ' · ' + (slides[atual].dataset.titulo || '') + '</b><br>' + notas[atual] : '';
+    document.title = (atual + 1) + '/' + slides.length + ' · ' + (slides[atual].dataset.titulo || '') + ' · Treinamento';
+    if (atualizarHash !== false) { try { history.replaceState(null, '', '#' + (atual + 1)); } catch (e) {} }
+  }
+  function grade(abrir){
+    const on = abrir === undefined ? !document.body.classList.contains('grade') : abrir;
+    document.body.classList.toggle('grade', on); ajustar();
+    if (!on) ir(atual);
+  }
+  celulas.forEach((c, i) => c.addEventListener('click', () => { if (document.body.classList.contains('grade')) { atual = i; grade(false); } }));
+  document.addEventListener('keydown', e => {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    const k = e.key;
+    if (document.body.classList.contains('grade')) { if (k === 'Escape' || k === 'g' || k === 'G' || k === 'Enter') grade(false); return; }
+    if (k === 'ArrowRight' || k === 'ArrowDown' || k === 'PageDown' || k === ' ' || k === 'Enter') { e.preventDefault(); ir(atual + 1); }
+    else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp' || k === 'Backspace') { e.preventDefault(); ir(atual - 1); }
+    else if (k === 'Home') ir(0); else if (k === 'End') ir(slides.length - 1);
+    else if (k === 'g' || k === 'G') grade(true);
+    else if (k === 'n' || k === 'N') { mostrarNotas = !mostrarNotas; notasEl.classList.toggle('on', mostrarNotas); }
+    else if (k === 'f' || k === 'F') { if (!document.fullscreenElement) document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
+  });
+  // toque: deslizar para os lados; clique perto das bordas
+  let x0 = null;
+  document.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', e => { if (x0 === null || document.body.classList.contains('grade')) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) ir(atual + (dx < 0 ? 1 : -1)); x0 = null; });
+  palco.addEventListener('click', e => { if (document.body.classList.contains('grade')) return; const r = palco.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width; if (x > .85) ir(atual + 1); else if (x < .15) ir(atual - 1); });
+  addEventListener('resize', ajustar);
+  addEventListener('hashchange', () => { const n = parseInt((location.hash || '').slice(1), 10); if (n) ir(n - 1, false); });
+  ajustar();
+  const inicio = parseInt((location.hash || '').slice(1), 10);
+  ir(inicio ? inicio - 1 : 0, false);
+  if (/[?&]notas(=|&|$)/.test(location.search)) { mostrarNotas = true; notasEl.classList.add('on'); }
+})();
+</script>
+</body>
+</html>
