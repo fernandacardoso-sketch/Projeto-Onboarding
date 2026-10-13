@@ -510,6 +510,93 @@
   @media print{ .btn-copiar, .copiado{ display:none !important; } }
   .casc-passos li > div .mut{ display:block; font-size:12.5px; }
 
+  /* ---- Regras: página que rola inteira, cascata em fluxo, tabela larga ---- */
+  body.pagina-rola #appScreen{ height:auto; min-height:100vh; }
+  body.pagina-rola .panel.rola{ overflow:visible; padding-bottom:24px; }
+  .regras-pag{ width:100%; max-width:1080px; margin:0 auto; display:flex; flex-direction:column; gap:20px; }
+  .regras-pag .bloco h2{ font-size:16px; }
+  .avisos{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:10px; margin:0 0 18px; }
+  .aviso.destaque-regra{ display:flex; align-items:flex-start; gap:10px; margin:0; padding:10px 14px; font-size:13px; font-weight:400; line-height:1.45; border-radius:var(--r-md); }
+  .aviso svg{ flex:none; width:18px; height:18px; margin-top:1px; }
+  .aviso b{ display:block; font-weight:700; }
+  .fluxo{ display:grid; grid-template-columns:repeat(4,1fr); gap:34px; list-style:none; padding:0; margin:0; }
+  .fluxo .passo{ display:flex; flex-direction:column; height:100%; padding:16px 16px 18px; }
+  .fluxo .passo .n{ width:30px; height:30px; font-size:15px; margin-bottom:10px; }
+  .fluxo .passo h3{ font-size:15px; margin:0 0 6px; }
+  .fluxo .passo p{ margin:0; font-size:13px; line-height:1.5; color:var(--text-muted); }
+  .fluxo .passo:not(:last-child)::after{ content:""; position:absolute; top:30px; right:-34px; width:34px; height:2px; background:var(--border-strong); }
+  .fluxo .passo:not(:last-child)::before{ content:""; position:absolute; top:26px; right:-35px; width:9px; height:9px; border-top:2px solid var(--text-muted); border-right:2px solid var(--text-muted); transform:rotate(45deg); z-index:1; }
+  @media (max-width:1000px){ .fluxo{ grid-template-columns:repeat(2,1fr); gap:14px; } .fluxo .passo::after, .fluxo .passo::before{ display:none; } }
+  @media (max-width:560px){ .fluxo{ grid-template-columns:1fr; } }
+  .regras-pag .regra{ padding:20px 24px; }
+  .tab-larga{ width:100%; overflow-x:auto; }
+  .tab-regra{ width:100%; min-width:720px; border-collapse:collapse; margin:4px 0 0; font-size:13.5px; }
+  .tab-regra th{ position:static; text-align:left; padding:10px 14px; font-size:11.5px; background:var(--head-bg); border:0; border-bottom:1px solid var(--border-strong); }
+  .tab-regra td{ padding:12px 14px; border:0; border-bottom:1px solid var(--border); vertical-align:middle; }
+  .tab-regra tr:last-child td{ border-bottom:0; }
+  .tab-regra .nivel b{ display:block; font-size:14px; }
+  .tab-regra .nivel small{ display:block; font-size:12px; color:var(--text-muted); font-weight:400; margin-top:2px; }
+  .tab-regra .col-lim{ font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .chip-sg{ display:inline-flex; align-items:center; gap:7px; padding:4px 11px 4px 9px; font-size:12.5px; font-weight:600; border-radius:var(--r-pill); background:var(--surface-sunken); border:1px solid var(--border-strong); white-space:nowrap; }
+  .chip-sg::before{ content:""; width:10px; height:10px; border-radius:3px; background:var(--sg1); }
+  .chip-sg.cor-sg2::before{ background:var(--sg2); } .chip-sg.cor-sg3::before{ background:var(--sg3); }
+  .regra h3 small{ font-size:12.5px; font-weight:500; margin-left:6px; }
+  .criterios-regra{ list-style:none; padding:0; margin:10px 0 0; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; }
+  .criterios-regra li{ display:flex; align-items:flex-start; gap:12px; margin:0; padding:12px 14px; background:var(--surface-sunken); border-radius:var(--r-md); font-size:13.5px; line-height:1.45; }
+  .criterios-regra .n{ flex:none; display:grid; place-items:center; width:26px; height:26px; font-size:13px; font-weight:800; color:var(--black); background:var(--orange); border-radius:50%; }
+  .como-ler{ font-size:12px; line-height:1.6; color:var(--text-muted); }
+  .como-ler h2{ font-size:14px !important; color:var(--text); }
+  .como-ler ul.notas{ font-size:12px; margin:0 0 12px; padding-left:18px; overflow:visible; }
+  .como-ler ul.notas b{ color:var(--text); }
+
+  /* ---- Visão geral: faixa de alerta e legenda de status ---- */
+  .banner-crit{ flex:none; display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:var(--r-md); font-size:14px; font-weight:600; border:1px solid var(--border-strong); background:var(--card-bg); }
+  .banner-crit .ico svg{ width:18px; height:18px; display:block; }
+  .banner-crit.grave{ background:var(--over-bg); color:var(--over-text); border-color:var(--over-bar); }
+  .banner-crit.medio{ background:var(--warn-bg); color:var(--warn-text); border-color:transparent; }
+  .banner-crit.ok{ background:var(--ok-bg); color:var(--ok-text); border-color:transparent; }
+  .link-crit{ font:inherit; font-weight:700; color:inherit; background:none; padding:1px 3px; border-radius:4px; text-decoration:underline; text-underline-offset:3px; cursor:pointer; }
+  .link-crit:hover{ text-decoration-thickness:2px; }
+  .link-crit:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  .legenda-status{ flex:none; display:flex; flex-wrap:wrap; align-items:center; gap:6px 18px; font-size:12.5px; color:var(--text-muted); }
+  .legenda-status .rot{ font-weight:700; color:var(--text); }
+  .legenda-status .it{ display:inline-flex; align-items:center; gap:8px; }
+
+  /* ---- ordenação nas tabelas pequenas ---- */
+  .mini th{ padding:0; }
+  .mini th > .ord{ padding:6px 8px; font-size:11.5px; }
+  .mini{ min-width:560px; }
+  #resumoPod{ }
+  .mini td:first-child, .mini th:first-child{ position:sticky; left:0; background:var(--card-bg); z-index:1; }
+
+  /* ---- telas menores: tabelas rolam na horizontal e a primeira coluna fica fixa ---- */
+  #tabelaCarteira table{ min-width:940px; }
+  #tabelaAtrib table{ min-width:1240px; }
+  #tabelaCarteira thead th:first-child, #tabelaCarteira tr.lin td:first-child{ position:sticky; left:0; box-shadow:1px 0 0 var(--border); }
+  #tabelaCarteira thead th:first-child{ z-index:4; background:var(--head-bg); }
+  #tabelaCarteira tr.lin td:first-child{ z-index:1; background:var(--card-bg); }
+  #tabelaCarteira tr.lin:hover td:first-child{ background:linear-gradient(var(--accent-weak), var(--accent-weak)), var(--card-bg); }
+  #tabelaAtrib thead th:nth-child(-n+2), #tabelaAtrib tr.lin td:nth-child(-n+2){ position:sticky; }
+  #tabelaAtrib thead th:nth-child(1), #tabelaAtrib tr.lin td:nth-child(1){ left:0; width:50px; min-width:50px; max-width:50px; box-sizing:border-box; }
+  #tabelaAtrib thead th:nth-child(2), #tabelaAtrib tr.lin td:nth-child(2){ left:50px; box-shadow:1px 0 0 var(--border); }
+  #tabelaAtrib thead th:nth-child(-n+2){ z-index:4; background:var(--head-bg); }
+  #tabelaAtrib tr.lin td:nth-child(-n+2){ z-index:1; background:var(--card-bg); }
+  #tabelaAtrib tr.lin:hover td:nth-child(-n+2){ background:linear-gradient(var(--accent-weak), var(--accent-weak)), var(--card-bg); }
+  th.num > .ord{ justify-content:flex-end; }
+
+  /* ---- estados vazios e esqueleto de carregamento ---- */
+  .vazio-amigavel{ display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .vazio-amigavel svg{ width:34px; height:34px; color:var(--text-muted); }
+  .vazio-amigavel b{ font-size:15px; font-weight:700; color:var(--text); }
+  .vazio-amigavel .mut{ font-size:13px; }
+  .esq-bar{ display:block; height:12px; border-radius:6px; background:linear-gradient(90deg, var(--surface-sunken) 25%, var(--border) 50%, var(--surface-sunken) 75%); background-size:200% 100%; animation:esqueleto 1.3s linear infinite; }
+  @keyframes esqueleto{ to{ background-position:-200% 0; } }
+  .vaga .esq-bar + .esq-bar{ margin-top:8px; } .ccard .esq-bar{ margin:6px 0; } .ccard .esq-bar:first-child{ height:16px; }
+  tr.esq td{ padding:14px 12px; }
+  body.carga-inicial .kpi b{ color:transparent; width:56px; border-radius:6px; background:linear-gradient(90deg, var(--surface-sunken) 25%, var(--border) 50%, var(--surface-sunken) 75%); background-size:200% 100%; animation:esqueleto 1.3s linear infinite; user-select:none; }
+  @media (prefers-reduced-motion:reduce){ .esq-bar, body.carga-inicial .kpi b{ animation:none; } }
+  @media print{ .banner-crit, .legenda-status{ -webkit-print-color-adjust:exact; print-color-adjust:exact; } .tab-larga{ overflow:visible; } #tabelaCarteira thead th:first-child, #tabelaCarteira tr.lin td:first-child, #tabelaAtrib thead th, #tabelaAtrib tr.lin td{ position:static !important; } #tabelaCarteira table, #tabelaAtrib table, .mini{ min-width:0 !important; } }
+
   .regra ul.notas{ margin:10px 0 0; padding-left:18px; font-size:12.5px; line-height:1.55; color:var(--text-muted); }
   .regra ul.notas li{ margin-bottom:5px; }
   .regra ul.notas b{ color:var(--text); font-weight:600; }
@@ -681,6 +768,7 @@
       <div class="panel" id="panel-visao-geral" role="tabpanel" aria-labelledby="tab-visao-geral">
         <h2 class="print-titulo">Visão geral</h2>
         <div class="vg">
+          <div class="banner-crit" id="bannerCrit" role="status" hidden></div>
           <div class="kpis" id="kpis">
             <div class="kpi"><b id="kpiTotalOnb">-</b><span>Analistas (com guardiões)</span></div>
             <div class="kpi"><b id="kpiCarteiraTotal">-</b><span>Clientes em Onboarding</span></div>
@@ -688,6 +776,7 @@
             <div class="kpi" id="kpiAcimaBox"><b id="kpiAcima">-</b><span>Acima do limite</span><small>carteira &gt; limite</small></div>
             <div class="kpi" id="kpiLimiteBox"><b id="kpiNoLimite">-</b><span>No limite</span><small>carteira = limite</small></div>
           </div>
+          <div class="legenda-status" data-legenda-status></div>
 
           <section class="bloco" aria-labelledby="h-vagas">
             <h2 id="h-vagas">Vagas livres por nível <small>os guardiões ficam à parte: só recebem clientes quando o POD está no limite</small></h2>
@@ -697,11 +786,11 @@
           <div class="duas">
             <section class="bloco" aria-labelledby="h-nivel">
               <h2 id="h-nivel">Resumo por nível</h2>
-              <table class="mini"><thead><tr><th scope="col" class="col-chave">Nível</th><th scope="col" class="num">Analistas</th><th scope="col" class="num">Clientes / Limite</th><th scope="col">Ocupação</th><th scope="col" class="num">Vagas livres (clientes)</th><th scope="col" class="num">Analistas com vaga</th></tr></thead><tbody id="resumoNivel"></tbody></table>
+              <table class="mini"><thead><tr id="cabResumoNivel"><th scope="col" data-col="rot" class="col-chave"><button type="button" class="ord">Nível</button></th><th scope="col" data-col="n" class="num"><button type="button" class="ord">Analistas</button></th><th scope="col" data-col="carteira" class="num"><button type="button" class="ord">Clientes / Limite</button></th><th scope="col" data-col="pct"><button type="button" class="ord">Ocupação</button></th><th scope="col" data-col="livres" class="num"><button type="button" class="ord">Vagas livres (clientes)</button></th><th scope="col" data-col="comVaga" class="num"><button type="button" class="ord">Analistas com vaga</button></th></tr></thead><tbody id="resumoNivel"></tbody></table>
             </section>
             <section class="bloco" aria-labelledby="h-pod">
               <h2 id="h-pod">Resumo por POD</h2>
-              <table class="mini"><thead><tr><th scope="col" class="col-chave">POD</th><th scope="col" class="col-chave">Nível</th><th scope="col" class="num">Analistas</th><th scope="col" class="num">Clientes / Limite</th><th scope="col">Ocupação</th><th scope="col" class="num">Vagas livres (clientes)</th><th scope="col" class="num">Analistas com vaga</th></tr></thead><tbody id="resumoPod"></tbody></table>
+              <table class="mini"><thead><tr id="cabResumoPod"><th scope="col" data-col="pod" class="col-chave"><button type="button" class="ord">POD</button></th><th scope="col" data-col="niveis" class="col-chave"><button type="button" class="ord">Nível</button></th><th scope="col" data-col="n" class="num"><button type="button" class="ord">Analistas</button></th><th scope="col" data-col="carteira" class="num"><button type="button" class="ord">Clientes / Limite</button></th><th scope="col" data-col="pct"><button type="button" class="ord">Ocupação</button></th><th scope="col" data-col="livres" class="num"><button type="button" class="ord">Vagas livres (clientes)</button></th><th scope="col" data-col="comVaga" class="num"><button type="button" class="ord">Analistas com vaga</button></th></tr></thead><tbody id="resumoPod"></tbody></table>
             </section>
           </div>
 
@@ -741,6 +830,7 @@
           <span class="lg" title="Pré-onboarding: clientes com status Pre Onboarding no Salesforce. Eles já estão contados na carteira."><i class="sw sw-pre"></i>Pré-onboarding</span>
           <span class="lg"><i class="sw-lim"></i>Limite</span>
         </div>
+        <div class="legenda-status" data-legenda-status></div>
 
         <div class="tabela" id="tabelaCarteira" tabindex="0" aria-label="Carteira por onboarder">
           <table>
@@ -782,16 +872,16 @@
         <div class="tabela" id="tabelaAtrib" tabindex="0" aria-label="Atribuições">
           <table>
             <thead>
-              <tr>
+              <tr id="cabAtrib">
                 <th scope="col"><span class="sem-ord"><span class="sr-only">Detalhe</span></span></th>
-                <th scope="col"><span class="sem-ord">Data / hora</span></th>
-                <th scope="col"><span class="sem-ord">Cliente</span></th>
-                <th scope="col"><span class="sem-ord">Hotmart ID</span></th>
-                <th scope="col"><span class="sem-ord">Onboarder</span></th>
-                <th scope="col"><span class="sem-ord">Closer</span></th>
-                <th scope="col"><span class="sem-ord">Segmentação</span></th>
-                <th scope="col" class="num"><span class="sem-ord">Amount 12 meses</span></th>
-                <th scope="col"><span class="sem-ord">Etapa da cascata</span></th>
+                <th scope="col" data-col="data"><button type="button" class="ord">Data / hora</button></th>
+                <th scope="col" data-col="cliente"><button type="button" class="ord">Cliente</button></th>
+                <th scope="col" data-col="hotmart"><button type="button" class="ord">Hotmart ID</button></th>
+                <th scope="col" data-col="onboarder"><button type="button" class="ord">Onboarder</button></th>
+                <th scope="col" data-col="closer"><button type="button" class="ord">Closer</button></th>
+                <th scope="col" data-col="seg"><button type="button" class="ord">Segmentação</button></th>
+                <th scope="col" data-col="amount" class="num"><button type="button" class="ord">Amount 12 meses</button></th>
+                <th scope="col" data-col="etapa"><button type="button" class="ord">Etapa da cascata</button></th>
               </tr>
             </thead>
             <tbody id="corpoAtrib"></tbody>
@@ -803,44 +893,56 @@
 
       <!-- ===== REGRAS ===== -->
       <div class="panel rola" id="panel-regras" role="tabpanel" aria-labelledby="tab-regras" hidden>
-        <h2 class="print-titulo">Regras de atribuição</h2>
-        <section class="bloco" aria-labelledby="h-cascata">
-          <h2 id="h-cascata">Cascata de decisão <small>quatro passos, sempre nesta ordem</small></h2>
-          <p style="margin:0 0 10px"><span class="destaque-regra">Nunca cruza nível</span><span class="destaque-regra">N6+ não tem guardião</span></p>
-          <ol class="passos" style="list-style:none;padding:0;margin:0">
-            <li class="passo"><span class="n" aria-hidden="true">1</span><h3>Mesmo POD</h3>Onboarders do POD do Closer com carteira abaixo do limite do nível.</li>
-            <li class="passo"><span class="n" aria-hidden="true">2</span><h3>Guardião</h3>Só se o POD estiver no limite. Vale para N2-N3 e N4-N5, nunca N6+. Escolhe o guardião com menor carteira (limite 150).</li>
-            <li class="passo"><span class="n" aria-hidden="true">3</span><h3>Outro POD, mesmo nível</h3>Mesma lógica do passo 1, em qualquer POD do nível do Closer.</li>
-            <li class="passo"><span class="n" aria-hidden="true">4</span><h3>Alerta ao coordenador</h3>Se todo o nível (guardiões inclusos) estiver no limite, é enviado e-mail ao coordenador e nada é atribuído.</li>
-          </ol>
-        </section>
-        <div class="regras">
-          <section class="regra">
-            <h3>Limites e segmentação por receita (12 meses)</h3>
-            <table>
-              <thead><tr><th scope="col">Nível</th><th scope="col">Limite</th><th scope="col">SG1</th><th scope="col">SG2</th><th scope="col">SG3</th></tr></thead>
-              <tbody>
-                <tr><td>N2-N3<br><small class="mut" style="font-weight:400">N2: R$120k–599k · N3: R$600k–999k</small></td><td>75 clientes</td><td>R$120k a R$299k</td><td>R$300k a R$599k</td><td>R$600k a R$999k</td></tr>
-                <tr><td>N4-N5<br><small class="mut" style="font-weight:400">N4: R$1M–1,9M · N5: R$2M–4,9M</small></td><td>50 clientes</td><td>R$1M a R$1,9M</td><td>R$2M a R$2,9M</td><td>R$3M a R$4,9M</td></tr>
-                <tr><td>N6+<br><small class="mut" style="font-weight:400">N6: acima de R$5M</small></td><td>25 clientes</td><td>R$5M a R$9,9M</td><td>R$10M a R$14,9M</td><td>a partir de R$15M</td></tr>
-                <tr><td>Guardian</td><td>150 clientes</td><td colspan="3" class="mut">sem subgrupos</td></tr>
-              </tbody>
-            </table>
+        <div class="regras-pag">
+          <h2 class="print-titulo">Regras de atribuição</h2>
+
+          <section class="bloco" aria-labelledby="h-cascata">
+            <h2 id="h-cascata">Cascata de atribuição <small>quatro passos, sempre nesta ordem</small></h2>
+            <div class="avisos" role="note" aria-label="Avisos da cascata">
+              <div class="aviso destaque-regra"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.01"/></svg><div><b>Nunca cruza nível</b><span>Um Closer N2-N3 só recebe onboarder N2-N3, e assim por diante.</span></div></div>
+              <div class="aviso destaque-regra"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.01"/></svg><div><b>N6+ não tem guardião</b><span>No N6+ o passo 2 não existe: se o POD estiver no limite, vai direto ao passo 3.</span></div></div>
+            </div>
+            <ol class="passos fluxo">
+              <li class="passo"><span class="n" aria-hidden="true">1</span><h3>Mesmo POD</h3><p>Onboarders do POD do Closer com carteira abaixo do limite do nível.</p></li>
+              <li class="passo"><span class="n" aria-hidden="true">2</span><h3>Guardião</h3><p>Só se o POD estiver no limite. Vale para N2-N3 e N4-N5. Escolhe o guardião com menor carteira (limite 150).</p></li>
+              <li class="passo"><span class="n" aria-hidden="true">3</span><h3>Outro POD, mesmo nível</h3><p>Mesma lógica do passo 1, em qualquer POD do nível do Closer.</p></li>
+              <li class="passo"><span class="n" aria-hidden="true">4</span><h3>Alerta ao coordenador</h3><p>Se todo o nível, guardiões inclusos, estiver no limite, o coordenador recebe um e-mail e nada é atribuído.</p></li>
+            </ol>
+          </section>
+
+          <section class="regra" aria-labelledby="h-limites">
+            <h3 id="h-limites">Limites e segmentação por receita (12 meses)</h3>
+            <div class="tab-larga">
+              <table class="tab-regra">
+                <thead><tr><th scope="col">Nível</th><th scope="col">Limite</th><th scope="col">SG1</th><th scope="col">SG2</th><th scope="col">SG3</th></tr></thead>
+                <tbody>
+                  <tr><td class="nivel"><b>N2-N3</b><small>N2: R$120k–599k · N3: R$600k–999k</small></td><td class="col-lim">75 clientes</td><td><span class="chip-sg cor-sg1">R$120k a R$299k</span></td><td><span class="chip-sg cor-sg2">R$300k a R$599k</span></td><td><span class="chip-sg cor-sg3">R$600k a R$999k</span></td></tr>
+                  <tr><td class="nivel"><b>N4-N5</b><small>N4: R$1M–1,9M · N5: R$2M–4,9M</small></td><td class="col-lim">50 clientes</td><td><span class="chip-sg cor-sg1">R$1M a R$1,9M</span></td><td><span class="chip-sg cor-sg2">R$2M a R$2,9M</span></td><td><span class="chip-sg cor-sg3">R$3M a R$4,9M</span></td></tr>
+                  <tr><td class="nivel"><b>N6+</b><small>N6: acima de R$5M</small></td><td class="col-lim">25 clientes</td><td><span class="chip-sg cor-sg1">R$5M a R$9,9M</span></td><td><span class="chip-sg cor-sg2">R$10M a R$14,9M</span></td><td><span class="chip-sg cor-sg3">a partir de R$15M</span></td></tr>
+                  <tr><td class="nivel"><b>Guardian</b></td><td class="col-lim">150 clientes</td><td colspan="3" class="mut">sem subgrupos</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="regra" aria-labelledby="h-quem">
+            <h3 id="h-quem">Quem recebe a Oportunidade <small class="mut">critérios em ordem, do 1 ao 4</small></h3>
+            <ol class="curta criterios-regra">
+              <li><span class="n" aria-hidden="true">1</span><span>Quem tem menos clientes no subgrupo da Oportunidade (SG1, SG2 ou SG3).</span></li>
+              <li><span class="n" aria-hidden="true">2</span><span>Empate: menor carteira total.</span></li>
+              <li><span class="n" aria-hidden="true">3</span><span>Empate: menos pré-onboardings no subgrupo.</span></li>
+              <li><span class="n" aria-hidden="true">4</span><span>Empate final: quem está há mais tempo sem receber uma atribuição.</span></li>
+            </ol>
+          </section>
+
+          <section class="bloco como-ler" aria-labelledby="h-ler">
+            <h2 id="h-ler">Como ler esta tabela</h2>
             <ul class="notas" id="notasSegmentacao">
               <li><b>Faixas:</b> o valor inicial de cada faixa já pertence a ela, e o valor final pertence à faixa seguinte. Ex.: no N2-N3, R$300k é SG2, não SG1.</li>
               <li><b>Fora das faixas:</b> o valor abaixo do piso do nível entra no SG1 e o valor acima do teto entra no SG3.</li>
               <li><b>Quem concorre:</b> só os onboarders abaixo do limite de carteira, que são os do POD do Closer ou, na etapa de outro POD, os do mesmo nível. Guardiões não usam subgrupos.</li>
             </ul>
-            <p>Status: <span class="status-tag st-ok">tranquilo</span> abaixo de 70% · <span class="status-tag st-atencao">atenção</span> 70% a 99% · <span class="status-tag st-limite">no limite</span> 100% · <span class="status-tag st-acima">acima do limite</span> mais de 100%.</p>
-          </section>
-          <section class="regra">
-            <h3>Quem recebe a Oportunidade</h3>
-            <ol class="curta">
-              <li>Quem tem menos clientes no subgrupo da Oportunidade (SG1, SG2 ou SG3).</li>
-              <li>Empate: menor carteira total.</li>
-              <li>Empate: menos pré-onboardings no subgrupo.</li>
-              <li>Empate final: quem está há mais tempo sem receber uma atribuição.</li>
-            </ol>
+            <div class="legenda-status" data-legenda-status></div>
           </section>
         </div>
       </div>
@@ -1058,6 +1160,11 @@
   let nivelAtivo = 'todos', agruparPod = false, modoCarteira = 'tabela';
   let ordem = { col: 'status', dir: 'desc' };
   let periodo = 'tudo', ocultarTestes = false;
+  let abaAtual = 'visao-geral', paramsPendentes = null;
+  let ordemAtrib = { col: null, dir: 'desc' };                      // null = ordem do servidor (mais recentes primeiro)
+  const resumoOrd = { nivel: { col: null, dir: 'asc' }, pod: { col: null, dir: 'asc' } };
+  const COLS_CARTEIRA = ['nome', 'pod', 'level', 'pct', 'livres', 'pre', 'status'];
+  const COLS_ATRIB = ['data', 'cliente', 'hotmart', 'onboarder', 'closer', 'seg', 'amount', 'etapa'];
   let visiveisAtrib = POR_PAGINA;
   const expandidasCarteira = new Set(), expandidasAtrib = new Set();
 
@@ -1073,7 +1180,7 @@
 
   // ── abas (hash na URL, última aba lembrada, setas do teclado) ──
   function abaInicial(){
-    const hsh = (location.hash || '').replace('#', '');
+    const hsh = lerHash().aba;
     if (ABAS.includes(hsh)) return hsh;
     try { const s = localStorage.getItem(CHAVE_ABA); if (ABAS.includes(s)) return s; } catch (e) {}
     return 'visao-geral';
@@ -1087,7 +1194,7 @@
       p.hidden = !sel;
       if (sel && focar) t.focus();
     });
-    try { history.replaceState(null, '', '#' + id); } catch (e) {}
+    abaAtual = id; document.body.classList.toggle('pagina-rola', id === 'regras'); persistirUrl();
     try { localStorage.setItem(CHAVE_ABA, id); } catch (e) {}
   }
   document.querySelector('.tabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (b) selecionarAba(b.dataset.aba); });
@@ -1101,7 +1208,121 @@
     else if (e.key === 'End') j = ABAS.length - 1;
     if (j !== null) { e.preventDefault(); selecionarAba(ABAS[j], true); }
   });
-  window.addEventListener('hashchange', () => { const hsh = (location.hash || '').replace('#', ''); if (ABAS.includes(hsh)) selecionarAba(hsh); });
+  window.addEventListener('hashchange', () => {
+    const { aba, params } = lerHash(); if (!ABAS.includes(aba)) return;
+    aplicarParametros(params); selecionarAba(aba); renderVisaoGeral(); renderCarteira(); renderAtrib();
+  });
+  // ── estado na URL: #aba?filtro=valor (aba, filtros, ordenação e modo de exibição) ──
+  function lerHash(){
+    const raw = (location.hash || '').replace(/^#/, ''), i = raw.indexOf('?');
+    return { aba: i < 0 ? raw : raw.slice(0, i), params: new URLSearchParams(i < 0 ? '' : raw.slice(i + 1)) };
+  }
+  function estadoParams(){
+    const p = new URLSearchParams();
+    if (nivelAtivo !== 'todos') p.set('nivel', nivelAtivo);
+    if (filtroPod.value) p.set('pod', filtroPod.value);
+    if (filtroStatus.value) p.set('status', filtroStatus.value);
+    if (carteiraBusca.value.trim()) p.set('q', carteiraBusca.value.trim());
+    if (modoCarteira !== 'tabela') p.set('modo', modoCarteira);
+    if (agruparPod) p.set('grupo', '1');
+    if (ordem.col !== 'status' || ordem.dir !== 'desc') p.set('ord', ordem.col + '.' + ordem.dir);
+    if (periodo !== 'tudo') p.set('per', periodo);
+    if (periodo === 'custom') { if (dataDe.value) p.set('de', dataDe.value); if (dataAte.value) p.set('ate', dataAte.value); }
+    if (filtroCloser.value) p.set('closer', filtroCloser.value);
+    if (filtroOnboarder.value) p.set('onb', filtroOnboarder.value);
+    if (filtroNivelAtrib.value) p.set('nv', filtroNivelAtrib.value);
+    if (ocultarTestes) p.set('teste', '1');
+    if (ordemAtrib.col) p.set('oa', ordemAtrib.col + '.' + ordemAtrib.dir);
+    return p;
+  }
+  function persistirUrl(){
+    const p = paramsPendentes || estadoParams(), qs = p.toString();   // enquanto os dados não chegam, mantém o que veio no link
+    try { history.replaceState(null, '', '#' + abaAtual + (qs ? '?' + qs : '')); } catch (e) {}
+  }
+  function aplicarParametros(p){
+    const nv = p.get('nivel'); nivelAtivo = ['N2-N3', 'N4-N5', 'N6+', 'Guardian'].includes(nv) ? nv : 'todos';
+    filtroPod.value = p.get('pod') || ''; filtroStatus.value = p.get('status') || ''; carteiraBusca.value = p.get('q') || '';
+    agruparPod = p.get('grupo') === '1';
+    definirModo(p.get('modo') === 'cards' ? 'cards' : 'tabela');
+    const o = (p.get('ord') || '').split('.'); ordem = COLS_CARTEIRA.includes(o[0]) && ['asc', 'desc'].includes(o[1]) ? { col: o[0], dir: o[1] } : { col: 'status', dir: 'desc' };
+    const per = p.get('per') || 'tudo', ymd = v => /^\d{4}-\d{2}-\d{2}$/.test(v || '') ? v : '';
+    if (['hoje', '7', '30', 'tudo'].includes(per)) calcularPeriodo(per);
+    else if (per === 'custom') { periodo = 'custom'; dataDe.value = ymd(p.get('de')); dataAte.value = ymd(p.get('ate')); }
+    else calcularPeriodo('tudo');
+    filtroCloser.value = p.get('closer') || ''; filtroOnboarder.value = p.get('onb') || '';
+    filtroNivelAtrib.value = ['N2-N3', 'N4-N5', 'N6+'].includes(p.get('nv')) ? p.get('nv') : '';
+    ocultarTestes = p.get('teste') === '1'; document.getElementById('ocultarTestes').setAttribute('aria-pressed', String(ocultarTestes));
+    const oa = (p.get('oa') || '').split('.'); ordemAtrib = COLS_ATRIB.includes(oa[0]) && ['asc', 'desc'].includes(oa[1]) ? { col: oa[0], dir: oa[1] } : { col: null, dir: 'desc' };
+    visiveisAtrib = POR_PAGINA; sincronizarFiltros(); sincronizarPeriodo();
+  }
+  const primeiraCarga = () => carregando && !atualizadoEm;
+  const ICONE_VAZIO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5v-9z"/><path d="m3 7.5 9 4.5 9-4.5M12 12v9"/></svg>';
+  function vazioAmigavel(titulo, dica){
+    const w = h('div', 'vazio-amigavel'); w.insertAdjacentHTML('afterbegin', ICONE_VAZIO); w.appendChild(h('b', '', titulo)); if (dica) w.appendChild(h('span', 'mut', dica)); return w;
+  }
+  // esqueleto de carregamento (primeira carga): barras cinza animadas no lugar do conteúdo
+  function barraEsq(l){ const s = h('span', 'esq-bar'); s.style.width = l + '%'; return s; }
+  function linhasEsqueleto(tbody, colunas, n){
+    tbody.innerHTML = '';
+    for (let i = 0; i < n; i++) { const tr = h('tr', 'esq'); for (let c = 0; c < colunas; c++) { const td = h('td'); td.appendChild(barraEsq(c === 0 ? 55 : 35 + ((i * 7 + c * 13) % 45))); tr.appendChild(td); } tbody.appendChild(tr); }
+  }
+  // legenda de status com os limiares explícitos
+  function montarLegendasStatus(){
+    const itens = [['ok', 'abaixo de ' + FAIXA_ATENCAO + '% do limite'], ['atencao', 'de ' + FAIXA_ATENCAO + '% a 99% do limite'], ['limite', 'exatamente 100%'], ['acima', 'mais de 100%']];
+    document.querySelectorAll('[data-legenda-status]').forEach(el => {
+      el.innerHTML = ''; el.setAttribute('role', 'group'); el.setAttribute('aria-label', 'Legenda dos status da carteira');
+      el.appendChild(h('span', 'rot', 'Status'));
+      itens.forEach(([k, txt]) => {
+        const it = h('span', 'it'); const t = h('span', 'status-tag com-icone ' + STATUS[k].classe);
+        t.insertAdjacentHTML('afterbegin', ICONES_STATUS[k]); t.appendChild(document.createTextNode(maiuscula(STATUS[k].rotulo)));
+        it.appendChild(t); it.appendChild(h('span', 'mut', txt)); el.appendChild(it);
+      });
+    });
+  }
+  // ordenação das tabelas de resumo da Visão geral
+  function ordenarResumo(linhas, est){
+    if (!est.col) return linhas;
+    return linhas.slice().sort((a, b) => {
+      const x = a[est.col], y = b[est.col], c = typeof x === 'string' ? x.localeCompare(y, 'pt-BR', { numeric: true }) : (x ?? -1) - (y ?? -1);
+      return est.dir === 'asc' ? c : -c;
+    });
+  }
+  function ligarOrdemResumo(idCab, chave){
+    const cab = document.getElementById(idCab);
+    cab.addEventListener('click', e => {
+      const th = e.target.closest('th'); if (!th || !e.target.closest('.ord')) return;
+      const est = resumoOrd[chave], col = th.dataset.col;
+      if (est.col === col) est.dir = est.dir === 'asc' ? 'desc' : 'asc'; else { est.col = col; est.dir = ['rot', 'pod', 'niveis'].includes(col) ? 'asc' : 'desc'; }
+      renderVisaoGeral();
+    });
+  }
+  function marcarOrdem(idCab, est){
+    document.querySelectorAll('#' + idCab + ' th').forEach(th => { if (est.col && th.dataset.col === est.col) th.setAttribute('aria-sort', est.dir === 'asc' ? 'ascending' : 'descending'); else th.removeAttribute('aria-sort'); });
+  }
+  // faixa de alerta no topo da Visão geral: clica e abre a Carteira já filtrada
+  function montarBanner(todos){
+    const b = document.getElementById('bannerCrit'); b.innerHTML = '';
+    if (!todos.length) { b.hidden = true; return; }
+    const st = todos.map(statusDe), c = k => st.filter(s => s.chave === k).length;
+    const itens = [['acima', c('acima'), 'acima do limite'], ['limite', c('limite'), 'no limite'], ['atencao', c('atencao'), 'em atenção']].filter(i => i[1] > 0);
+    const nivel = c('acima') ? 'grave' : itens.length ? 'medio' : 'ok';
+    b.hidden = false; b.className = 'banner-crit ' + nivel;
+    const ico = h('span', 'ico'); ico.innerHTML = ICONES_STATUS[c('acima') ? 'acima' : itens.length ? 'atencao' : 'ok']; b.appendChild(ico);
+    const txt = h('span', 'txt'); b.appendChild(txt);
+    if (!itens.length) { txt.textContent = 'Nenhum analista acima do limite ou em atenção.'; return; }
+    itens.forEach((it, i) => {
+      if (i) txt.appendChild(document.createTextNode(i === itens.length - 1 ? ' e ' : ', '));
+      const bt = h('button', 'link-crit', it[1] + (it[1] === 1 ? ' analista ' : ' analistas ') + it[2]); bt.type = 'button'; bt.title = 'Ver na Carteira';
+      bt.addEventListener('click', () => irParaCarteira({ status: it[0] })); txt.appendChild(bt);
+    });
+  }
+  function esqueletoVisao(){
+    document.getElementById('bannerCrit').hidden = true;
+    const v = document.getElementById('vagasNivel'); v.innerHTML = '';
+    for (let i = 0; i < 4; i++) { const d = h('div', 'vaga'); d.appendChild(barraEsq(30)); d.appendChild(barraEsq(70)); v.appendChild(d); }
+    linhasEsqueleto(document.getElementById('resumoNivel'), 6, 4); linhasEsqueleto(document.getElementById('resumoPod'), 7, 5);
+    const ul = document.getElementById('atencaoLista'); ul.innerHTML = ''; const li = h('li'); li.appendChild(barraEsq(60)); ul.appendChild(li);
+  }
 
   // ── cálculo de status (carteira x limite do nível) ──
   function statusDe(o){
@@ -1131,7 +1352,9 @@
     sincronizarFiltros(); renderCarteira(); selecionarAba('carteira', true);
   }
   function renderVisaoGeral(){
+    if (primeiraCarga()) { esqueletoVisao(); return; }
     const todos = painelData.onboarders || [];
+    montarBanner(todos);
     const reg = todos.filter(o => !ehGuardiao(o)), gua = todos.filter(ehGuardiao);
     const st = todos.map(statusDe);
     document.getElementById('kpiTotalOnb').textContent = String(todos.length);
@@ -1153,7 +1376,7 @@
     const dg = h('div', 'vaga aparte'); dg.appendChild(h('span', 'tag', 'Guardião · à parte')); dg.appendChild(h('b', '', String(ag.livres)));
     dg.appendChild(h('span', '', 'clientes disponíveis nos guardiões')); dg.appendChild(h('span', 'det', ag.comVaga + ' de ' + ag.n + ' analistas com vaga · só entram quando o POD está no limite')); vagas.appendChild(dg);
 
-    // resumo por nível (guardiões numa linha à parte)
+    // resumo por nível (guardiões numa linha à parte) e por POD, com ordenação pelo cabeçalho
     const rn = document.getElementById('resumoNivel'); rn.innerHTML = '';
     const linhaResumo = (tr, a, rotuloTd) => {
       tr.appendChild(rotuloTd); tr.appendChild(h('td', 'num', String(a.n)));
@@ -1161,21 +1384,20 @@
       const tdO = h('td'); tdO.appendChild(ocupBarra(a.pct, corPct(a.pct))); tr.appendChild(tdO);
       tr.appendChild(h('td', 'num', String(a.livres))); tr.appendChild(h('td', 'num', a.comVaga + ' de ' + a.n));
     };
-    NIVEIS.forEach(n => { const tr = h('tr'); linhaResumo(tr, agregar(reg.filter(o => o.level === n)), h('td', 'nome col-chave', n)); rn.appendChild(tr); });
+    ordenarResumo(NIVEIS.map(n => ({ rot: n, ...agregar(reg.filter(o => o.level === n)) })), resumoOrd.nivel).forEach(l => { const tr = h('tr'); linhaResumo(tr, l, h('td', 'nome col-chave', l.rot)); rn.appendChild(tr); });
     if (gua.length) { const tr = h('tr', 'aparte'); linhaResumo(tr, ag, h('td', 'nome col-chave', 'Guardião (à parte)')); rn.appendChild(tr); }
+    marcarOrdem('cabResumoNivel', resumoOrd.nivel); marcarOrdem('cabResumoPod', resumoOrd.pod);
 
-    // resumo por POD
     const rp = document.getElementById('resumoPod'); rp.innerHTML = '';
     const pods = [...new Set(reg.map(o => o.pod))].sort((a, b) => num(a) - num(b));
-    pods.forEach(p => {
-      const lista = reg.filter(o => o.pod === p), a = agregar(lista);
-      const tr = h('tr'); tr.appendChild(h('td', 'nome col-chave', 'POD ' + p));
-      tr.appendChild(h('td', 'col-chave', [...new Set(lista.map(o => o.level))].join(', ')));
-      tr.appendChild(h('td', 'num', String(a.n))); tr.appendChild(h('td', 'num nowrap', a.carteira + ' / ' + a.limite));
-      const tdO = h('td'); tdO.appendChild(ocupBarra(a.pct, corPct(a.pct))); tr.appendChild(tdO);
-      tr.appendChild(h('td', 'num', String(a.livres))); tr.appendChild(h('td', 'num', a.comVaga + ' de ' + a.n)); rp.appendChild(tr);
+    ordenarResumo(pods.map(p => { const lista = reg.filter(o => o.pod === p); return { pod: num(p), podRot: p, niveis: [...new Set(lista.map(o => o.level))].join(', '), ...agregar(lista) }; }), resumoOrd.pod).forEach(l => {
+      const tr = h('tr'); tr.appendChild(h('td', 'nome col-chave', 'POD ' + l.podRot));
+      tr.appendChild(h('td', 'col-chave', l.niveis));
+      tr.appendChild(h('td', 'num', String(l.n))); tr.appendChild(h('td', 'num nowrap', l.carteira + ' / ' + l.limite));
+      const tdO = h('td'); tdO.appendChild(ocupBarra(l.pct, corPct(l.pct))); tr.appendChild(tdO);
+      tr.appendChild(h('td', 'num', String(l.livres))); tr.appendChild(h('td', 'num', l.comVaga + ' de ' + l.n)); rp.appendChild(tr);
     });
-    if (!pods.length) { const tr = h('tr'); const td = h('td', 'vazio-tab', 'Sem dados.'); td.colSpan = 7; tr.appendChild(td); rp.appendChild(tr); }
+    if (!pods.length) { const tr = h('tr'); const td = h('td', 'vazio-tab'); td.appendChild(vazioAmigavel('Sem dados de PODs ainda.', 'Os onboarders aparecem aqui depois do próximo sync.')); td.colSpan = 7; tr.appendChild(td); rp.appendChild(tr); }
 
     // atenção
     const ul = document.getElementById('atencaoLista'); ul.innerHTML = '';
@@ -1333,20 +1555,26 @@
     return frag;
   }
   function renderCarteira(){
+    persistirUrl();
+    if (primeiraCarga()) {
+      document.getElementById('carteiraCount').textContent = ''; linhasEsqueleto(corpoCarteira, 7, 8); carteiraCards.innerHTML = '';
+      for (let i = 0; i < 8; i++) { const c = h('div', 'ccard'); c.appendChild(barraEsq(50)); c.appendChild(barraEsq(80)); c.appendChild(barraEsq(65)); carteiraCards.appendChild(c); }
+      return;
+    }
     const lista = ordenar(listaCarteira());
     const total = (painelData.onboarders || []).length;
     document.getElementById('carteiraCount').textContent = lista.length === total ? total + ' onboarders' : lista.length + ' de ' + total + ' onboarders';
     document.querySelectorAll('#cabCarteira th').forEach(th => { if (th.dataset.col === ordem.col) th.setAttribute('aria-sort', ordem.dir === 'asc' ? 'ascending' : 'descending'); else th.removeAttribute('aria-sort'); });
     corpoCarteira.innerHTML = ''; carteiraCards.innerHTML = '';
-    const vazio = msg => { const tr = h('tr'); const td = h('td', 'vazio-tab', msg); td.colSpan = 7; tr.appendChild(td); corpoCarteira.appendChild(tr); return td; };
+    const vazio = (msg, dica) => { const tr = h('tr'); const td = h('td', 'vazio-tab'); td.appendChild(vazioAmigavel(msg, dica)); td.colSpan = 7; tr.appendChild(td); corpoCarteira.appendChild(tr); return td; };
     if (erroCarga) { vazio(erroCarga); return; }
-    if (!carregando && !total) { vazio('Nenhum onboarder no painel.'); return; }
+    if (!carregando && !total) { vazio('Nenhum onboarder no painel.', 'Os analistas aparecem aqui depois do sync diário com o Salesforce.'); return; }
     if (!lista.length) {
-      const td = vazio('Nenhum onboarder para esses filtros.');
+      const td = vazio('Nenhum onboarder para esses filtros.', 'Tente tirar algum filtro ou buscar por outro nome.');
       const b = h('button', 'btn-quiet', 'Limpar filtros'); b.type = 'button';
       b.addEventListener('click', () => { nivelAtivo = 'todos'; filtroPod.value = ''; filtroStatus.value = ''; carteiraBusca.value = ''; sincronizarFiltros(); renderCarteira(); });
       td.appendChild(document.createElement('br')); td.appendChild(b);
-      carteiraCards.appendChild(h('div', 'vazio-tab', 'Nenhum onboarder para esses filtros.')); return;
+      carteiraCards.appendChild(vazioAmigavel('Nenhum onboarder para esses filtros.', 'Tente tirar algum filtro ou buscar por outro nome.')); return;
     }
     linhasCarteira(lista).forEach(item => {
       if (item.tr) { corpoCarteira.appendChild(item.tr); const c = h('div', 'grupo-cab', item.tr.textContent); carteiraCards.appendChild(c); return; }
@@ -1391,7 +1619,7 @@
   carteiraBusca.addEventListener('input', renderCarteira);
   document.getElementById('agruparPod').addEventListener('click', () => { agruparPod = !agruparPod; sincronizarFiltros(); renderCarteira(); });
   function definirModo(m){
-    modoCarteira = m;
+    modoCarteira = m; persistirUrl();
     tabelaCarteira.hidden = m !== 'tabela'; carteiraCards.hidden = m !== 'cards';
     document.getElementById('verTabela').setAttribute('aria-pressed', String(m === 'tabela'));
     document.getElementById('verCards').setAttribute('aria-pressed', String(m === 'cards'));
@@ -1472,14 +1700,14 @@
       return true;
     });
   }
-  function aplicarPeriodo(p){
+  function calcularPeriodo(p){
     periodo = p; const hoje = hojeYmd();
     if (p === 'hoje') { dataDe.value = hoje; dataAte.value = hoje; }
     else if (p === '7') { dataDe.value = somaDias(hoje, -6); dataAte.value = hoje; }
     else if (p === '30') { dataDe.value = somaDias(hoje, -29); dataAte.value = hoje; }
     else if (p === 'tudo') { dataDe.value = ''; dataAte.value = ''; }
-    visiveisAtrib = POR_PAGINA; sincronizarPeriodo(); renderAtrib();
   }
+  function aplicarPeriodo(p){ calcularPeriodo(p); visiveisAtrib = POR_PAGINA; sincronizarPeriodo(); renderAtrib(); }
   function sincronizarPeriodo(){ document.querySelectorAll('[data-periodo]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.periodo === periodo))); }
   document.querySelectorAll('[data-periodo]').forEach(b => b.addEventListener('click', () => aplicarPeriodo(b.dataset.periodo)));
   [dataDe, dataAte].forEach(i => i.addEventListener('input', () => { periodo = 'custom'; visiveisAtrib = POR_PAGINA; sincronizarPeriodo(); renderAtrib(); }));
@@ -1555,21 +1783,54 @@
     wrap.appendChild(h('p', 'casc-txt', racional ? SEM_TRAVESSAO(racional) : 'Sem racional registrado.'));
     return wrap;
   }
+  function dataKey(s){
+    const m = String(s || '').match(/(\d{1,2})\/(\d{1,2})\/(\d{4})(?:,?\s*(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+    return m ? m[3] + m[2].padStart(2, '0') + m[1].padStart(2, '0') + (m[4] || '00').padStart(2, '0') + (m[5] || '00') + (m[6] || '00') : '';
+  }
+  function valorOrdemAtrib(a, col){
+    switch (col) {
+      case 'data': return dataKey(a.data_atribuicao);
+      case 'cliente': return String(a.cliente || '').toLowerCase();
+      case 'hotmart': return num(a.hotmart_id);
+      case 'onboarder': return nomeDe(a.onboarder).toLowerCase();
+      case 'closer': return nomeDe(a.closer).toLowerCase();
+      case 'seg': { const si = segInfo(a.segmentacao); return (si.nivel || '') + (si.sg || ''); }
+      case 'amount': return temAmount(a) ? Number(a.amount_12m) : -1;
+      default: return etapaDe(a);
+    }
+  }
+  function ordenarAtrib(l){
+    if (!ordemAtrib.col) return l;
+    return l.slice().sort((a, b) => {
+      const x = valorOrdemAtrib(a, ordemAtrib.col), y = valorOrdemAtrib(b, ordemAtrib.col), c = x < y ? -1 : x > y ? 1 : 0;
+      return (ordemAtrib.dir === 'asc' ? c : -c) || dataKey(b.data_atribuicao).localeCompare(dataKey(a.data_atribuicao));
+    });
+  }
+  document.getElementById('cabAtrib').addEventListener('click', e => {
+    const th = e.target.closest('th'); if (!th || !e.target.closest('.ord')) return;
+    const col = th.dataset.col;
+    if (ordemAtrib.col === col) ordemAtrib.dir = ordemAtrib.dir === 'asc' ? 'desc' : 'asc';
+    else ordemAtrib = { col, dir: ['cliente', 'onboarder', 'closer', 'etapa', 'seg', 'hotmart'].includes(col) ? 'asc' : 'desc' };
+    visiveisAtrib = POR_PAGINA; renderAtrib();
+  });
   function celulaPessoa(email){ const td = h('td', 'nowrap', nomeDe(email)); td.title = email || ''; return td; }
   function renderAtrib(){
+    persistirUrl();
+    document.querySelectorAll('#cabAtrib th').forEach(th => { if (ordemAtrib.col && th.dataset.col === ordemAtrib.col) th.setAttribute('aria-sort', ordemAtrib.dir === 'asc' ? 'ascending' : 'descending'); else th.removeAttribute('aria-sort'); });
+    if (primeiraCarga()) { document.getElementById('atribCount').textContent = ''; atribMais.hidden = true; linhasEsqueleto(corpoAtrib, 9, 8); return; }
     const todas = painelData.ultimas_atribuicoes || [];
-    const lista = atribFiltradas(); const vis = lista.slice(0, visiveisAtrib);
+    const lista = ordenarAtrib(atribFiltradas()); const vis = lista.slice(0, visiveisAtrib);
     document.getElementById('atribCount').textContent = lista.length === todas.length ? todas.length + (todas.length === 1 ? ' atribuição' : ' atribuições') : lista.length + ' de ' + todas.length + ' atribuições';
     const nAtivos = filtrosAtivosAtrib(), btnLimpar = document.getElementById('limparAtrib');
     btnLimpar.hidden = nAtivos === 0; btnLimpar.textContent = 'Limpar filtros (' + nAtivos + ')';
     corpoAtrib.innerHTML = ''; atribMais.hidden = true;
     const datas = todas.map(a => ymdDe(a.data_atribuicao)).filter(Boolean).sort();
     document.getElementById('atribNota').textContent = datas.length ? 'O histórico carregado vai de ' + datas[0].split('-').reverse().join('/') + ' a ' + datas[datas.length - 1].split('-').reverse().join('/') + '.' : '';
-    const vazio = msg => { const tr = h('tr'); const td = h('td', 'vazio-tab', msg); td.colSpan = 9; tr.appendChild(td); corpoAtrib.appendChild(tr); return td; };
+    const vazio = (msg, dica) => { const tr = h('tr'); const td = h('td', 'vazio-tab'); td.appendChild(vazioAmigavel(msg, dica)); td.colSpan = 9; tr.appendChild(td); corpoAtrib.appendChild(tr); return td; };
     if (erroCarga) { vazio(erroCarga); return; }
-    if (!todas.length) { if (!carregando) vazio('Nenhuma atribuição registrada ainda.'); return; }
+    if (!todas.length) { if (!carregando) vazio('Nenhuma atribuição registrada ainda.', 'Elas aparecem aqui assim que um Closer atribuir a primeira Oportunidade.'); return; }
     if (!lista.length) {
-      const td = vazio('Nenhuma atribuição para esses filtros.');
+      const td = vazio('Nenhuma atribuição para esses filtros.', 'Tente ampliar o período ou limpar os filtros.');
       const b = h('button', 'btn-quiet', 'Limpar filtros'); b.type = 'button';
       b.addEventListener('click', limparFiltrosAtrib);
       td.appendChild(document.createElement('br')); td.appendChild(b); return;
@@ -1621,11 +1882,16 @@
     geradoEm.textContent = carregando ? 'Atualizando…' : 'Atualizado ' + rotuloTempo(atualizadoEm);
   }
   setInterval(() => { if (appScreen.style.display !== 'none') atualizarStatus(); }, 1000);
-  function renderTudo(){ preencherFiltrosPod(); preencherFiltrosAtrib(); sincronizarFiltros(); renderVisaoGeral(); renderCarteira(); renderAtrib(); atualizarStatus(); }
+  function renderTudo(){
+    document.body.classList.toggle('carga-inicial', primeiraCarga()); appScreen.setAttribute('aria-busy', String(primeiraCarga()));
+    preencherFiltrosPod(); preencherFiltrosAtrib();
+    if (paramsPendentes && !primeiraCarga()) { aplicarParametros(paramsPendentes); paramsPendentes = null; }   // filtros do link, depois que as listas (POD, closer...) existem
+    montarLegendasStatus(); sincronizarFiltros(); renderVisaoGeral(); renderCarteira(); renderAtrib(); atualizarStatus();
+  }
 
   async function carregarPainel(){
     carregando = true; erroCarga = '';
-    refreshBtn.classList.add('girando'); atualizarStatus();
+    refreshBtn.classList.add('girando'); if (!atualizadoEm) renderTudo(); else atualizarStatus();
     try {
       const res = await apiFetch(WEBHOOK_PAINEL_URL, { method: 'GET' });
       if (!res.ok) throw new Error('status ' + res.status);
@@ -1671,6 +1937,8 @@
   document.addEventListener('click', e => { if (!userPop.hidden && !userPop.contains(e.target)) fecharMenuUsuario(); });
 
   // Retoma a sessão da aba (mesmo SESSION_KEY do Onboarding Assignment)
+  { const h0 = lerHash(); if (h0.params.toString()) paramsPendentes = h0.params; }
+  ligarOrdemResumo('cabResumoNivel', 'nivel'); ligarOrdemResumo('cabResumoPod', 'pod'); montarLegendasStatus();
   selecionarAba(abaInicial());
   sincronizarFiltros(); sincronizarPeriodo(); definirModo('tabela');
   const savedSession = getSession();
