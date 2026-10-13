@@ -401,6 +401,19 @@
     .meter-fill, .status-tag, .badge, .passo .n, .destaque-regra, .atencao li{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   }
 
+  /* cards: selo dentro do card */
+  .ccard{ min-width:0; flex:none; }
+  .cards > .ccard{ align-self:start; }
+  .ccard .topo{ flex-direction:column; align-items:flex-start; gap:8px; }
+  .ccard .topo > div:first-child{ width:100%; min-width:0; }
+  .ccard .topo .nome{ font-size:15px; }
+  .ccard .topo small{ display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .ccard .status-tag{ flex:none; max-width:100%; }
+  .ccard .sg-item{ flex-wrap:nowrap; }
+  .ccard .sg-item b, .ccard .sg-item .mut{ white-space:nowrap; }
+  .ccard .sg-item .meter-track{ width:60px; }
+  .cards{ grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); }
+
   .regra ul.notas{ margin:10px 0 0; padding-left:18px; font-size:12.5px; line-height:1.55; color:var(--text-muted); }
   .regra ul.notas li{ margin-bottom:5px; }
   .regra ul.notas b{ color:var(--text); font-weight:600; }
