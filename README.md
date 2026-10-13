@@ -52,6 +52,7 @@ Quem atribui é o sistema: o Closer não escolhe o Onboarder.
 | 11 | Testar Agendas | `GET /testar-agendas` | admin | Confere se a agenda de cada Onboarder está acessível (só leitura) |
 | 12 | _(não usado)_ | | | Número reservado |
 | 13 | Diagnóstico Closed Won | `GET /diagnostico-closed-won?opp_id=` | admin | Registro completo da Opportunity (tenta ler as regras de validação; a credencial atual não tem acesso) |
+| 15 | Sugestão N6+ (Aceitar e Retomar) | `POST /sugestao-n6` (`acao`: `listar`, `retomar`, `detalhe`, `aceitar`) | sessão; `detalhe` e `aceitar` só `julia.brito` e `fernanda.cardoso` | Sugestões do N6+: lista para o app, retomada do fluxo e aceite pelo coordenador |
 | 14 | Simular Etapa | `GET /simular-etapa?opp_id=&etapa=` | admin | Mostra o que o Salesforce exigiria numa etapa, **sem alterar a Opp** (transação sempre desfeita). Desative depois de usar |
 
 Todos os webhooks, **exceto o Login**, exigem o header `Authorization: Bearer <token>` e respondem **401** sem sessão válida. O CORS é restrito a `https://fernandacardoso-sketch.github.io`.
@@ -99,6 +100,8 @@ Atribuídas que ainda não chegaram ao Closed Won **não** entram na contagem (o
 ### Upstash (prefixos `carteira:`)
 `session:<token>` (8h), `rl:<email>` (limite de tentativas, 15 min), `login_log` (últimos 1.000 logins).
 
+**Chaves do N6+ (W2 grava, W15 lê e atualiza):** `carteira:sugestoes:<email do closer>` (hash: campo = id da Oportunidade, valor = JSON com `status` `pendente` ou `aceita`, onboarder sugerido, token, quem aceitou e quando; expira em 30 dias) e `carteira:sugtoken:<token de 48 hex>` (mesmo JSON; expira em 7 dias).
+
 ### Variáveis do n8n
 `UPSTASH_ONB_URL`, `UPSTASH_ONB_TOKEN`, `CARTEIRA_SENHA_HASH` (formato `salt:hash scrypt`). Nunca coloque esses valores em arquivo do projeto.
 
@@ -125,6 +128,8 @@ Atribuídas que ainda não chegaram ao Closed Won **não** entram na contagem (o
 **Guardiões** (`Level = Guardian` no PODS) ficam **fora da distribuição** desde 13/10/2026: não recebem atribuições, o tamanho da carteira deles não é considerado (W5 manda `capacidade_maxima` nula e o painel mostra "sem limite") e o passo de guardião saiu da cascata.
 
 **N6+ só sugere** (desde 13/10/2026): o W2 roda a mesma cascata, mas **não atribui** (não grava Onboarding Owner, não atualiza o cache e o app não segue para o agendamento). Em vez disso, o ramo `É sugestão N6+?` envia uma mensagem ao **Google Chat do coordenador** (`julia.brito`) pelo nó `Enviar Google Chat (N6+)` e registra no Hist a linha "Sem atribuição (sugestão N6+)" com o racional `[Sugestão N6+] ...`. A URL do webhook do espaço do Google Chat fica na constante `GOOGLE_CHAT_WEBHOOK_N6` do nó `Decidir Atribuição` (preencher antes de usar). Se todo o N6+ estiver no limite, a mensagem avisa que não há onboarder disponível.
+
+**Aceite da sugestão pelo botão do Chat** (N6+, desde 13/10/2026): o card do Chat traz o botão **Aceitar sugestão**, que abre `aceitar-sugestao.html?t=<token>` (GitHub Pages). A página pede o login do Onboarding Assignment (mesmo e-mail e senha; o e-mail precisa estar na aba `Acessos`), mostra a Oportunidade, o Amount 12m, o Closer e o onboarder sugerido, e só então o botão **Aceitar sugestão** age. Quem pode ver e aceitar está na lista `PODEM_ACEITAR` do nó `Decidir Ação` do W15: **julia.brito** e **fernanda.cardoso** (outras pessoas recebem 403). Ao aceitar, o W15 define o `Onboarding_Owner__c` na Oportunidade (primeiro, para uma falha não deixar o cache adiantado), soma +1 na carteira do onboarder no cache, grava o aceite no Upstash, registra no Hist ("[Sugestão N6+ aceita] ..." com o onboarder real) e responde no mesmo tópico do Chat ("Sugestão aceita por ..."). O link vale uma vez, por 7 dias, e fica inválido se uma sugestão mais nova for gerada para a mesma Oportunidade. No app, a Oportunidade fica "Aguardando coordenador" até o aceite e depois "Sugestão aceita": o Closer clica em **Continuar**, informa o e-mail do cliente e segue para o agendamento e o Closed Won, usando o onboarder aceito (`acao: retomar`, que devolve os horários da agenda dele no mesmo formato da atribuição normal).
 
 **Conteúdo do aviso ao coordenador** (e-mail dos níveis N2-N3 e N4-N5 e mensagem do Chat no N6+): nome da Oportunidade, link do Salesforce, Amount 12m, Closer, resumo de `Business_aditional_information_CLOSER__c` e, **por último e em cor de destaque**, a sugestão de onboarder. O título de cada tópico vai em negrito. No Chat a mensagem é um **card** (`cardsV2`, com o texto curto de aviso em `text`), porque mensagem de texto simples não aceita cor. O resumo do campo lê as seções numeradas (`**1. Contexto:**`) e mostra Contexto, Nicho, Relação com a Hotmart, Perfil do cliente, Faturamento e Principais dores, cada um curto, sem markdown, sem parênteses e sem as ofertas; texto livre vira um "Resumo" de até cerca de 300 caracteres e campo vazio vira "Não informado". No e-mail a sugestão é "Nenhum onboarder disponível", porque ele só sai quando o nível inteiro está no limite.
 
@@ -197,6 +202,8 @@ Uma credencial OAuth2 (`GCal - sales.bizops`) autorizada por `sales.bizops@hotma
 |---|---|
 | `0.` a `11. Carteira - *.json` | Os workflows do n8n |
 | `index-fer.html` | Onboarding Assignment (vai para o GitHub Pages) |
+| `aceitar-sugestao.html` | Página em que a coordenação aceita a sugestão do N6+ (vai para o GitHub Pages) |
+| `15.Carteira - Sugestão N6+ (Aceitar e Retomar).json` | Workflow 15. Contém a URL do webhook do Google Chat: **não vai para o repositório** |
 | `painel.html` | Painel de Acompanhamento (vai para o GitHub Pages) |
 | `PODs_Q4_2026.xlsx` | Roster do Q4 (nomes, POD, função, e-mail) |
 | `PODS Q4 - novo roster.xlsx` | Roster no formato da aba PODS, com a lista de mudanças |
