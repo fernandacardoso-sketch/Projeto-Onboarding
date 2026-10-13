@@ -119,7 +119,7 @@ Atribuídas que ainda não chegaram ao Closed Won **não** entram na contagem (o
 
 **Cascata** (nunca cruza nível):
 1. Onboarders do **mesmo POD** do Closer com carteira total abaixo do limite (**N2-N3: 75, N4-N5: 50, N6+: 25**).
-2. **Guardião** (só N2-N3 e N4-N5; limite 150; vai para quem tem a menor carteira total).
+2. **Guardião** (só N2-N3 e N4-N5; limite 75; vai para quem tem a menor carteira total).
 3. **Outro POD do mesmo nível.**
 4. Ninguém cabe: e-mail ao coordenador do nível e nenhuma atribuição. Coordenadores: N2-N3 `raissa.salles`, N4-N5 `giovane.jansen`, N6+ `julia.brito`.
 
