@@ -480,6 +480,36 @@
   @media (prefers-reduced-motion:reduce){ .ccard{ transition:none; } .ccard:hover{ transform:none; } }
   @media print{ .fatia, .fatia .pre, .sw, .sw-pre, .sw-lim, .lim{ -webkit-print-color-adjust:exact; print-color-adjust:exact; } }
 
+  /* ---- Atribuições: Amount, cliente truncado, cascata na linha expandida ---- */
+  th.num .sem-ord{ display:block; text-align:right; }
+  td.amount{ font-variant-numeric:tabular-nums; font-weight:600; }
+  #corpoAtrib td.cliente{ max-width:220px; }
+  tr.det .casc{ display:flex; flex-direction:column; gap:12px; max-width:760px; }
+  .casc-topo{ display:flex; flex-wrap:wrap; align-items:center; gap:8px 18px; }
+  .casc-id{ display:inline-flex; align-items:center; gap:8px; }
+  .casc-id code{ font-family:var(--font-mono); font-size:12.5px; color:var(--text); background:var(--card-bg); border:1px solid var(--border-strong); border-radius:var(--r-sm); padding:2px 8px; }
+  .btn-copiar{ font-family:inherit; font-size:12px; font-weight:600; color:var(--text); background:var(--card-bg); border:1.5px solid var(--field-border); border-radius:var(--r-sm); padding:3px 10px; cursor:pointer; }
+  .btn-copiar:hover{ border-color:var(--text-muted); }
+  .btn-copiar:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  .copiado{ font-size:12px; font-weight:600; color:var(--ok-text); min-width:0; }
+  .casc-passos, .criterios{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
+  .casc-passos li{ display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:var(--r-sm); border:1px solid var(--border); background:var(--card-bg); }
+  .casc-passos li.escolhido{ border-color:var(--text); border-width:1.5px; }
+  .casc-passos li.nao-usado{ opacity:.7; }
+  .casc-passos .n{ flex:none; width:20px; height:20px; border-radius:50%; display:grid; place-items:center; font-size:11.5px; font-weight:700; background:var(--surface-sunken); color:var(--text); }
+  .casc-passos li.escolhido .n{ background:var(--ink); color:var(--on-ink); }
+  .casc-passos li > div{ flex:1; min-width:0; }
+  .estado{ flex:none; margin-left:auto; font-size:11.5px; font-weight:700; padding:2px 9px; border-radius:var(--r-pill); background:var(--surface-sunken); color:var(--text); white-space:nowrap; }
+  .escolhido .estado, .criterios .decidiu .estado{ background:var(--ink); color:var(--on-ink); }
+  .casc-crit .rot{ display:block; font-size:11.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px; }
+  .criterios{ counter-reset:crit; }
+  .criterios li{ counter-increment:crit; display:flex; align-items:center; gap:8px; font-size:13px; padding:3px 0; color:var(--text-muted); }
+  .criterios li::before{ content:counter(crit) "."; width:18px; font-weight:700; font-variant-numeric:tabular-nums; }
+  .criterios li.decidiu{ color:var(--text); font-weight:700; }
+  .casc-txt{ margin:0; font-size:13px; line-height:1.55; }
+  @media print{ .btn-copiar, .copiado{ display:none !important; } }
+  .casc-passos li > div .mut{ display:block; font-size:12.5px; }
+
   .regra ul.notas{ margin:10px 0 0; padding-left:18px; font-size:12.5px; line-height:1.55; color:var(--text-muted); }
   .regra ul.notas li{ margin-bottom:5px; }
   .regra ul.notas b{ color:var(--text); font-weight:600; }
@@ -746,6 +776,7 @@
           <label class="campo-data">Onboarder <select id="filtroOnboarder" aria-label="Filtrar por onboarder"><option value="">Todos</option></select></label>
           <label class="campo-data">Nível <select id="filtroNivelAtrib" aria-label="Filtrar por nível"><option value="">Todos</option><option>N2-N3</option><option>N4-N5</option><option>N6+</option></select></label>
           <button type="button" class="pill toggle-teste" id="ocultarTestes" aria-pressed="false" title="Esconde atribuições de teste (cliente com “teste” no nome ou closer de teste)">Ocultar testes</button>
+          <button type="button" class="btn-quiet" id="limparAtrib" hidden>Limpar filtros</button>
           <span class="contagem grow" id="atribCount" aria-live="polite"></span>
         </div>
         <div class="tabela" id="tabelaAtrib" tabindex="0" aria-label="Atribuições">
@@ -759,6 +790,7 @@
                 <th scope="col"><span class="sem-ord">Onboarder</span></th>
                 <th scope="col"><span class="sem-ord">Closer</span></th>
                 <th scope="col"><span class="sem-ord">Segmentação</span></th>
+                <th scope="col" class="num"><span class="sem-ord">Amount 12 meses</span></th>
                 <th scope="col"><span class="sem-ord">Etapa da cascata</span></th>
               </tr>
             </thead>
@@ -1463,21 +1495,83 @@
     };
     preencher(filtroCloser, 'closer'); preencher(filtroOnboarder, 'onboarder');
   }
+  const brlCentavos = n => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(n).replace(/ /g, ' ');
+  const temAmount = a => a.amount_12m !== null && a.amount_12m !== undefined && a.amount_12m !== '' && !isNaN(Number(a.amount_12m));
+  function filtrosAtivosAtrib(){
+    return (periodo !== 'tudo' || dataDe.value || dataAte.value ? 1 : 0) + (filtroCloser.value ? 1 : 0) + (filtroOnboarder.value ? 1 : 0) + (filtroNivelAtrib.value ? 1 : 0) + (ocultarTestes ? 1 : 0);
+  }
+  function limparFiltrosAtrib(){
+    filtroCloser.value = ''; filtroOnboarder.value = ''; filtroNivelAtrib.value = ''; ocultarTestes = false;
+    document.getElementById('ocultarTestes').setAttribute('aria-pressed', 'false'); aplicarPeriodo('tudo');
+  }
+  document.getElementById('limparAtrib').addEventListener('click', limparFiltrosAtrib);
+  // copia o texto; usa a área de transferência do navegador e, se ela estiver bloqueada, um campo temporário
+  async function copiarTexto(txt){
+    try { await navigator.clipboard.writeText(txt); return true; } catch (e) { /* cai para o método antigo */ }
+    try { const ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;top:-100px;opacity:0'; document.body.appendChild(ta); ta.select(); const ok = document.execCommand('copy'); ta.remove(); return ok; } catch (e) { return false; }
+  }
+  const SEM_TRAVESSAO = s => String(s || '').replace(/\s[—–]\s/g, ', ');
+  // por que aquele onboarder foi escolhido: etapa da cascata + critério que decidiu dentro do grupo
+  function detAtrib(a, si){
+    const wrap = h('div', 'casc');
+    const racional = String(a.racional || '').trim();
+    const alerta = /^ALERTA DISPARADO/i.test(racional);
+    const etapa = etapaDe(a), semGuardiao = si.nivel === 'N6+';
+    const topo = h('div', 'casc-topo'); topo.appendChild(h('b', '', 'Como o onboarder foi escolhido'));
+    if (a.hotmart_id) {
+      const id = h('span', 'casc-id'); id.appendChild(h('span', 'mut', 'Hotmart ID')); id.appendChild(h('code', '', String(a.hotmart_id)));
+      const bt = h('button', 'btn-copiar', 'Copiar'); bt.type = 'button'; bt.setAttribute('aria-label', 'Copiar o Hotmart ID ' + a.hotmart_id);
+      const msg = h('span', 'copiado'); msg.setAttribute('role', 'status');
+      bt.addEventListener('click', async () => { const ok = await copiarTexto(String(a.hotmart_id)); msg.textContent = ok ? 'Copiado' : 'Não foi possível copiar'; clearTimeout(bt._t); bt._t = setTimeout(() => { msg.textContent = ''; }, 1800); });
+      id.appendChild(bt); id.appendChild(msg); topo.appendChild(id);
+    } else topo.appendChild(h('span', 'mut', 'Sem Hotmart ID registrado'));
+    wrap.appendChild(topo);
+    if (alerta) { wrap.appendChild(h('p', 'casc-txt', SEM_TRAVESSAO(racional))); return wrap; }
+    const ordemEtapa = { 'Mesmo POD': 1, 'Guardião': 2, 'Outro POD': 3 }, usada = ordemEtapa[etapa] || 0;
+    const passos = [
+      ['Mesmo POD', 'Onboarders do POD do closer com carteira abaixo do limite.'],
+      ['Guardião', semGuardiao ? 'Não se aplica ao N6+, que não tem guardião.' : 'Guardiões do nível, só se o POD estiver no limite.'],
+      ['Outro POD, mesmo nível', 'Onboarders de outros PODs do mesmo nível, só se o guardião também estiver no limite.']
+    ];
+    const ol = h('ol', 'casc-passos');
+    passos.forEach(([nome, desc], i) => {
+      const n = i + 1; const li = h('li', n === usada ? 'escolhido' : (n < usada && !(n === 2 && semGuardiao) ? 'sem-vaga' : 'nao-usado'));
+      li.appendChild(h('span', 'n', String(n))); const c = h('div'); c.appendChild(h('b', '', nome)); c.appendChild(h('span', 'mut', desc)); li.appendChild(c);
+      const est = n === usada ? 'Escolhido aqui' : (n < usada ? (n === 2 && semGuardiao ? 'Não se aplica' : 'Sem vaga') : 'Não foi necessário');
+      li.appendChild(h('span', 'estado', est)); ol.appendChild(li);
+    });
+    wrap.appendChild(ol);
+    // critério que decidiu entre os candidatos do passo escolhido
+    let crit = 0;
+    if (/empate no segmento, na carteira total e no pr[ée]-onboarding/i.test(racional)) crit = 4;
+    else if (/empate no segmento e na carteira total/i.test(racional)) crit = 3;
+    else if (/empate no segmento/i.test(racional)) crit = 2;
+    else if (/sem empate/i.test(racional)) crit = 1;
+    const criterios = ['Menos clientes no subgrupo da Oportunidade', 'Menor carteira total', 'Menos clientes em pré-onboarding no subgrupo', 'Última atribuição mais antiga'];
+    const cr = h('div', 'casc-crit'); cr.appendChild(h('span', 'rot', 'Critério de escolha dentro do passo'));
+    const ul = h('ol', 'criterios');
+    criterios.forEach((t, i) => { const li = h('li', i + 1 === crit ? 'decidiu' : (crit && i + 1 < crit ? 'empatou' : ''), t); if (i + 1 === crit) li.appendChild(h('span', 'estado', 'Decidiu')); else if (crit && i + 1 < crit) li.appendChild(h('span', 'estado', 'Empate')); ul.appendChild(li); });
+    cr.appendChild(ul); wrap.appendChild(cr);
+    wrap.appendChild(h('p', 'casc-txt', racional ? SEM_TRAVESSAO(racional) : 'Sem racional registrado.'));
+    return wrap;
+  }
   function celulaPessoa(email){ const td = h('td', 'nowrap', nomeDe(email)); td.title = email || ''; return td; }
   function renderAtrib(){
     const todas = painelData.ultimas_atribuicoes || [];
     const lista = atribFiltradas(); const vis = lista.slice(0, visiveisAtrib);
     document.getElementById('atribCount').textContent = lista.length === todas.length ? todas.length + (todas.length === 1 ? ' atribuição' : ' atribuições') : lista.length + ' de ' + todas.length + ' atribuições';
+    const nAtivos = filtrosAtivosAtrib(), btnLimpar = document.getElementById('limparAtrib');
+    btnLimpar.hidden = nAtivos === 0; btnLimpar.textContent = 'Limpar filtros (' + nAtivos + ')';
     corpoAtrib.innerHTML = ''; atribMais.hidden = true;
     const datas = todas.map(a => ymdDe(a.data_atribuicao)).filter(Boolean).sort();
     document.getElementById('atribNota').textContent = datas.length ? 'O histórico carregado vai de ' + datas[0].split('-').reverse().join('/') + ' a ' + datas[datas.length - 1].split('-').reverse().join('/') + '.' : '';
-    const vazio = msg => { const tr = h('tr'); const td = h('td', 'vazio-tab', msg); td.colSpan = 8; tr.appendChild(td); corpoAtrib.appendChild(tr); return td; };
+    const vazio = msg => { const tr = h('tr'); const td = h('td', 'vazio-tab', msg); td.colSpan = 9; tr.appendChild(td); corpoAtrib.appendChild(tr); return td; };
     if (erroCarga) { vazio(erroCarga); return; }
     if (!todas.length) { if (!carregando) vazio('Nenhuma atribuição registrada ainda.'); return; }
     if (!lista.length) {
       const td = vazio('Nenhuma atribuição para esses filtros.');
       const b = h('button', 'btn-quiet', 'Limpar filtros'); b.type = 'button';
-      b.addEventListener('click', () => { filtroCloser.value = ''; filtroOnboarder.value = ''; filtroNivelAtrib.value = ''; ocultarTestes = false; document.getElementById('ocultarTestes').setAttribute('aria-pressed', 'false'); aplicarPeriodo('tudo'); });
+      b.addEventListener('click', limparFiltrosAtrib);
       td.appendChild(document.createElement('br')); td.appendChild(b); return;
     }
     vis.forEach(a => {
@@ -1496,10 +1590,11 @@
         if (esp && esp !== si.sg) { const d = h('span', 'diverge', '!'); d.title = 'O Amount atual (' + brl(num(a.amount_12m)) + ') cai em ' + esp.toUpperCase() + ', mas a atribuição foi registrada como ' + si.sg.toUpperCase() + '. O Amount pode ter mudado depois.'; d.setAttribute('role', 'img'); d.setAttribute('aria-label', d.title); sb.appendChild(d); }
       } else sb.appendChild(h('span', 'faixa', si.nivel ? si.nivel + ' · ' + si.faixa : (a.segmentacao || '-')));
       tdS.appendChild(sb); tr.appendChild(tdS);
+      const tdA = h('td', 'num nowrap amount', temAmount(a) ? brlCentavos(Number(a.amount_12m)) : '-'); if (!temAmount(a)) tdA.title = 'Amount não encontrado no Salesforce para este Hotmart ID'; tr.appendChild(tdA);
       tr.appendChild(h('td', 'etapa', etapaDe(a)));
       corpoAtrib.appendChild(tr);
       let det = null;
-      const montarDet = () => { det = h('tr', 'det'); const td = h('td', '', a.racional || 'Sem racional registrado.'); td.colSpan = 8; det.appendChild(td); tr.after(det); };
+      const montarDet = () => { det = h('tr', 'det'); const td = h('td'); td.colSpan = 9; td.appendChild(detAtrib(a, si)); det.appendChild(td); tr.after(det); };
       if (aberta) montarDet();
       bt.addEventListener('click', () => {
         const abrir = bt.getAttribute('aria-expanded') !== 'true'; bt.setAttribute('aria-expanded', String(abrir));
