@@ -594,7 +594,7 @@
           </div>
 
           <section class="bloco" aria-labelledby="h-vagas">
-            <h2 id="h-vagas">Vagas livres por nível <small>os guardiões ficam à parte: só recebem contratos quando o POD está no limite</small></h2>
+            <h2 id="h-vagas">Vagas livres por nível <small>os guardiões ficam à parte: só recebem clientes quando o POD está no limite</small></h2>
             <div class="vagas" id="vagasNivel"></div>
           </section>
 
@@ -714,10 +714,10 @@
             <table>
               <thead><tr><th scope="col">Nível</th><th scope="col">Limite</th><th scope="col">SG1</th><th scope="col">SG2</th><th scope="col">SG3</th></tr></thead>
               <tbody>
-                <tr><td>N2-N3</td><td>75 contratos</td><td>&lt; R$300k</td><td>R$300k a &lt; R$600k</td><td>≥ R$600k</td></tr>
-                <tr><td>N4-N5</td><td>50 contratos</td><td>&lt; R$2M</td><td>R$2M a &lt; R$3M</td><td>≥ R$3M</td></tr>
-                <tr><td>N6+</td><td>25 contratos</td><td>&lt; R$10M</td><td>R$10M a &lt; R$15M</td><td>≥ R$15M</td></tr>
-                <tr><td>Guardian</td><td>150 contratos</td><td colspan="3" class="mut">sem subgrupos</td></tr>
+                <tr><td>N2-N3</td><td>75 clientes</td><td>&lt; R$300k</td><td>R$300k a &lt; R$600k</td><td>≥ R$600k</td></tr>
+                <tr><td>N4-N5</td><td>50 clientes</td><td>&lt; R$2M</td><td>R$2M a &lt; R$3M</td><td>≥ R$3M</td></tr>
+                <tr><td>N6+</td><td>25 clientes</td><td>&lt; R$10M</td><td>R$10M a &lt; R$15M</td><td>≥ R$15M</td></tr>
+                <tr><td>Guardian</td><td>150 clientes</td><td colspan="3" class="mut">sem subgrupos</td></tr>
               </tbody>
             </table>
             <ul class="notas" id="notasSegmentacao">
@@ -730,7 +730,7 @@
           <section class="regra">
             <h3>Quem recebe a Oportunidade</h3>
             <ol class="curta">
-              <li>Quem tem menos contratos no subgrupo da Oportunidade (SG1, SG2 ou SG3).</li>
+              <li>Quem tem menos clientes no subgrupo da Oportunidade (SG1, SG2 ou SG3).</li>
               <li>Empate: menor carteira total.</li>
               <li>Empate: menos pré-onboardings no subgrupo.</li>
               <li>Empate final: quem está há mais tempo sem receber uma atribuição.</li>
@@ -1086,7 +1086,7 @@
     NIVEIS.forEach(n => {
       const a = agregar(reg.filter(o => o.level === n));
       if (!a.n) return;
-      if (a.comVaga === 0) item('grave', n + ': nenhum onboarder com vaga. ' + (n === 'N6+' ? 'N6+ não tem guardião: o próximo contrato dispara o alerta ao coordenador.' : 'Só resta o guardião; se ele também estiver no limite, dispara o alerta ao coordenador.'), { nivel: n });
+      if (a.comVaga === 0) item('grave', n + ': nenhum onboarder com vaga. ' + (n === 'N6+' ? 'N6+ não tem guardião: o próximo cliente dispara o alerta ao coordenador.' : 'Só resta o guardião; se ele também estiver no limite, dispara o alerta ao coordenador.'), { nivel: n });
       else if (a.comVaga <= LIMIAR_POUCOS_COM_VAGA) item('leve', n + ': só ' + a.comVaga + ' de ' + a.n + ' onboarders com vaga (' + a.livres + ' vagas). Risco de disparar o alerta ao coordenador.', { nivel: n });
     });
     if (!ul.children.length) { const li = h('li'); li.appendChild(h('div', 'atencao-ok', 'Nenhum ponto de atenção agora.')); ul.appendChild(li); }
@@ -1138,7 +1138,7 @@
       it.appendChild(h('span', 'badge', k.toUpperCase()));
       const trk = h('div', 'meter-track'); const f = h('div', 'meter-fill'); f.style.width = (v / maior * 100) + '%';
       f.style.background = 'var(--ok-bar)'; trk.appendChild(f); it.appendChild(trk);
-      const b = h('b', '', v + (v === 1 ? ' contrato' : ' contratos')); it.appendChild(b);
+      const b = h('b', '', v + (v === 1 ? ' cliente' : ' clientes')); it.appendChild(b);
       const pre = num(o[k + '_pre_onboarding']); if (o[k + '_pre_onboarding'] !== undefined) it.appendChild(h('span', 'mut', pre + ' em pré'));
       wrap.appendChild(it);
     });

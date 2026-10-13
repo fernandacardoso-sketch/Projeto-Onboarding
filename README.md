@@ -123,7 +123,7 @@ Atribuídas que ainda não chegaram ao Closed Won **não** entram na contagem (o
 3. **Outro POD do mesmo nível.**
 4. Ninguém cabe: e-mail ao coordenador do nível e nenhuma atribuição. Coordenadores: N2-N3 `raissa.salles`, N4-N5 `giovane.jansen`, N6+ `julia.brito`.
 
-**Escolha dentro do pool** (sem limite fixo por subgrupo desde 12/10/2026): menos contratos **no subgrupo** da Oportunidade → empate: menor **carteira total** → empate: menor pré-onboarding no subgrupo → quem recebeu há mais tempo (nunca recebeu = primeiro). O antigo limite de 10 por subgrupo foi removido: nos dados reais quase todos já o tinham ultrapassado no SG1, e no N6+ três subgrupos de 10 (30) superavam o limite de carteira (25). Se tudo empatar, vale o primeiro da lista do Cache.
+**Escolha dentro do pool** (sem limite fixo por subgrupo desde 12/10/2026): menos clientes **no subgrupo** da Oportunidade → empate: menor **carteira total** → empate: menor pré-onboarding no subgrupo → quem recebeu há mais tempo (nunca recebeu = primeiro). O antigo limite de 10 por subgrupo foi removido: nos dados reais quase todos já o tinham ultrapassado no SG1, e no N6+ três subgrupos de 10 (30) superavam o limite de carteira (25). Se tudo empatar, vale o primeiro da lista do Cache.
 
 ---
 
@@ -223,7 +223,7 @@ Uma credencial OAuth2 (`GCal - sales.bizops`) autorizada por `sales.bizops@hotma
 
 
 ### Modo demonstração (`index-fer.html?demo=1`)
-Percorre o fluxo **inteiro** (atribuir, agendar o welcome, campos e Closed Won) com 8 Oportunidades fictícias, **sem login** e sem nenhuma chamada ao n8n ou ao Salesforce: o próprio navegador responde no lugar dos webhooks. A atribuição usa a **regra real** (menos contratos no subgrupo, depois carteira total, pré-onboarding e última atribuição) sobre um time fictício de 4 onboarders do POD 1 N2-N3. Há casos de treino: Oportunidade sem Amount, Conta sem User ID e plataforma "Other". Faixa amarela de aviso com "Reiniciar a demonstração"; "Sair" volta ao endereço normal. Nada é gravado: recarregar a página reinicia tudo.
+Percorre o fluxo **inteiro** (atribuir, agendar o welcome, campos e Closed Won) com 8 Oportunidades fictícias, **sem login** e sem nenhuma chamada ao n8n ou ao Salesforce: o próprio navegador responde no lugar dos webhooks. A atribuição usa a **regra real** (menos clientes no subgrupo, depois carteira total, pré-onboarding e última atribuição) sobre um time fictício de 4 onboarders do POD 1 N2-N3. Há casos de treino: Oportunidade sem Amount, Conta sem User ID e plataforma "Other". Faixa amarela de aviso com "Reiniciar a demonstração"; "Sair" volta ao endereço normal. Nada é gravado: recarregar a página reinicia tudo.
 
 ### Painel de Acompanhamento (painel.html, v2 em 12/10/2026)
 Quatro abas (hash na URL: #visao-geral, #carteira, #atribuicoes, #regras; a última aba fica em localStorage):
