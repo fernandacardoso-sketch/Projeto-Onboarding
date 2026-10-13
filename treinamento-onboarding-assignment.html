@@ -329,7 +329,7 @@
     <div class="cartao" style="padding:16px 18px;font-size:16.5px"><div class="num" style="width:32px;height:32px;font-size:17px;margin-bottom:6px">2</div><h3 style="font-size:19px">Outro POD</h3>Onboarders de outros PODs, do mesmo nível.<p class="muted" style="margin:8px 0 0;font-size:15px">Se todos estão no limite de carteira, vai para o 3.</p></div>
     <div class="cartao" style="padding:16px 18px;font-size:16.5px"><div class="num" style="width:32px;height:32px;font-size:17px;margin-bottom:6px">3</div><h3 style="font-size:19px">Alerta</h3>Ninguém disponível: o coordenador recebe um e-mail e <b>nada é atribuído</b>.</div>
   </div>
-  <div style="margin:12px 0 18px"><span class="chip amarelo">Nunca cruza nível</span> <span class="chip amarelo">Guardiões ficam fora da distribuição</span> <span class="chip amarelo">N6+: o sistema só sugere e avisa o coordenador</span></div>
+  <div style="margin:12px 0 18px"><span class="chip amarelo">Nunca cruza nível</span> <span class="chip amarelo">N6+: o sistema só sugere e avisa o coordenador</span></div>
   <h3 style="font-size:19px;margin:0 0 10px;color:var(--muted)">PASSO B: DENTRO DA ETAPA, QUEM RECEBE</h3>
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
     <div class="cartao destaque" style="padding:16px 18px;font-size:16.5px"><h3 style="font-size:19px">1º  Menos no subgrupo</h3>Conta só o subgrupo da Oportunidade (SG1, SG2 ou SG3). Quem tem <b>menos clientes nele</b> recebe.</div>
@@ -338,7 +338,7 @@
     <div class="cartao destaque" style="padding:16px 18px;font-size:16.5px"><h3 style="font-size:19px">4º  Empate final</h3>Quem está <b>há mais tempo sem receber</b> uma atribuição.</div>
   </div>
   <div class="rodape"><span>Onboarding Assignment</span><span>9</span></div>
-  <aside class="nota" hidden><b>Não precisa decorar: o sistema decide.</b> O Passo A define em qual grupo de onboarders o sistema procura, sempre nesta ordem, e só passa para o próximo quando todos do grupo estão no limite de carteira. O Passo B escolhe a pessoa dentro do grupo. Elegível quer dizer: ainda está abaixo do limite de carteira do nível (próximo slide). Não existe um limite fixo por subgrupo: o que conta é quem tem menos clientes naquele subgrupo. Guardiões ficam fora da distribuição: não recebem atribuições e o tamanho da carteira deles não conta. No N6+ o sistema não atribui: calcula o onboarder sugerido pela mesma regra e manda mensagem no Google Chat do coordenador, com a Oportunidade, o link do Salesforce, o Amount 12m, o Closer, a sugestão e um resumo das informações do Closer. O coordenador define o Onboarding Owner. Quem quiser saber por que um cliente foi para determinada pessoa encontra o racional na aba Atribuições do painel.</aside>
+  <aside class="nota" hidden><b>Não precisa decorar: o sistema decide.</b> O Passo A define em qual grupo de onboarders o sistema procura, sempre nesta ordem, e só passa para o próximo quando todos do grupo estão no limite de carteira. O Passo B escolhe a pessoa dentro do grupo. Elegível quer dizer: ainda está abaixo do limite de carteira do nível (próximo slide). Não existe um limite fixo por subgrupo: o que conta é quem tem menos clientes naquele subgrupo. No N6+ o sistema não atribui: calcula o onboarder sugerido pela mesma regra e manda mensagem no Google Chat do coordenador, com a Oportunidade, o link do Salesforce, o Amount 12m, o Closer, a sugestão e um resumo das informações do Closer. O coordenador define o Onboarding Owner. Quem quiser saber por que um cliente foi para determinada pessoa encontra o racional na aba Atribuições do painel.</aside>
 </section>
 
 <!-- 10 · LIMITES E FAIXAS -->
@@ -353,7 +353,7 @@
       <tr><td><b>N6+</b><br><small class="muted" style="font-size:13px">N6: acima de R$5M</small></td><td>25</td><td>R$5M a R$9,9M</td><td>R$10M a R$14,9M</td><td>a partir de R$15M</td></tr>
     </tbody>
   </table>
-  <p class="sub" style="margin:10px 0 0;font-size:16px">Limites em clientes por onboarder. Faixas pelo <b>Amount 12 months</b> da Oportunidade. Guardiões não têm limite: ficam fora da distribuição.</p>
+  <p class="sub" style="margin:10px 0 0;font-size:16px">Limites em clientes por onboarder. Faixas pelo <b>Amount 12 months</b> da Oportunidade.</p>
   <div class="cols c2" style="gap:16px;margin-top:16px;flex:none">
     <div class="cartao" style="font-size:17px"><h3>Onde cada faixa começa e termina</h3>O valor inicial de cada faixa já pertence a ela, e o valor final pertence à faixa seguinte. Ex.: no N2-N3, <b>R$300k é SG2</b>, não SG1.</div>
     <div class="cartao" style="font-size:17px"><h3>Fora das faixas</h3>Abaixo do piso do nível: <b>SG1</b>. Acima do teto: <b>SG3</b>. Ex.: R$80k no N2-N3 é <b>SG1</b>.</div>
@@ -404,7 +404,7 @@
         <tr class="fora"><td>Fernanda</td><td class="n">75</td><td class="n">75</td></tr><tr class="fora"><td>Gabriel</td><td class="n">75</td><td class="n">75</td></tr>
         <tr class="vence"><td>Duda, POD 2 (N2-N3) <span class="vence-tag">RECEBE</span></td><td class="n">20</td><td class="n">75</td></tr></tbody></table>
       <div class="res">Vai para outro POD do mesmo nível.</div>
-      <div class="pq"><b>Guardiões não recebem</b> Oportunidades e a carteira deles não conta. No <b>N6+</b> nada é atribuído: o coordenador recebe a sugestão no Google Chat.</div></div>
+      <div class="pq">No <b>N6+</b> nada é atribuído: o coordenador recebe a sugestão no Google Chat.</div></div>
     <div class="bcard"><div class="topo"><span class="letra">F</span><h3>O nível inteiro está cheio</h3></div>
       <table><thead><tr><th>Quem</th><th class="n">Total</th><th class="n">Limite</th></tr></thead><tbody>
         <tr class="fora"><td>POD da Fernanda</td><td class="n">cheio</td><td class="n"></td></tr><tr class="fora"><td>Todos os outros PODs N2-N3</td><td class="n">cheios</td><td class="n"></td></tr></tbody></table>
@@ -412,7 +412,7 @@
       <div class="pq"><b>Nunca cruza nível.</b> O coordenador é avisado por e-mail, com o resumo da Oportunidade, e a atribuição é manual.</div></div>
   </div>
   <div class="rodape"><span>Onboarding Assignment · exemplos ilustrativos</span><span>12</span></div>
-  <aside class="nota" hidden><b>A cascata em ação.</b> Primeiro o POD do Closer (cenários A a D), depois os outros PODs do mesmo nível (E) e, por fim, o alerta ao coordenador (F). Guardiões não entram na cascata. Mesmo que exista alguém em outro POD com carteira bem menor, o cliente fica no POD do Closer enquanto o POD tiver vaga: a proximidade de POD vem antes do equilíbrio entre PODs. Conferi estes cenários rodando o código da atribuição. Nomes e números são ilustrativos.</aside>
+  <aside class="nota" hidden><b>A cascata em ação.</b> Primeiro o POD do Closer (cenários A a D), depois os outros PODs do mesmo nível (E) e, por fim, o alerta ao coordenador (F). Mesmo que exista alguém em outro POD com carteira bem menor, o cliente fica no POD do Closer enquanto o POD tiver vaga: a proximidade de POD vem antes do equilíbrio entre PODs. Conferi estes cenários rodando o código da atribuição. Nomes e números são ilustrativos.</aside>
 </section>
 
 <!-- 10 · ETAPA 2 -->
