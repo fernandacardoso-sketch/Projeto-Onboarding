@@ -294,6 +294,12 @@
   .nav-topo a:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
   .print-titulo{ display:none; }
   .kpis{ grid-template-columns:repeat(5,1fr); }
+  .mini th.num{ text-align:right; }
+  .mini .col-chave{ white-space:nowrap; min-width:64px; }
+  .mini th{ vertical-align:bottom; line-height:1.25; }
+  .vaga span{ display:block; }
+  .vaga span.det{ margin-top:2px; font-weight:600; color:var(--text); }
+  .vaga .tag{ display:inline-block; }
   @media (max-width:900px){ .kpis{ grid-template-columns:repeat(2,1fr); } }
   .kpi.alerta-acima b{ color:var(--over-text); }
   .kpi small{ display:block; margin-top:2px; font-size:11.5px; color:var(--text-muted); }
@@ -413,6 +419,11 @@
   .ccard .sg-item b, .ccard .sg-item .mut{ white-space:nowrap; }
   .ccard .sg-item .meter-track{ width:60px; }
   .cards{ grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); }
+  .duas > .bloco{ min-width:0; overflow-x:auto; }
+  .mini th{ white-space:normal; padding:6px 6px; }
+  .mini td{ padding:7px 6px; }
+  .mini .ocup{ min-width:96px; }
+  .mini .ocup .meter-track{ min-width:44px; }
 
   .regra ul.notas{ margin:10px 0 0; padding-left:18px; font-size:12.5px; line-height:1.55; color:var(--text-muted); }
   .regra ul.notas li{ margin-bottom:5px; }
@@ -586,11 +597,11 @@
         <h2 class="print-titulo">Visão geral</h2>
         <div class="vg">
           <div class="kpis" id="kpis">
-            <div class="kpi"><b id="kpiTotalOnb">—</b><span>Onboarders / Guardiões</span></div>
-            <div class="kpi"><b id="kpiCarteiraTotal">—</b><span>Clientes em Onboarding</span></div>
-            <div class="kpi"><b id="kpiLivreTotal">—</b><span>Vagas livres</span><small>sem os guardiões</small></div>
-            <div class="kpi" id="kpiAcimaBox"><b id="kpiAcima">—</b><span>Acima do limite</span><small>carteira &gt; limite</small></div>
-            <div class="kpi" id="kpiLimiteBox"><b id="kpiNoLimite">—</b><span>No limite</span><small>carteira = limite</small></div>
+            <div class="kpi"><b id="kpiTotalOnb">-</b><span>Analistas (com guardiões)</span></div>
+            <div class="kpi"><b id="kpiCarteiraTotal">-</b><span>Clientes em Onboarding</span></div>
+            <div class="kpi"><b id="kpiLivreTotal">-</b><span>Vagas livres (clientes)</span><small>sem os guardiões</small></div>
+            <div class="kpi" id="kpiAcimaBox"><b id="kpiAcima">-</b><span>Acima do limite</span><small>carteira &gt; limite</small></div>
+            <div class="kpi" id="kpiLimiteBox"><b id="kpiNoLimite">-</b><span>No limite</span><small>carteira = limite</small></div>
           </div>
 
           <section class="bloco" aria-labelledby="h-vagas">
@@ -601,11 +612,11 @@
           <div class="duas">
             <section class="bloco" aria-labelledby="h-nivel">
               <h2 id="h-nivel">Resumo por nível</h2>
-              <table class="mini"><thead><tr><th scope="col">Nível</th><th scope="col">Onboarders</th><th scope="col">Carteira / limite</th><th scope="col">Ocupação</th><th scope="col" class="num">Vagas</th><th scope="col" class="num">Com vaga</th></tr></thead><tbody id="resumoNivel"></tbody></table>
+              <table class="mini"><thead><tr><th scope="col" class="col-chave">Nível</th><th scope="col" class="num">Analistas</th><th scope="col" class="num">Clientes / Limite</th><th scope="col">Ocupação</th><th scope="col" class="num">Vagas livres (clientes)</th><th scope="col" class="num">Analistas com vaga</th></tr></thead><tbody id="resumoNivel"></tbody></table>
             </section>
             <section class="bloco" aria-labelledby="h-pod">
               <h2 id="h-pod">Resumo por POD</h2>
-              <table class="mini"><thead><tr><th scope="col">POD</th><th scope="col">Nível</th><th scope="col">Onboarders</th><th scope="col">Carteira / limite</th><th scope="col">Ocupação</th><th scope="col" class="num">Vagas</th><th scope="col" class="num">Com vaga</th></tr></thead><tbody id="resumoPod"></tbody></table>
+              <table class="mini"><thead><tr><th scope="col" class="col-chave">POD</th><th scope="col" class="col-chave">Nível</th><th scope="col" class="num">Analistas</th><th scope="col" class="num">Clientes / Limite</th><th scope="col">Ocupação</th><th scope="col" class="num">Vagas livres (clientes)</th><th scope="col" class="num">Analistas com vaga</th></tr></thead><tbody id="resumoPod"></tbody></table>
             </section>
           </div>
 
@@ -960,7 +971,7 @@
   // "gabriel.galastro@hotmart.com" → "Gabriel Galastro"
   function nomeDe(email){
     const base = String(email || '').split('@')[0];
-    if (!base) return '—';
+    if (!base) return '-';
     return base.split(/[._-]+/).filter(Boolean).map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
   }
   const brl = n => 'R$ ' + new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 }).format(n);
@@ -1015,7 +1026,7 @@
   function ocupBarra(pct, cor){
     const w = h('div', 'ocup'); const t = h('div', 'meter-track'); const f = h('div', 'meter-fill');
     f.style.width = Math.min(pct || 0, 100) + '%'; f.style.background = cor; t.appendChild(f); w.appendChild(t);
-    w.appendChild(h('span', '', pct == null ? '—' : pct + '%')); return w;
+    w.appendChild(h('span', '', pct == null ? '-' : pct + '%')); return w;
   }
   function corPct(pct){ return pct == null ? 'var(--ok-bar)' : pct > 100 ? 'var(--over-bar)' : pct === 100 ? 'var(--red-bar)' : pct >= FAIXA_ATENCAO ? 'var(--orange)' : 'var(--ok-bar)'; }
 
@@ -1041,31 +1052,31 @@
     const vagas = document.getElementById('vagasNivel'); vagas.innerHTML = '';
     NIVEIS.forEach(n => {
       const a = agregar(reg.filter(o => o.level === n));
-      const d = h('div', 'vaga'); d.appendChild(h('b', '', String(a.livres))); d.appendChild(h('span', '', n + ' · ' + a.comVaga + ' de ' + a.n + ' com vaga')); vagas.appendChild(d);
+      const d = h('div', 'vaga'); d.appendChild(h('b', '', String(a.livres))); d.appendChild(h('span', '', 'clientes disponíveis no ' + n)); d.appendChild(h('span', 'det', a.comVaga + ' de ' + a.n + ' analistas com vaga')); vagas.appendChild(d);
     });
     const ag = agregar(gua);
     const dg = h('div', 'vaga aparte'); dg.appendChild(h('span', 'tag', 'Guardião · à parte')); dg.appendChild(h('b', '', String(ag.livres)));
-    dg.appendChild(h('span', '', ag.comVaga + ' de ' + ag.n + ' com vaga · só entram quando o POD está no limite')); vagas.appendChild(dg);
+    dg.appendChild(h('span', '', 'clientes disponíveis nos guardiões')); dg.appendChild(h('span', 'det', ag.comVaga + ' de ' + ag.n + ' analistas com vaga · só entram quando o POD está no limite')); vagas.appendChild(dg);
 
     // resumo por nível (guardiões numa linha à parte)
     const rn = document.getElementById('resumoNivel'); rn.innerHTML = '';
     const linhaResumo = (tr, a, rotuloTd) => {
-      tr.appendChild(rotuloTd); tr.appendChild(h('td', '', String(a.n)));
-      tr.appendChild(h('td', 'nowrap', a.carteira + ' / ' + a.limite));
+      tr.appendChild(rotuloTd); tr.appendChild(h('td', 'num', String(a.n)));
+      tr.appendChild(h('td', 'num nowrap', a.carteira + ' / ' + a.limite));
       const tdO = h('td'); tdO.appendChild(ocupBarra(a.pct, corPct(a.pct))); tr.appendChild(tdO);
       tr.appendChild(h('td', 'num', String(a.livres))); tr.appendChild(h('td', 'num', a.comVaga + ' de ' + a.n));
     };
-    NIVEIS.forEach(n => { const tr = h('tr'); linhaResumo(tr, agregar(reg.filter(o => o.level === n)), h('td', 'nome', n)); rn.appendChild(tr); });
-    if (gua.length) { const tr = h('tr', 'aparte'); linhaResumo(tr, ag, h('td', 'nome', 'Guardião (à parte)')); rn.appendChild(tr); }
+    NIVEIS.forEach(n => { const tr = h('tr'); linhaResumo(tr, agregar(reg.filter(o => o.level === n)), h('td', 'nome col-chave', n)); rn.appendChild(tr); });
+    if (gua.length) { const tr = h('tr', 'aparte'); linhaResumo(tr, ag, h('td', 'nome col-chave', 'Guardião (à parte)')); rn.appendChild(tr); }
 
     // resumo por POD
     const rp = document.getElementById('resumoPod'); rp.innerHTML = '';
     const pods = [...new Set(reg.map(o => o.pod))].sort((a, b) => num(a) - num(b));
     pods.forEach(p => {
       const lista = reg.filter(o => o.pod === p), a = agregar(lista);
-      const tr = h('tr'); tr.appendChild(h('td', 'nome', 'POD ' + p));
-      tr.appendChild(h('td', '', [...new Set(lista.map(o => o.level))].join(', ')));
-      tr.appendChild(h('td', '', String(a.n))); tr.appendChild(h('td', 'nowrap', a.carteira + ' / ' + a.limite));
+      const tr = h('tr'); tr.appendChild(h('td', 'nome col-chave', 'POD ' + p));
+      tr.appendChild(h('td', 'col-chave', [...new Set(lista.map(o => o.level))].join(', ')));
+      tr.appendChild(h('td', 'num', String(a.n))); tr.appendChild(h('td', 'num nowrap', a.carteira + ' / ' + a.limite));
       const tdO = h('td'); tdO.appendChild(ocupBarra(a.pct, corPct(a.pct))); tr.appendChild(tdO);
       tr.appendChild(h('td', 'num', String(a.livres))); tr.appendChild(h('td', 'num', a.comVaga + ' de ' + a.n)); rp.appendChild(tr);
     });
@@ -1125,7 +1136,7 @@
     fill.style.width = Math.min(st.pct ?? 0, 100) + '%'; fill.style.background = st.cor; trk.appendChild(fill);
     const marca = h('span', 'marca'); marca.setAttribute('aria-hidden', 'true'); trk.appendChild(marca);
     m.appendChild(trk);
-    const tx = h('span', 'meter-txt'); tx.appendChild(h('b', '', String(num(o.carteira_atual)))); tx.appendChild(document.createTextNode(' / ' + (o.capacidade_maxima ?? '—')));
+    const tx = h('span', 'meter-txt'); tx.appendChild(h('b', '', String(num(o.carteira_atual)))); tx.appendChild(document.createTextNode(' / ' + (o.capacidade_maxima ?? '-')));
     m.appendChild(tx); return m;
   }
   function tagStatus(st){ return h('span', 'status-tag ' + st.classe, (st.pct == null ? '' : st.pct + '% · ') + st.rotulo); }
@@ -1150,7 +1161,7 @@
       if (agruparPod && o.pod !== ultimoPod) {
         ultimoPod = o.pod;
         const doPod = lista.filter(x => x.pod === o.pod), a = agregar(doPod);
-        const tr = h('tr', 'grupo'); const td = h('td', '', 'POD ' + (o.pod ?? '—')); td.colSpan = 7;
+        const tr = h('tr', 'grupo'); const td = h('td', '', 'POD ' + (o.pod ?? '-')); td.colSpan = 7;
         td.appendChild(h('span', 'mut', doPod.length + ' onboarders · carteira ' + a.carteira + ' / ' + a.limite + ' · ' + a.livres + ' vagas'));
         tr.appendChild(td); frag.push({ tr });
       }
@@ -1182,11 +1193,11 @@
       const tdN = h('td'); const w = h('div', 'nome-wrap');
       const bt = h('button', 'exp'); bt.type = 'button'; bt.innerHTML = ICONE_SETA; bt.setAttribute('aria-expanded', String(aberto));
       bt.setAttribute('aria-label', 'Ver a carteira por subgrupo de ' + nomeDe(o.email));
-      w.appendChild(bt); const nm = h('div'); const nn = h('span', 'nome', nomeDe(o.email)); nn.title = o.email || ''; nm.appendChild(nn); nm.appendChild(h('small', '', o.email || '—')); w.appendChild(nm); tdN.appendChild(w); tr.appendChild(tdN);
-      const tdP = h('td'); tdP.appendChild(h('span', 'badge pod', 'POD ' + (o.pod ?? '—'))); tr.appendChild(tdP);
-      const tdV = h('td'); tdV.appendChild(h('span', 'badge', ROTULO_NIVEL[o.level] || o.level || '—')); tr.appendChild(tdV);
+      w.appendChild(bt); const nm = h('div'); const nn = h('span', 'nome', nomeDe(o.email)); nn.title = o.email || ''; nm.appendChild(nn); nm.appendChild(h('small', '', o.email || '-')); w.appendChild(nm); tdN.appendChild(w); tr.appendChild(tdN);
+      const tdP = h('td'); tdP.appendChild(h('span', 'badge pod', 'POD ' + (o.pod ?? '-'))); tr.appendChild(tdP);
+      const tdV = h('td'); tdV.appendChild(h('span', 'badge', ROTULO_NIVEL[o.level] || o.level || '-')); tr.appendChild(tdV);
       const tdM = h('td'); tdM.appendChild(barraCarteira(o, st)); tr.appendChild(tdM);
-      tr.appendChild(h('td', 'num', o.capacidade_livre == null ? '—' : String(o.capacidade_livre)));
+      tr.appendChild(h('td', 'num', o.capacidade_livre == null ? '-' : String(o.capacidade_livre)));
       tr.appendChild(h('td', 'num', String(num(o.pre_onboarding_atual))));
       const tdS = h('td'); tdS.appendChild(tagStatus(st)); tr.appendChild(tdS);
       corpoCarteira.appendChild(tr);
@@ -1199,10 +1210,10 @@
       });
       // cards
       const cd = h('article', 'ccard'); const top = h('div', 'topo'); const tt = h('div');
-      const n2 = h('div', 'nome', nomeDe(o.email)); n2.title = o.email || ''; tt.appendChild(n2); tt.appendChild(h('small', 'mut', o.email || '—')); top.appendChild(tt); top.appendChild(tagStatus(st)); cd.appendChild(top);
-      const bd = h('div', 'badges'); bd.appendChild(h('span', 'badge pod', 'POD ' + (o.pod ?? '—'))); bd.appendChild(h('span', 'badge', ROTULO_NIVEL[o.level] || o.level || '—')); cd.appendChild(bd);
+      const n2 = h('div', 'nome', nomeDe(o.email)); n2.title = o.email || ''; tt.appendChild(n2); tt.appendChild(h('small', 'mut', o.email || '-')); top.appendChild(tt); top.appendChild(tagStatus(st)); cd.appendChild(top);
+      const bd = h('div', 'badges'); bd.appendChild(h('span', 'badge pod', 'POD ' + (o.pod ?? '-'))); bd.appendChild(h('span', 'badge', ROTULO_NIVEL[o.level] || o.level || '-')); cd.appendChild(bd);
       cd.appendChild(barraCarteira(o, st));
-      const l1 = h('div', 'linha'); l1.appendChild(h('span', '', 'Vagas livres')); l1.appendChild(h('b', '', o.capacidade_livre == null ? '—' : String(o.capacidade_livre))); cd.appendChild(l1);
+      const l1 = h('div', 'linha'); l1.appendChild(h('span', '', 'Vagas livres')); l1.appendChild(h('b', '', o.capacidade_livre == null ? '-' : String(o.capacidade_livre))); cd.appendChild(l1);
       const l2 = h('div', 'linha'); l2.appendChild(h('span', '', 'Em pré-onboarding')); l2.appendChild(h('b', '', String(num(o.pre_onboarding_atual)))); cd.appendChild(l2);
       if (o.sg1_carteira !== undefined) cd.appendChild(sgDetalhe(o));
       carteiraCards.appendChild(cd);
@@ -1275,7 +1286,7 @@
     const g = String(seg || '').match(/^\s*Guardian\s+(sg[123])\s*$/i);   // guardiões não têm faixa de receita
     if (g) return { nivel: 'Guardian', sg: g[1].toLowerCase(), faixa: 'guardião, sem faixa de receita', legado: false };
     const m = String(seg || '').match(/^\s*(N2-N3|N4-N5|N6\+)\s*·\s*(.+)$/);
-    if (!m) return { nivel: null, sg: null, faixa: seg || '—', legado: false };
+    if (!m) return { nivel: null, sg: null, faixa: seg || '-', legado: false };
     const nivel = m[1], resto = norm(m[2]), f = FAIXAS[nivel];
     for (const k of ['sg1', 'sg2', 'sg3']) {
       if (norm(f[k]) === resto) return { nivel, sg: k, faixa: f[k], legado: false };
@@ -1288,7 +1299,7 @@
     const r = String(a.racional || '').trim();
     if (/^\[Guardi[ãa]o\]/i.test(r)) return 'Guardião';
     if (/^\[Outro POD\]/i.test(r)) return 'Outro POD';
-    if (!r) return '—';
+    if (!r) return '-';
     return 'Mesmo POD';
   }
   const ehTeste = a => CLOSERS_TESTE.includes(String(a.closer || '').toLowerCase()) || PADRAO_TESTE.test(String(a.cliente || ''));
@@ -1349,16 +1360,16 @@
       const tr = h('tr', 'lin');
       const t0 = h('td'); const bt = h('button', 'exp'); bt.type = 'button'; bt.innerHTML = ICONE_SETA;
       bt.setAttribute('aria-expanded', String(aberta)); bt.setAttribute('aria-label', 'Ver o racional da atribuição de ' + (a.cliente || 'cliente')); t0.appendChild(bt); tr.appendChild(t0);
-      tr.appendChild(h('td', 'mut nowrap', a.data_atribuicao || '—'));
-      const tdC = h('td', 'cliente', a.cliente || '—'); tdC.title = a.cliente || ''; tr.appendChild(tdC);
-      tr.appendChild(h('td', 'hid', a.hotmart_id ? String(a.hotmart_id) : '—'));
+      tr.appendChild(h('td', 'mut nowrap', a.data_atribuicao || '-'));
+      const tdC = h('td', 'cliente', a.cliente || '-'); tdC.title = a.cliente || ''; tr.appendChild(tdC);
+      tr.appendChild(h('td', 'hid', a.hotmart_id ? String(a.hotmart_id) : '-'));
       tr.appendChild(celulaPessoa(a.onboarder)); const tdCl = celulaPessoa(a.closer); tdCl.classList.add('mut'); tr.appendChild(tdCl);
       const si = segInfo(a.segmentacao); const tdS = h('td'); const sb = h('span', 'sg-badge');
       if (si.sg) {
         sb.appendChild(h('span', 'badge', si.sg.toUpperCase())); const fx = h('span', 'faixa', si.nivel + ' · ' + si.faixa); if (si.legado) fx.title = 'Registrado no histórico como “' + si.original + '”; exibido na faixa oficial'; sb.appendChild(fx);
         const esp = a.amount_12m != null ? sgDeValor(si.nivel, num(a.amount_12m)) : null;
         if (esp && esp !== si.sg) { const d = h('span', 'diverge', '!'); d.title = 'O Amount atual (' + brl(num(a.amount_12m)) + ') cai em ' + esp.toUpperCase() + ', mas a atribuição foi registrada como ' + si.sg.toUpperCase() + '. O Amount pode ter mudado depois.'; d.setAttribute('role', 'img'); d.setAttribute('aria-label', d.title); sb.appendChild(d); }
-      } else sb.appendChild(h('span', 'faixa', si.nivel ? si.nivel + ' · ' + si.faixa : (a.segmentacao || '—')));
+      } else sb.appendChild(h('span', 'faixa', si.nivel ? si.nivel + ' · ' + si.faixa : (a.segmentacao || '-')));
       tdS.appendChild(sb); tr.appendChild(tdS);
       tr.appendChild(h('td', 'etapa', etapaDe(a)));
       corpoAtrib.appendChild(tr);
