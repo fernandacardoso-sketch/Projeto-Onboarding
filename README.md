@@ -113,9 +113,9 @@ Atribuídas que ainda não chegaram ao Closed Won **não** entram na contagem (o
 
 | Nível | sg1 | sg2 | sg3 |
 |---|---|---|---|
-| N2-N3 (N2: R$ 120 mil–599 mil · N3: R$ 600 mil–999 mil) | < R$ 300 mil | R$ 300 mil a < 600 mil | ≥ R$ 600 mil |
-| N4-N5 (N4: R$ 1 mi–1,9 mi · N5: R$ 2 mi–4,9 mi) | < R$ 2 mi | R$ 2 mi a < 3 mi | ≥ R$ 3 mi |
-| N6 (acima de R$ 5 mi) / N6+ | < R$ 10 mi | R$ 10 mi a < 15 mi | ≥ R$ 15 mi |
+| N2-N3 (N2: R$ 120 mil–599 mil · N3: R$ 600 mil–999 mil) | R$ 120 mil a 299 mil | R$ 300 mil a 599 mil | R$ 600 mil a 999 mil |
+| N4-N5 (N4: R$ 1 mi–1,9 mi · N5: R$ 2 mi–4,9 mi) | R$ 1 mi a 1,9 mi | R$ 2 mi a 2,9 mi | R$ 3 mi a 4,9 mi |
+| N6 (acima de R$ 5 mi) / N6+ | R$ 5 mi a 9,9 mi | R$ 10 mi a 14,9 mi | a partir de R$ 15 mi |
 
 **Cascata** (nunca cruza nível):
 1. Onboarders do **mesmo POD** do Closer com carteira total abaixo do limite (**N2-N3: 75, N4-N5: 50, N6+: 25**).
@@ -233,4 +233,4 @@ Quatro abas (hash na URL: #visao-geral, #carteira, #atribuicoes, #regras; a últ
 - **Regras:** cascata em 4 passos, uma tabela única de limites e subgrupos, desempate.
 Cabeçalho com links Atribuição/Painel, "Atualizado há N", atualizar (auto a cada 3 min), avatar com menu e tema. Ao imprimir, as 4 abas saem em sequência.
 **Workflow 5:** devolve até 500 atribuições, a carteira por subgrupo (`sg1_carteira`…) e, por atribuição, `hotmart_id` e `amount_12m` (consulta ao Salesforce; se falhar, o painel segue sem essas colunas). Sem reimportá-lo, o painel avisa o que falta.
-**Workflow 2:** os rótulos de segmentação gravados no histórico passaram a seguir a regra oficial (SG1 "< R$300k", SG3 "≥ R$600k" etc.); linhas antigas (ex.: "120k–300k") continuam sendo lidas e são exibidas na faixa oficial.
+**Workflow 2:** os rótulos de segmentação gravados no histórico passaram a seguir a regra oficial (N2-N3: SG1 "R$120k a R$299k", SG2 "R$300k a R$599k", SG3 "R$600k a R$999k"; mesma lógica nos demais níveis); linhas antigas (ex.: "120k–300k") continuam sendo lidas e são exibidas na faixa oficial.
