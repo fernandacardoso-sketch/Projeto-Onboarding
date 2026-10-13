@@ -597,6 +597,10 @@
   @media (prefers-reduced-motion:reduce){ .esq-bar, body.carga-inicial .kpi b{ animation:none; } }
   @media print{ .banner-crit, .legenda-status{ -webkit-print-color-adjust:exact; print-color-adjust:exact; } .tab-larga{ overflow:visible; } #tabelaCarteira thead th:first-child, #tabelaCarteira tr.lin td:first-child, #tabelaAtrib thead th, #tabelaAtrib tr.lin td{ position:static !important; } #tabelaCarteira table, #tabelaAtrib table, .mini{ min-width:0 !important; } }
 
+  .fluxo{ grid-template-columns:repeat(3,1fr); }
+  @media (max-width:1000px){ .fluxo{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:560px){ .fluxo{ grid-template-columns:1fr; } }
+
   .regra ul.notas{ margin:10px 0 0; padding-left:18px; font-size:12.5px; line-height:1.55; color:var(--text-muted); }
   .regra ul.notas li{ margin-bottom:5px; }
   .regra ul.notas b{ color:var(--text); font-weight:600; }
@@ -779,7 +783,7 @@
           <div class="legenda-status" data-legenda-status></div>
 
           <section class="bloco" aria-labelledby="h-vagas">
-            <h2 id="h-vagas">Vagas livres por nível <small>os guardiões ficam à parte: só recebem clientes quando o POD está no limite</small></h2>
+            <h2 id="h-vagas">Vagas livres por nível <small>sem os guardiões, que não recebem atribuições</small></h2>
             <div class="vagas" id="vagasNivel"></div>
           </section>
 
@@ -900,13 +904,13 @@
             <h2 id="h-cascata">Cascata de atribuição <small>quatro passos, sempre nesta ordem</small></h2>
             <div class="avisos" role="note" aria-label="Avisos da cascata">
               <div class="aviso destaque-regra"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.01"/></svg><div><b>Nunca cruza nível</b><span>Um Closer N2-N3 só recebe onboarder N2-N3, e assim por diante.</span></div></div>
-              <div class="aviso destaque-regra"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.01"/></svg><div><b>N6+ não tem guardião</b><span>No N6+ o passo 2 não existe: se o POD estiver no limite, vai direto ao passo 3.</span></div></div>
+              <div class="aviso destaque-regra"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.01"/></svg><div><b>Guardiões ficam fora</b><span>Não recebem atribuições e o tamanho da carteira deles não é considerado.</span></div></div>
+              <div class="aviso destaque-regra"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.01"/></svg><div><b>N6+ só sugere</b><span>Nada é atribuído: o sistema calcula o onboarder sugerido e avisa o coordenador no Google Chat.</span></div></div>
             </div>
             <ol class="passos fluxo">
               <li class="passo"><span class="n" aria-hidden="true">1</span><h3>Mesmo POD</h3><p>Onboarders do POD do Closer com carteira abaixo do limite do nível.</p></li>
-              <li class="passo"><span class="n" aria-hidden="true">2</span><h3>Guardião</h3><p>Só se o POD estiver no limite. Vale para N2-N3 e N4-N5. Escolhe o guardião com menor carteira (limite 75).</p></li>
-              <li class="passo"><span class="n" aria-hidden="true">3</span><h3>Outro POD, mesmo nível</h3><p>Mesma lógica do passo 1, em qualquer POD do nível do Closer.</p></li>
-              <li class="passo"><span class="n" aria-hidden="true">4</span><h3>Alerta ao coordenador</h3><p>Se todo o nível, guardiões inclusos, estiver no limite, o coordenador recebe um e-mail e nada é atribuído.</p></li>
+              <li class="passo"><span class="n" aria-hidden="true">2</span><h3>Outro POD, mesmo nível</h3><p>Mesma lógica do passo 1, em qualquer POD do nível do Closer.</p></li>
+              <li class="passo"><span class="n" aria-hidden="true">3</span><h3>Alerta ao coordenador</h3><p>Se todo o nível estiver no limite, o coordenador recebe um e-mail e nada é atribuído. No N6+ o aviso vai por Google Chat.</p></li>
             </ol>
           </section>
 
@@ -919,7 +923,6 @@
                   <tr><td class="nivel"><b>N2-N3</b><small>N2: R$120k–599k · N3: R$600k–999k</small></td><td class="col-lim">75 clientes</td><td><span class="chip-sg cor-sg1">R$120k a R$299k</span></td><td><span class="chip-sg cor-sg2">R$300k a R$599k</span></td><td><span class="chip-sg cor-sg3">R$600k a R$999k</span></td></tr>
                   <tr><td class="nivel"><b>N4-N5</b><small>N4: R$1M–1,9M · N5: R$2M–4,9M</small></td><td class="col-lim">50 clientes</td><td><span class="chip-sg cor-sg1">R$1M a R$1,9M</span></td><td><span class="chip-sg cor-sg2">R$2M a R$2,9M</span></td><td><span class="chip-sg cor-sg3">R$3M a R$4,9M</span></td></tr>
                   <tr><td class="nivel"><b>N6+</b><small>N6: acima de R$5M</small></td><td class="col-lim">25 clientes</td><td><span class="chip-sg cor-sg1">R$5M a R$9,9M</span></td><td><span class="chip-sg cor-sg2">R$10M a R$14,9M</span></td><td><span class="chip-sg cor-sg3">a partir de R$15M</span></td></tr>
-                  <tr><td class="nivel"><b>Guardian</b></td><td class="col-lim">75 clientes</td><td colspan="3" class="mut">sem subgrupos</td></tr>
                 </tbody>
               </table>
             </div>
@@ -940,7 +943,8 @@
             <ul class="notas" id="notasSegmentacao">
               <li><b>Faixas:</b> o valor inicial de cada faixa já pertence a ela, e o valor final pertence à faixa seguinte. Ex.: no N2-N3, R$300k é SG2, não SG1.</li>
               <li><b>Fora das faixas:</b> o valor abaixo do piso do nível entra no SG1 e o valor acima do teto entra no SG3.</li>
-              <li><b>Quem concorre:</b> só os onboarders abaixo do limite de carteira, que são os do POD do Closer ou, na etapa de outro POD, os do mesmo nível. Guardiões não usam subgrupos.</li>
+              <li><b>Quem concorre:</b> só os onboarders abaixo do limite de carteira, que são os do POD do Closer ou, na etapa de outro POD, os do mesmo nível.</li>
+              <li><b>Guardiões:</b> não recebem atribuições, não têm limite de carteira e ficam fora das vagas e da ocupação.</li>
             </ul>
             <div class="legenda-status" data-legenda-status></div>
           </section>
@@ -1366,15 +1370,13 @@
     document.getElementById('kpiAcimaBox').classList.toggle('alerta-acima', acima > 0);
     document.getElementById('kpiLimiteBox').classList.toggle('alerta', noLim > 0);
 
-    // vagas por nível (guardiões à parte)
+    // vagas por nível (guardiões não entram: não recebem atribuições)
     const vagas = document.getElementById('vagasNivel'); vagas.innerHTML = '';
     NIVEIS.forEach(n => {
       const a = agregar(reg.filter(o => o.level === n));
       const d = h('div', 'vaga'); d.appendChild(h('b', '', String(a.livres))); d.appendChild(h('span', '', 'clientes disponíveis no ' + n)); d.appendChild(h('span', 'det', a.comVaga + ' de ' + a.n + ' analistas com vaga')); vagas.appendChild(d);
     });
-    const ag = agregar(gua);
-    const dg = h('div', 'vaga aparte'); dg.appendChild(h('span', 'tag', 'Guardião · à parte')); dg.appendChild(h('b', '', String(ag.livres)));
-    dg.appendChild(h('span', '', 'clientes disponíveis nos guardiões')); dg.appendChild(h('span', 'det', ag.comVaga + ' de ' + ag.n + ' analistas com vaga · só entram quando o POD está no limite')); vagas.appendChild(dg);
+
 
     // resumo por nível (guardiões numa linha à parte) e por POD, com ordenação pelo cabeçalho
     const rn = document.getElementById('resumoNivel'); rn.innerHTML = '';
@@ -1385,7 +1387,6 @@
       tr.appendChild(h('td', 'num', String(a.livres))); tr.appendChild(h('td', 'num', a.comVaga + ' de ' + a.n));
     };
     ordenarResumo(NIVEIS.map(n => ({ rot: n, ...agregar(reg.filter(o => o.level === n)) })), resumoOrd.nivel).forEach(l => { const tr = h('tr'); linhaResumo(tr, l, h('td', 'nome col-chave', l.rot)); rn.appendChild(tr); });
-    if (gua.length) { const tr = h('tr', 'aparte'); linhaResumo(tr, ag, h('td', 'nome col-chave', 'Guardião (à parte)')); rn.appendChild(tr); }
     marcarOrdem('cabResumoNivel', resumoOrd.nivel); marcarOrdem('cabResumoPod', resumoOrd.pod);
 
     const rp = document.getElementById('resumoPod'); rp.innerHTML = '';
@@ -1414,7 +1415,7 @@
     NIVEIS.forEach(n => {
       const a = agregar(reg.filter(o => o.level === n));
       if (!a.n) return;
-      if (a.comVaga === 0) item('grave', n + ': nenhum onboarder com vaga. ' + (n === 'N6+' ? 'N6+ não tem guardião: o próximo cliente dispara o alerta ao coordenador.' : 'Só resta o guardião; se ele também estiver no limite, dispara o alerta ao coordenador.'), { nivel: n });
+      if (a.comVaga === 0) item('grave', n + ': nenhum onboarder com vaga. ' + (n === 'N6+' ? 'A próxima sugestão vai avisar o coordenador no Google Chat que não há onboarder disponível.' : 'O próximo cliente dispara o alerta por e-mail ao coordenador.'), { nivel: n });
       else if (a.comVaga <= LIMIAR_POUCOS_COM_VAGA) item('leve', n + ': só ' + a.comVaga + ' de ' + a.n + ' onboarders com vaga (' + a.livres + ' vagas). Risco de disparar o alerta ao coordenador.', { nivel: n });
     });
     if (!ul.children.length) { const li = h('li'); li.appendChild(h('div', 'atencao-ok', 'Nenhum ponto de atenção agora.')); ul.appendChild(li); }
@@ -1493,7 +1494,7 @@
   }
   function barraCarteira(o, st){
     const m = h('div', 'meter'); m.appendChild(barraEmpilhada(o, st));
-    const tx = h('span', 'meter-txt'); tx.appendChild(h('b', '', String(num(o.carteira_atual)))); tx.appendChild(document.createTextNode(' / ' + (o.capacidade_maxima ?? '-')));
+    const tx = h('span', 'meter-txt'); tx.appendChild(h('b', '', String(num(o.carteira_atual)))); if (o.capacidade_maxima != null) tx.appendChild(document.createTextNode(' / ' + o.capacidade_maxima));
     m.appendChild(tx); return m;
   }
   function tagStatus(st){ return h('span', 'status-tag ' + st.classe, (st.pct == null ? '' : st.pct + '% · ') + st.rotulo); }
@@ -1526,10 +1527,10 @@
     top.appendChild(tt); top.appendChild(tagStatusCard(st)); cd.appendChild(top);
     const tg = h('div', 'tags'); tg.appendChild(h('span', 'tag-s', 'POD ' + (o.pod ?? '-'))); tg.appendChild(h('span', 'tag-s', ROTULO_NIVEL[o.level] || o.level || '-')); cd.appendChild(tg);
     const pr = h('div', 'princ'); const big = h('div', 'grande'); big.appendChild(h('b', '', String(num(o.carteira_atual))));
-    big.appendChild(h('span', '', ' / ' + (o.capacidade_maxima ?? '-') + ' clientes')); if (st.pct != null) big.appendChild(h('em', 'pct', st.pct + '%'));
+    big.appendChild(h('span', '', (o.capacidade_maxima != null ? ' / ' + o.capacidade_maxima : '') + ' clientes')); if (st.pct != null) big.appendChild(h('em', 'pct', st.pct + '%'));
     pr.appendChild(big); pr.appendChild(barraEmpilhada(o, st)); cd.appendChild(pr);
     const c2 = h('div', 'duas-col');
-    const a = h('div'); a.appendChild(h('span', '', 'Vagas livres')); a.appendChild(h('b', '', o.capacidade_livre == null ? '-' : String(o.capacidade_livre))); c2.appendChild(a);
+    const a = h('div'); a.appendChild(h('span', '', 'Vagas livres')); a.appendChild(h('b', '', o.capacidade_livre == null ? 'Sem limite' : String(o.capacidade_livre))); c2.appendChild(a);
     const b = h('div'); b.appendChild(h('span', '', 'Em pré-onboarding')); b.appendChild(h('b', '', String(num(o.pre_onboarding_atual)))); b.title = TXT_PRE; c2.appendChild(b);
     cd.appendChild(c2);
     const sg = subgrupos(o); const lg = h('div', 'sg-leg');
@@ -1684,6 +1685,7 @@
     const r = String(a.racional || '').trim();
     if (/^\[Guardi[ãa]o\]/i.test(r)) return 'Guardião';
     if (/^\[Outro POD\]/i.test(r)) return 'Outro POD';
+    if (/^\[Sugest[ãa]o/i.test(r)) return 'Sugestão N6+';
     if (!r) return '-';
     return 'Mesmo POD';
   }
@@ -1716,7 +1718,7 @@
   function preencherFiltrosAtrib(){
     const l = painelData.ultimas_atribuicoes || [];
     const preencher = (sel, campo) => {
-      const atual = sel.value; const vals = [...new Set(l.map(a => a[campo]).filter(Boolean))].sort((a, b) => nomeDe(a).localeCompare(nomeDe(b)));
+      const atual = sel.value; const vals = [...new Set(l.map(a => a[campo]).filter(v => v && /@/.test(String(v))))].sort((a, b) => nomeDe(a).localeCompare(nomeDe(b)));
       sel.innerHTML = ''; sel.appendChild(new Option('Todos', ''));
       vals.forEach(v => sel.appendChild(new Option(nomeDe(v), v)));
       sel.value = vals.includes(atual) ? atual : '';
@@ -1743,9 +1745,8 @@
   function detAtrib(a, si){
     const wrap = h('div', 'casc');
     const racional = String(a.racional || '').trim();
-    const alerta = /^ALERTA DISPARADO/i.test(racional);
-    const etapa = etapaDe(a), semGuardiao = si.nivel === 'N6+';
-    const topo = h('div', 'casc-topo'); topo.appendChild(h('b', '', 'Como o onboarder foi escolhido'));
+    const alerta = /^ALERTA DISPARADO/i.test(racional), sugestao = /^\[Sugest[ãa]o/i.test(racional), antigo = /^\[Guardi[ãa]o\]/i.test(racional);
+    const topo = h('div', 'casc-topo'); topo.appendChild(h('b', '', sugestao ? 'Como o onboarder foi sugerido' : 'Como o onboarder foi escolhido'));
     if (a.hotmart_id) {
       const id = h('span', 'casc-id'); id.appendChild(h('span', 'mut', 'Hotmart ID')); id.appendChild(h('code', '', String(a.hotmart_id)));
       const bt = h('button', 'btn-copiar', 'Copiar'); bt.type = 'button'; bt.setAttribute('aria-label', 'Copiar o Hotmart ID ' + a.hotmart_id);
@@ -1754,32 +1755,41 @@
       id.appendChild(bt); id.appendChild(msg); topo.appendChild(id);
     } else topo.appendChild(h('span', 'mut', 'Sem Hotmart ID registrado'));
     wrap.appendChild(topo);
-    if (alerta) { wrap.appendChild(h('p', 'casc-txt', SEM_TRAVESSAO(racional))); return wrap; }
-    const ordemEtapa = { 'Mesmo POD': 1, 'Guardião': 2, 'Outro POD': 3 }, usada = ordemEtapa[etapa] || 0;
+    if (antigo) {   // histórico do tempo em que o guardião ainda recebia atribuições
+      wrap.appendChild(h('p', 'casc-txt mut', 'Atribuição antiga: nessa época o guardião ainda recebia Oportunidades. Hoje os guardiões ficam fora da distribuição.'));
+      wrap.appendChild(h('p', 'casc-txt', SEM_TRAVESSAO(racional))); return wrap;
+    }
+    // etapa usada: 1 mesmo POD, 2 outro POD, 3 alerta ao coordenador
+    let usada = etapaDe(a) === 'Outro POD' ? 2 : 1;
+    if (alerta || (sugestao && /Sem onboarder dispon[ií]vel/i.test(racional))) usada = 3;
+    else if (sugestao) usada = /\((outro POD|mesmo POD)/i.exec(racional) && /\(outro POD/i.test(racional) ? 2 : 1;
     const passos = [
       ['Mesmo POD', 'Onboarders do POD do closer com carteira abaixo do limite.'],
-      ['Guardião', semGuardiao ? 'Não se aplica ao N6+, que não tem guardião.' : 'Guardiões do nível, só se o POD estiver no limite.'],
-      ['Outro POD, mesmo nível', 'Onboarders de outros PODs do mesmo nível, só se o guardião também estiver no limite.']
+      ['Outro POD, mesmo nível', 'Onboarders de outros PODs do mesmo nível, só se o POD do closer estiver no limite.'],
+      ['Alerta ao coordenador', sugestao ? 'Todo o nível está no limite: o coordenador é avisado no Google Chat.' : 'Todo o nível está no limite: o coordenador é avisado por e-mail e nada é atribuído.']
     ];
     const ol = h('ol', 'casc-passos');
     passos.forEach(([nome, desc], i) => {
-      const n = i + 1; const li = h('li', n === usada ? 'escolhido' : (n < usada && !(n === 2 && semGuardiao) ? 'sem-vaga' : 'nao-usado'));
+      const n = i + 1; const li = h('li', n === usada ? 'escolhido' : (n < usada ? 'sem-vaga' : 'nao-usado'));
       li.appendChild(h('span', 'n', String(n))); const c = h('div'); c.appendChild(h('b', '', nome)); c.appendChild(h('span', 'mut', desc)); li.appendChild(c);
-      const est = n === usada ? 'Escolhido aqui' : (n < usada ? (n === 2 && semGuardiao ? 'Não se aplica' : 'Sem vaga') : 'Não foi necessário');
+      const est = n === usada ? (n === 3 ? 'Acionado' : sugestao ? 'Sugerido aqui' : 'Escolhido aqui') : (n < usada ? 'Sem vaga' : 'Não foi necessário');
       li.appendChild(h('span', 'estado', est)); ol.appendChild(li);
     });
     wrap.appendChild(ol);
-    // critério que decidiu entre os candidatos do passo escolhido
-    let crit = 0;
-    if (/empate no segmento, na carteira total e no pr[ée]-onboarding/i.test(racional)) crit = 4;
-    else if (/empate no segmento e na carteira total/i.test(racional)) crit = 3;
-    else if (/empate no segmento/i.test(racional)) crit = 2;
-    else if (/sem empate/i.test(racional)) crit = 1;
-    const criterios = ['Menos clientes no subgrupo da Oportunidade', 'Menor carteira total', 'Menos clientes em pré-onboarding no subgrupo', 'Última atribuição mais antiga'];
-    const cr = h('div', 'casc-crit'); cr.appendChild(h('span', 'rot', 'Critério de escolha dentro do passo'));
-    const ul = h('ol', 'criterios');
-    criterios.forEach((t, i) => { const li = h('li', i + 1 === crit ? 'decidiu' : (crit && i + 1 < crit ? 'empatou' : ''), t); if (i + 1 === crit) li.appendChild(h('span', 'estado', 'Decidiu')); else if (crit && i + 1 < crit) li.appendChild(h('span', 'estado', 'Empate')); ul.appendChild(li); });
-    cr.appendChild(ul); wrap.appendChild(cr);
+    if (usada < 3) {
+      // critério que decidiu entre os candidatos do passo
+      let crit = 0;
+      if (/empate no segmento, na carteira total e no pr[ée]-onboarding/i.test(racional)) crit = 4;
+      else if (/empate no segmento e na carteira total/i.test(racional)) crit = 3;
+      else if (/empate no segmento|empate no subgrupo/i.test(racional)) crit = 2;
+      else if (/sem empate|menos clientes no subgrupo/i.test(racional)) crit = 1;
+      const criterios = ['Menos clientes no subgrupo da Oportunidade', 'Menor carteira total', 'Menos clientes em pré-onboarding no subgrupo', 'Última atribuição mais antiga'];
+      const cr = h('div', 'casc-crit'); cr.appendChild(h('span', 'rot', 'Critério de escolha dentro do passo'));
+      const ul = h('ol', 'criterios');
+      criterios.forEach((t, i) => { const li = h('li', i + 1 === crit ? 'decidiu' : (crit && i + 1 < crit ? 'empatou' : ''), t); if (i + 1 === crit) li.appendChild(h('span', 'estado', 'Decidiu')); else if (crit && i + 1 < crit) li.appendChild(h('span', 'estado', 'Empate')); ul.appendChild(li); });
+      cr.appendChild(ul); wrap.appendChild(cr);
+    }
+    if (sugestao) wrap.appendChild(h('p', 'casc-txt mut', 'N6+: nada foi atribuído pelo sistema. O coordenador decide e define o Onboarding Owner na Oportunidade.'));
     wrap.appendChild(h('p', 'casc-txt', racional ? SEM_TRAVESSAO(racional) : 'Sem racional registrado.'));
     return wrap;
   }
@@ -1813,7 +1823,7 @@
     else ordemAtrib = { col, dir: ['cliente', 'onboarder', 'closer', 'etapa', 'seg', 'hotmart'].includes(col) ? 'asc' : 'desc' };
     visiveisAtrib = POR_PAGINA; renderAtrib();
   });
-  function celulaPessoa(email){ const td = h('td', 'nowrap', nomeDe(email)); td.title = email || ''; return td; }
+  function celulaPessoa(email){ const ehEmail = /@/.test(String(email || '')); const td = h('td', 'nowrap' + (ehEmail ? '' : ' mut'), ehEmail ? nomeDe(email) : String(email || '-')); td.title = email || ''; return td; }
   function renderAtrib(){
     persistirUrl();
     document.querySelectorAll('#cabAtrib th').forEach(th => { if (ordemAtrib.col && th.dataset.col === ordemAtrib.col) th.setAttribute('aria-sort', ordemAtrib.dir === 'asc' ? 'ascending' : 'descending'); else th.removeAttribute('aria-sort'); });
