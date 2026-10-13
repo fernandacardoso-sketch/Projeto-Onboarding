@@ -714,15 +714,15 @@
             <table>
               <thead><tr><th scope="col">Nível</th><th scope="col">Limite</th><th scope="col">SG1</th><th scope="col">SG2</th><th scope="col">SG3</th></tr></thead>
               <tbody>
-                <tr><td>N2-N3<br><small class="mut" style="font-weight:400">N2: R$120k–599k · N3: R$600k–999k</small></td><td>75 clientes</td><td>&lt; R$300k</td><td>R$300k a &lt; R$600k</td><td>≥ R$600k</td></tr>
-                <tr><td>N4-N5<br><small class="mut" style="font-weight:400">N4: R$1M–1,9M · N5: R$2M–4,9M</small></td><td>50 clientes</td><td>&lt; R$2M</td><td>R$2M a &lt; R$3M</td><td>≥ R$3M</td></tr>
-                <tr><td>N6+<br><small class="mut" style="font-weight:400">N6: acima de R$5M</small></td><td>25 clientes</td><td>&lt; R$10M</td><td>R$10M a &lt; R$15M</td><td>≥ R$15M</td></tr>
+                <tr><td>N2-N3<br><small class="mut" style="font-weight:400">N2: R$120k–599k · N3: R$600k–999k</small></td><td>75 clientes</td><td>R$120k a R$299k</td><td>R$300k a R$599k</td><td>R$600k a R$999k</td></tr>
+                <tr><td>N4-N5<br><small class="mut" style="font-weight:400">N4: R$1M–1,9M · N5: R$2M–4,9M</small></td><td>50 clientes</td><td>R$1M a R$1,9M</td><td>R$2M a R$2,9M</td><td>R$3M a R$4,9M</td></tr>
+                <tr><td>N6+<br><small class="mut" style="font-weight:400">N6: acima de R$5M</small></td><td>25 clientes</td><td>R$5M a R$9,9M</td><td>R$10M a R$14,9M</td><td>a partir de R$15M</td></tr>
                 <tr><td>Guardian</td><td>150 clientes</td><td colspan="3" class="mut">sem subgrupos</td></tr>
               </tbody>
             </table>
             <ul class="notas" id="notasSegmentacao">
               <li><b>Faixas:</b> o valor inicial de cada faixa já pertence a ela, e o valor final pertence à faixa seguinte. Ex.: no N2-N3, R$300k é SG2, não SG1.</li>
-              <li><b>Extremos:</b> o SG1 não tem valor mínimo e o SG3 não tem valor máximo.</li>
+              <li><b>Fora das faixas:</b> o valor abaixo do piso do nível entra no SG1 e o valor acima do teto entra no SG3.</li>
               <li><b>Quem concorre:</b> só os onboarders abaixo do limite de carteira, que são os do POD do Closer ou, na etapa de outro POD, os do mesmo nível. Guardiões não usam subgrupos.</li>
             </ul>
             <p>Status: <span class="status-tag st-ok">tranquilo</span> abaixo de 70% · <span class="status-tag st-atencao">atenção</span> 70% a 99% · <span class="status-tag st-limite">no limite</span> 100% · <span class="status-tag st-acima">acima do limite</span> mais de 100%.</p>
@@ -922,9 +922,9 @@
   };
   // Segmentação por receita: regra oficial (SG1 sem piso, SG3 sem teto) e rótulos antigos gravados no histórico
   const FAIXAS = {
-    'N2-N3': { limites: [300000, 600000],     sg1: '< R$300k',  sg2: 'R$300k a < R$600k', sg3: '≥ R$600k', legado: { sg1: ['120k–300k'], sg2: ['300k–600k'], sg3: ['600k–1M'] } },
-    'N4-N5': { limites: [2000000, 3000000],   sg1: '< R$2M',    sg2: 'R$2M a < R$3M',     sg3: '≥ R$3M',   legado: { sg1: ['1M–2M'],    sg2: ['2M–3M'],    sg3: ['3M–5M'] } },
-    'N6+':   { limites: [10000000, 15000000], sg1: '< R$10M',   sg2: 'R$10M a < R$15M',   sg3: '≥ R$15M',  legado: { sg1: ['5M–10M'],   sg2: ['10M–15M'],  sg3: ['15M+'] } }
+    'N2-N3': { limites: [300000, 600000],     sg1: 'R$120k a R$299k', sg2: 'R$300k a R$599k', sg3: 'R$600k a R$999k', legado: { sg1: ['120k–300k', '< R$300k'], sg2: ['300k–600k', 'R$300k a < R$600k'], sg3: ['600k–1M', '≥ R$600k'] } },
+    'N4-N5': { limites: [2000000, 3000000],   sg1: 'R$1M a R$1,9M', sg2: 'R$2M a R$2,9M', sg3: 'R$3M a R$4,9M', legado: { sg1: ['1M–2M', '< R$2M'], sg2: ['2M–3M', 'R$2M a < R$3M'], sg3: ['3M–5M', '≥ R$3M'] } },
+    'N6+':   { limites: [10000000, 15000000], sg1: 'R$5M a R$9,9M', sg2: 'R$10M a R$14,9M', sg3: 'a partir de R$15M', legado: { sg1: ['5M–10M', '< R$10M'], sg2: ['10M–15M', 'R$10M a < R$15M'], sg3: ['15M+', '≥ R$15M'] } }
   };
   const ICONE_SETA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>';
   const ICONE_ALERTA = '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>';
