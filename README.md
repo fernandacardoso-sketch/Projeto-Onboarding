@@ -119,9 +119,14 @@ Atribuídas que ainda não chegaram ao Closed Won **não** entram na contagem (o
 
 **Cascata** (nunca cruza nível):
 1. Onboarders do **mesmo POD** do Closer com carteira total abaixo do limite (**N2-N3: 75, N4-N5: 50, N6+: 25**).
-2. **Guardião** (só N2-N3 e N4-N5; limite 75; vai para quem tem a menor carteira total).
-3. **Outro POD do mesmo nível.**
-4. Ninguém cabe: e-mail ao coordenador do nível e nenhuma atribuição. Coordenadores: N2-N3 `raissa.salles`, N4-N5 `giovane.jansen`, N6+ `julia.brito`.
+2. **Outro POD do mesmo nível.**
+3. Ninguém cabe: e-mail ao coordenador do nível e nenhuma atribuição. Coordenadores: N2-N3 `raissa.salles`, N4-N5 `giovane.jansen`, N6+ `julia.brito`.
+
+**Guardiões** (`Level = Guardian` no PODS) ficam **fora da distribuição** desde 13/10/2026: não recebem atribuições, o tamanho da carteira deles não é considerado (W5 manda `capacidade_maxima` nula e o painel mostra "sem limite") e o passo de guardião saiu da cascata.
+
+**N6+ só sugere** (desde 13/10/2026): o W2 roda a mesma cascata, mas **não atribui** (não grava Onboarding Owner, não atualiza o cache e o app não segue para o agendamento). Em vez disso, o ramo `É sugestão N6+?` envia uma mensagem ao **Google Chat do coordenador** (`julia.brito`) pelo nó `Enviar Google Chat (N6+)` e registra no Hist a linha "Sem atribuição (sugestão N6+)" com o racional `[Sugestão N6+] ...`. A URL do webhook do espaço do Google Chat fica na constante `GOOGLE_CHAT_WEBHOOK_N6` do nó `Decidir Atribuição` (preencher antes de usar). Se todo o N6+ estiver no limite, a mensagem avisa que não há onboarder disponível.
+
+**Conteúdo do aviso ao coordenador** (e-mail dos níveis N2-N3 e N4-N5 e mensagem do Chat no N6+): nome da Oportunidade, link do Salesforce, Amount 12m, Closer, sugestão de onboarder e resumo de `Business_aditional_information_CLOSER__c` (HTML removido, até cerca de 280 caracteres, "Não informado" se vazio). No e-mail, a sugestão é "Nenhum onboarder disponível", porque ele só sai quando o nível inteiro está no limite.
 
 **Escolha dentro do pool** (sem limite fixo por subgrupo desde 12/10/2026): menos clientes **no subgrupo** da Oportunidade → empate: menor **carteira total** → empate: menor pré-onboarding no subgrupo → quem recebeu há mais tempo (nunca recebeu = primeiro). O antigo limite de 10 por subgrupo foi removido: nos dados reais quase todos já o tinham ultrapassado no SG1, e no N6+ três subgrupos de 10 (30) superavam o limite de carteira (25). Se tudo empatar, vale o primeiro da lista do Cache.
 
@@ -227,10 +232,10 @@ Percorre o fluxo **inteiro** (atribuir, agendar o welcome, campos e Closed Won) 
 
 ### Painel de Acompanhamento (painel.html, v2 em 12/10/2026)
 Quatro abas (hash na URL: #visao-geral, #carteira, #atribuicoes, #regras; a última aba fica em localStorage):
-- **Visão geral:** 5 indicadores (onboarders/guardiões, clientes em onboarding, vagas livres *sem guardiões*, acima do limite >100%, no limite =100%), vagas por nível com os guardiões à parte, resumo por nível e por POD e o bloco "Atenção" (constante `LIMIAR_POUCOS_COM_VAGA` no JS).
+- **Visão geral:** faixa de alerta clicável, 5 indicadores (analistas, clientes em onboarding, vagas livres *sem guardiões*, acima do limite >100%, no limite =100%), vagas por nível, resumo por nível e por POD (ordenáveis) e o bloco "Atenção" (constante `LIMIAR_POUCOS_COM_VAGA` no JS).
 - **Carteira:** tabela (padrão) ou cards; filtros de nível, POD, status e nome; agrupar por POD; linha expansível com a carteira por subgrupo SG1/SG2/SG3; exportar CSV do que está filtrado.
-- **Atribuições:** Data/hora, cliente, Hotmart ID, onboarder, closer, segmentação (SG1/SG2/SG3 em badge, faixa oficial) e etapa da cascata (lida do início do racional: `[Guardião]`, `[Outro POD]`, senão "Mesmo POD"); filtros de período, closer, onboarder e nível; "Ocultar testes" (cliente com "teste" no nome ou closer em `CLOSERS_TESTE`).
-- **Regras:** cascata em 4 passos, uma tabela única de limites e subgrupos, desempate.
+- **Atribuições:** Data/hora, cliente, Hotmart ID, onboarder, closer, segmentação (SG1/SG2/SG3 em badge, faixa oficial) e etapa da cascata (lida do início do racional: `[Outro POD]`, `[Sugestão N6+]`, senão "Mesmo POD"; registros antigos com `[Guardião]` continuam legíveis); filtros de período, closer, onboarder e nível; "Ocultar testes" (cliente com "teste" no nome ou closer em `CLOSERS_TESTE`).
+- **Regras:** cascata em 3 passos, uma tabela única de limites e subgrupos, desempate.
 Cabeçalho com links Atribuição/Painel, "Atualizado há N", atualizar (auto a cada 3 min), avatar com menu e tema. Ao imprimir, as 4 abas saem em sequência.
 **Workflow 5:** devolve até 500 atribuições, a carteira por subgrupo (`sg1_carteira`…) e, por atribuição, `hotmart_id` e `amount_12m` (consulta ao Salesforce; se falhar, o painel segue sem essas colunas). Sem reimportá-lo, o painel avisa o que falta.
 **Workflow 2:** os rótulos de segmentação gravados no histórico passaram a seguir a regra oficial (N2-N3: SG1 "R$120k a R$299k", SG2 "R$300k a R$599k", SG3 "R$600k a R$999k"; mesma lógica nos demais níveis); linhas antigas (ex.: "120k–300k") continuam sendo lidas e são exibidas na faixa oficial.
