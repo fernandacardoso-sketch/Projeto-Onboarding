@@ -113,9 +113,9 @@ Atribuídas que ainda não chegaram ao Closed Won **não** entram na contagem (o
 
 | Nível | sg1 | sg2 | sg3 |
 |---|---|---|---|
-| N2-N3 | < R$ 300 mil | R$ 300 mil a < 600 mil | ≥ R$ 600 mil |
-| N4-N5 | < R$ 2 mi | R$ 2 mi a < 3 mi | ≥ R$ 3 mi |
-| N6+ | < R$ 10 mi | R$ 10 mi a < 15 mi | ≥ R$ 15 mi |
+| N2-N3 (N2: R$ 120 mil–599 mil · N3: R$ 600 mil–999 mil) | < R$ 300 mil | R$ 300 mil a < 600 mil | ≥ R$ 600 mil |
+| N4-N5 (N4: R$ 1 mi–1,9 mi · N5: R$ 2 mi–4,9 mi) | < R$ 2 mi | R$ 2 mi a < 3 mi | ≥ R$ 3 mi |
+| N6 (acima de R$ 5 mi) / N6+ | < R$ 10 mi | R$ 10 mi a < 15 mi | ≥ R$ 15 mi |
 
 **Cascata** (nunca cruza nível):
 1. Onboarders do **mesmo POD** do Closer com carteira total abaixo do limite (**N2-N3: 75, N4-N5: 50, N6+: 25**).
