@@ -732,7 +732,7 @@
             <!-- Alerta de capacidade máxima -->
             <div class="section-gap rise" id="alertWrap" style="display:none;">
               <div class="alert-box">
-                <strong>Capacidade máxima atingida</strong><br>
+                <strong id="alertTitulo">Capacidade máxima atingida</strong><br>
                 <span id="alertMsg"></span>
               </div>
               <button class="btn-ghost" id="assignAgainBtn">Tentar outra Oportunidade</button>
@@ -1826,8 +1826,20 @@
       }
       const data = await res.json();
 
+      // N6+: o sistema não atribui. A sugestão vai por mensagem no Google Chat do coordenador, que define o onboarder.
+      if (data.status === 'sugestao') {
+        document.getElementById('alertTitulo').textContent = 'Sugestão enviada ao coordenador';
+        alertMsg.textContent = (data.mensagem || 'No N6+ a atribuição é feita pelo coordenador.') +
+          (data.sem_sugestao ? ' Hoje não há onboarder N6+ disponível, então a mensagem avisa isso.' : '') +
+          ' Quando ele definir o onboarder, a Oportunidade aparece como já atribuída no seu funil.';
+        assignFormWrap.style.display = 'none';
+        alertWrap.style.display = 'block';
+        return;
+      }
+
       // Caminho de alerta (capacidade máxima)
       if (data.status === 'alerta') {
+        document.getElementById('alertTitulo').textContent = 'Capacidade máxima atingida';
         alertMsg.textContent = data.motivo ?? 'Nenhum onboarder disponível. E-mail enviado ao coordenador.';
         assignFormWrap.style.display = 'none';
         alertWrap.style.display = 'block';
