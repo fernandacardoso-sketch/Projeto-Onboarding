@@ -227,7 +227,7 @@ Percorre o fluxo **inteiro** (atribuir, agendar o welcome, campos e Closed Won) 
 
 ### Painel de Acompanhamento (painel.html, v2 em 12/10/2026)
 Quatro abas (hash na URL: #visao-geral, #carteira, #atribuicoes, #regras; a última aba fica em localStorage):
-- **Visão geral:** 5 indicadores (onboarders/guardiões, contratos ativos, vagas livres *sem guardiões*, acima do limite >100%, no limite =100%), vagas por nível com os guardiões à parte, resumo por nível e por POD e o bloco "Atenção" (constante `LIMIAR_POUCOS_COM_VAGA` no JS).
+- **Visão geral:** 5 indicadores (onboarders/guardiões, clientes em onboarding, vagas livres *sem guardiões*, acima do limite >100%, no limite =100%), vagas por nível com os guardiões à parte, resumo por nível e por POD e o bloco "Atenção" (constante `LIMIAR_POUCOS_COM_VAGA` no JS).
 - **Carteira:** tabela (padrão) ou cards; filtros de nível, POD, status e nome; agrupar por POD; linha expansível com a carteira por subgrupo SG1/SG2/SG3; exportar CSV do que está filtrado.
 - **Atribuições:** Data/hora, cliente, Hotmart ID, onboarder, closer, segmentação (SG1/SG2/SG3 em badge, faixa oficial) e etapa da cascata (lida do início do racional: `[Guardião]`, `[Outro POD]`, senão "Mesmo POD"); filtros de período, closer, onboarder e nível; "Ocultar testes" (cliente com "teste" no nome ou closer em `CLOSERS_TESTE`).
 - **Regras:** cascata em 4 passos, uma tabela única de limites e subgrupos, desempate.
