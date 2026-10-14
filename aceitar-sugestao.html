@@ -303,6 +303,7 @@
       <div class="tabs" role="tablist" aria-label="Seções">
         <button type="button" class="tab" role="tab" id="tabSugestao" aria-controls="painelSugestao" aria-selected="false">Sugestão</button>
         <button type="button" class="tab" role="tab" id="tabPendencias" aria-controls="painelPendencias" aria-selected="true">Pendências <span class="contador" id="nPend" aria-label="pendentes">0</span></button>
+        <button type="button" class="tab" role="tab" id="tabHistorico" aria-controls="painelHistorico" aria-selected="false">Histórico</button>
       </div>
       <div class="app-tools">
         <nav class="nav-topo" aria-label="Atalhos">
@@ -390,6 +391,20 @@
       <div class="barra-lista"><span id="contagem" aria-live="polite"></span><button type="button" class="btn-quiet" id="fLimpar" hidden>Limpar filtros</button></div>
       <div class="lista" id="lista" aria-live="polite"></div>
     </main>
+    <!-- HISTÓRICO -->
+    <main id="painelHistorico" class="largo" role="tabpanel" aria-labelledby="tabHistorico" hidden>
+      <div class="eyebrow">Sugestões do N6+</div>
+      <h1>Histórico</h1>
+      <p class="sub">Sugestões já aceitas pela coordenação, da mais recente para a mais antiga (guardadas por 30 dias).</p>
+      <div class="filtros" role="group" aria-label="Filtros do histórico">
+        <select id="fHCloser" aria-label="Filtrar por Closer"><option value="">Todos os Closers</option></select>
+        <select id="fHOnb" aria-label="Filtrar por onboarder"><option value="">Todos os onboarders</option></select>
+        <select id="fHPor" aria-label="Filtrar por quem aceitou"><option value="">Quem aceitou: todos</option></select>
+        <div class="busca"><input type="search" id="fHBusca" placeholder="Buscar por Oportunidade" autocomplete="off" aria-label="Buscar por Oportunidade no histórico" /></div>
+      </div>
+      <div class="barra-lista"><span id="hContagem" aria-live="polite"></span><button type="button" class="btn-quiet" id="fHLimpar" hidden>Limpar filtros</button></div>
+      <div class="lista" id="hLista" aria-live="polite"></div>
+    </main>
     <footer>Onboarding Assignment · New Business</footer>
   </div>
 <script>
@@ -397,6 +412,8 @@
   'use strict';
   var BASE = 'https://hotmart.app.n8n.cloud/webhook/';
   var SESSION_KEY = 'carteira_sessao';
+  // a sessão também fica no localStorage (até expirar) para o link do Chat, aberto em outra aba, não pedir login de novo
+  function salvarSessao(s) { sessionStorage.setItem(SESSION_KEY, s); try { localStorage.setItem(SESSION_KEY, s); } catch (e) {} }
   var params = new URLSearchParams(location.search);
   var TOKEN = (params.get('t') || '').trim(), OPP_URL = (params.get('opp') || '').trim();
   var $ = function (id) { return document.getElementById(id); };
@@ -417,8 +434,8 @@
 
   // ── utilitários ──
   function sessao() {
-    try { var s = JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null'); if (s && s.token && new Date(s.expira_em) > new Date()) return s; } catch (e) {}
-    sessionStorage.removeItem(SESSION_KEY); return null;
+    try { var s = JSON.parse(sessionStorage.getItem(SESSION_KEY) || localStorage.getItem(SESSION_KEY) || 'null'); if (s && s.token && new Date(s.expira_em) > new Date()) return s; } catch (e) {}
+    sessionStorage.removeItem(SESSION_KEY); try { localStorage.removeItem(SESSION_KEY); } catch (e) {} return null;
   }
   var nome = function (e) { return String(e || '').split('@')[0].split(/[._-]+/).filter(Boolean).map(function (p) { return p.charAt(0).toUpperCase() + p.slice(1); }).join(' ') || '-'; };
   function compacto(n) {   // R$ 600 mi, R$ 6,5 mi, R$ 450 mil
@@ -441,20 +458,22 @@
     var s = sessao(); if (!s) { entrarTela(); throw new Error('login'); }
     var res = await fetch(BASE + 'sugestao-n6', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + s.token }, body: JSON.stringify(corpo) });
     var dados = {}; try { dados = await res.json(); } catch (e) {}
-    if (res.status === 401) { sessionStorage.removeItem(SESSION_KEY); entrarTela(); $('loginErro').textContent = 'Sua sessão expirou. Entre de novo.'; $('loginErro').classList.add('show'); throw new Error('login'); }
+    if (res.status === 401) { sessionStorage.removeItem(SESSION_KEY); try { localStorage.removeItem(SESSION_KEY); } catch (e) {} entrarTela(); $('loginErro').textContent = 'Sua sessão expirou. Entre de novo.'; $('loginErro').classList.add('show'); throw new Error('login'); }
     return { ok: res.ok, status: res.status, dados: dados };
   }
 
   // ── abas ──
   function irPara(qual) {
     aba = qual;
+    var m = { sugestao: ['tabSugestao', 'painelSugestao'], pendencias: ['tabPendencias', 'painelPendencias'], historico: ['tabHistorico', 'painelHistorico'] };
+    Object.keys(m).forEach(function (k) { $(m[k][0]).setAttribute('aria-selected', String(k === qual)); $(m[k][1]).hidden = k !== qual; });
     var sug = qual === 'sugestao';
-    $('tabSugestao').setAttribute('aria-selected', String(sug)); $('tabPendencias').setAttribute('aria-selected', String(!sug));
-    $('painelSugestao').hidden = !sug; $('painelPendencias').hidden = sug;
     try { var u = new URL(location.href); u.searchParams.delete('t'); u.searchParams.delete('opp'); if (sug && atual) { if (tokenAtual) u.searchParams.set('t', tokenAtual); else u.searchParams.set('opp', atual.opp_id); } history.replaceState(null, '', u.pathname + (u.search || '')); } catch (e) {}
+    if (qual === 'historico') renderHistorico();
   }
   $('tabSugestao').addEventListener('click', function () { if (atual) irPara('sugestao'); });
   $('tabPendencias').addEventListener('click', function () { irPara('pendencias'); });
+  $('tabHistorico').addEventListener('click', function () { irPara('historico'); });
   $('voltarBtn').addEventListener('click', function () { irPara('pendencias'); });
   function habilitarSugestao() { $('tabSugestao').disabled = !atual; }
 
@@ -510,11 +529,46 @@
       if (!r.ok) { carregouLista = true; todas = []; renderLista(); $('lista').innerHTML = ''; var v = el('div', 'vazio'); v.appendChild(el('b', '', (r.dados && r.dados.mensagem) || 'Não foi possível carregar as pendências.')); $('lista').appendChild(v); return; }
       todas = r.dados.sugestoes || []; carregouLista = true;
       opcoesSelect($('fCloser'), unicos('closer'), 'Todos os Closers'); opcoesSelect($('fOnb'), unicos('onboarder'), 'Todos os onboarders');
-      filtro.closer = $('fCloser').value; filtro.onb = $('fOnb').value; renderLista();
+      filtro.closer = $('fCloser').value; filtro.onb = $('fOnb').value; renderLista(); renderHistorico();
     } catch (e) { if (e.message !== 'login') { carregouLista = true; renderLista(); msgLista('Falha de conexão. Tente atualizar.'); } }
     finally { $('refreshBtn').classList.remove('girando'); }
   }
   function msgLista(t) { $('lista').innerHTML = ''; var v = el('div', 'vazio'); v.appendChild(el('b', '', t)); $('lista').appendChild(v); }
+
+  // ── histórico: sugestões aceitas ──
+  var fH = { closer: '', onb: '', por: '', busca: '' };
+  function quemAceitou(e) { return e.aceito_nome || (e.aceito_por ? nome(e.aceito_por) : ''); }
+  function aceitasOrdenadas() {
+    return todas.filter(function (e) { return e.status === 'aceita'; }).sort(function (a, b) { return String(b.aceito_em || b.criado_em || '').localeCompare(String(a.aceito_em || a.criado_em || '')); });
+  }
+  function renderHistorico() {
+    var box = $('hLista'); box.innerHTML = '';
+    var aceitas = aceitasOrdenadas();
+    function opts(sel, valores, rotulo, f) { var v0 = sel.value; sel.innerHTML = ''; var o0 = el('option', '', rotulo); o0.value = ''; sel.appendChild(o0); valores.forEach(function (v) { var o = el('option', '', f ? f(v) : nome(v)); o.value = v; sel.appendChild(o); }); sel.value = valores.indexOf(v0) >= 0 ? v0 : ''; }
+    function uniq(fn) { var s = {}; aceitas.forEach(function (e) { var v = fn(e); if (v) s[v] = 1; }); return Object.keys(s).sort(); }
+    opts($('fHCloser'), uniq(function (e) { return e.closer; }), 'Todos os Closers'); opts($('fHOnb'), uniq(function (e) { return e.onboarder; }), 'Todos os onboarders'); opts($('fHPor'), uniq(quemAceitou), 'Quem aceitou: todos', function (v) { return v; });
+    fH.closer = $('fHCloser').value; fH.onb = $('fHOnb').value; fH.por = $('fHPor').value;
+    var b = fH.busca.trim().toLowerCase();
+    var l = aceitas.filter(function (e) { return (!fH.closer || e.closer === fH.closer) && (!fH.onb || e.onboarder === fH.onb) && (!fH.por || quemAceitou(e) === fH.por) && (!b || String(e.cliente || '').toLowerCase().indexOf(b) >= 0 || String(e.opp_id || '').toLowerCase().indexOf(b) >= 0); });
+    var ativos = (fH.closer ? 1 : 0) + (fH.onb ? 1 : 0) + (fH.por ? 1 : 0) + (b ? 1 : 0);
+    $('fHLimpar').hidden = ativos === 0; $('fHLimpar').textContent = 'Limpar filtros (' + ativos + ')';
+    $('hContagem').textContent = !carregouLista ? '' : (l.length === aceitas.length ? l.length + (l.length === 1 ? ' aceita' : ' aceitas') : l.length + ' de ' + aceitas.length + ' aceitas');
+    if (!carregouLista) { for (var i = 0; i < 3; i++) { var c = el('div', 'pend-item'); c.appendChild(el('span', 'esq')); c.lastChild.style.width = '55%'; c.appendChild(el('span', 'esq')); c.lastChild.style.width = '30%'; box.appendChild(c); } return; }
+    if (!l.length) { var v = el('div', 'vazio'); v.appendChild(el('b', '', aceitas.length ? 'Nenhuma aceita para esses filtros.' : 'Ainda não há sugestões aceitas.')); v.appendChild(el('span', '', aceitas.length ? 'Tente tirar algum filtro.' : 'Quando a coordenação aceitar uma sugestão, ela aparece aqui.')); box.appendChild(v); return; }
+    l.forEach(function (e) {
+      var it = el('button', 'pend-item'); it.type = 'button'; it.setAttribute('aria-label', 'Abrir a sugestão aceita de ' + (e.cliente || e.opp_id));
+      it.appendChild(el('b', '', e.cliente || e.opp_id)); it.appendChild(el('span', 'badge-estado aceita', 'Aceita'));
+      it.appendChild(el('span', 'meta', nome(e.closer) + ' · ' + compacto(e.amount) + ' · ' + (e.level || 'N6+') + ' ' + String(e.subgrupo || '').toUpperCase() + ' · aceita' + (quemAceitou(e) ? ' por ' + quemAceitou(e) : '') + (e.aceito_em ? ' em ' + dataBR(e.aceito_em) : '')));
+      var sug = el('span', 'sug'); sug.appendChild(document.createTextNode('Onboarder: ')); sug.appendChild(el('strong', '', nome(e.onboarder))); sug.appendChild(document.createTextNode(' (POD ' + e.pod + ')'));
+      if (e.sugerido_original && e.sugerido_original !== e.onboarder) sug.appendChild(document.createTextNode(' · trocado pela coordenação, o sistema sugeriu ' + nome(e.sugerido_original)));
+      it.appendChild(sug);
+      it.addEventListener('click', function () { abrirSugestao({ opp_id: e.opp_id }); });
+      box.appendChild(it);
+    });
+  }
+  [['fHCloser', 'closer'], ['fHOnb', 'onb'], ['fHPor', 'por']].forEach(function (par) { $(par[0]).addEventListener('change', function () { fH[par[1]] = this.value; renderHistorico(); }); });
+  $('fHBusca').addEventListener('input', function () { fH.busca = this.value; renderHistorico(); });
+  $('fHLimpar').addEventListener('click', function () { fH = { closer: '', onb: '', por: '', busca: '' }; $('fHCloser').value = ''; $('fHOnb').value = ''; $('fHPor').value = ''; $('fHBusca').value = ''; renderHistorico(); });
 
   // ── detalhe da sugestão ──
   var CRIT = ['Menos clientes no subgrupo da Oportunidade', 'Menor carteira total', 'Menos clientes em pré-onboarding no subgrupo', 'Atribuição mais antiga'];
@@ -647,7 +701,7 @@
   avatarBtn.addEventListener('click', function (ev) { ev.stopPropagation(); var abre = userPop.hidden; userPop.hidden = !abre; avatarBtn.setAttribute('aria-expanded', String(abre)); if (abre) $('logoutBtn').focus(); });
   userPop.addEventListener('keydown', function (e) { if (e.key === 'Escape') { e.stopPropagation(); fecharMenu(true); } });
   document.addEventListener('click', function (e) { if (!userPop.hidden && !userPop.contains(e.target)) fecharMenu(); });
-  $('logoutBtn').addEventListener('click', function () { sessionStorage.removeItem(SESSION_KEY); fecharMenu(); todas = []; carregouLista = false; atual = null; iniciar(); });
+  $('logoutBtn').addEventListener('click', function () { sessionStorage.removeItem(SESSION_KEY); try { localStorage.removeItem(SESSION_KEY); } catch (e) {} fecharMenu(); todas = []; carregouLista = false; atual = null; iniciar(); });
 
   $('loginForm').addEventListener('submit', async function (ev) {
     ev.preventDefault();
@@ -659,7 +713,7 @@
       var res = await fetch(BASE + 'carteira-login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, password: senha }) });
       var d = {}; try { d = await res.json(); } catch (e) {}
       if (!res.ok || !d.sucesso) { erro.textContent = d.mensagem || ('Não foi possível entrar (status ' + res.status + ').'); erro.classList.add('show'); return; }
-      sessionStorage.setItem(SESSION_KEY, JSON.stringify({ token: d.token, email: d.email, nome: d.nome, papel: d.papel, expira_em: d.expira_em }));
+      salvarSessao(JSON.stringify({ token: d.token, email: d.email, nome: d.nome, papel: d.papel, expira_em: d.expira_em }));
       $('senha').value = ''; iniciar();
     } catch (e) { erro.textContent = 'Falha de conexão. Tente de novo.'; erro.classList.add('show'); }
     finally { $('entrarBtn').disabled = false; $('entrarSpin').classList.remove('show'); }
