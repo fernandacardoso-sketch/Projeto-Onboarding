@@ -549,6 +549,8 @@
   .opp-acao{ position:relative; z-index:2; padding:5px 12px; font-size:12.5px; font-weight:700; line-height:1.2; color:var(--black); background:var(--orange); border-radius:var(--r-sm); }
   .opp-acao:hover{ background:var(--orange-hover); }
   .opp-acao.sec{ color:var(--text); background:transparent; border:1.5px solid var(--field-border); padding:4px 10px; }
+  a.btn-quiet.link-painel{ display:inline-flex; align-items:center; text-decoration:none; }
+  a.btn-quiet.link-painel[hidden]{ display:none; }
   .opp-cancelar{ position:relative; z-index:2; padding:4px 10px; font-size:12.5px; font-weight:700; line-height:1.2; color:var(--text); background:transparent; border:1.5px solid var(--field-border); border-radius:var(--r-sm); }
   .opp-cancelar:hover{ border-color:var(--text); }
   .opp-cancelar:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
@@ -707,6 +709,7 @@
           <button type="button" class="chip-filtro" id="chipDisp" aria-pressed="false"><span>Disponíveis para atribuir (<span id="chipDispN">0</span>)</span></button>
           <button type="button" class="icon-btn" id="oppRefreshBtn" aria-label="Atualizar oportunidades" title="Atualizar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 4v5h-5"/></svg></button>
           <button type="button" class="btn-quiet" id="manualBtn">Atribuir por ID</button>
+          <a class="btn-quiet link-painel" id="painelLink" href="painel.html" hidden>Painel</a>
         </div>
       </header>
       <div class="demo-banner" id="demoBanner" role="status" hidden>Modo demonstração · dados fictícios · nada é gravado. <a class="demo-reiniciar" href="?demo=1">Reiniciar a demonstração</a></div>
@@ -1080,6 +1083,7 @@
     loggedEmail.textContent = email;
     document.getElementById('avatarIni').textContent = iniciaisDoUsuario();
     fecharMenuUsuario();
+    document.getElementById('painelLink').hidden = (getSession() || {}).papel !== 'admin';   // atalho do painel só para admin
     funilSub.textContent = 'Funil de ' + ((getSession() || {}).nome || email);
     oportunidades = []; atualizadoEm = 0; erroCarga = ''; oppSearch.value = '';   // outra pessoa pode ter entrado: nada do funil anterior
     resetFlow();
