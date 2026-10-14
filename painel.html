@@ -979,15 +979,17 @@
   // ============================================================
   const WEBHOOK_PAINEL_URL = "https://hotmart.app.n8n.cloud/webhook/painel-acompanhamento";
   const WEBHOOK_LOGIN_URL = "https://hotmart.app.n8n.cloud/webhook/carteira-login";
-  // Sessão fica só na aba (sessionStorage) e expira em 8h; o token é validado pelo n8n em toda chamada.
+  // Sessão fica na aba (sessionStorage) e também no localStorage, compartilhada entre as páginas; expira em 8h; o token é validado pelo n8n em toda chamada.
   const SESSION_KEY = "carteira_sessao";
+  // a sessão também fica no localStorage (até expirar) para o link do Chat, aberto em outra aba, não pedir login de novo
+  function salvarSessao(s) { sessionStorage.setItem(SESSION_KEY, s); try { localStorage.setItem(SESSION_KEY, s); } catch (e) {} }
 
   function getSession(){
     try {
-      const s = JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null');
+      const s = JSON.parse(sessionStorage.getItem(SESSION_KEY) || localStorage.getItem(SESSION_KEY) || 'null');
       if (s && s.token && new Date(s.expira_em) > new Date()) return s;
     } catch (e) {}
-    sessionStorage.removeItem(SESSION_KEY);
+    sessionStorage.removeItem(SESSION_KEY); try { localStorage.removeItem(SESSION_KEY); } catch (e) {}
     return null;
   }
 
@@ -997,7 +999,7 @@
     if (!s) { showLogin(); throw new Error('Sessão expirada. Faça login novamente.'); }
     const res = await fetch(url, { ...opts, headers: { ...(opts.headers || {}), 'Authorization': 'Bearer ' + s.token } });
     if (res.status === 401) {
-      sessionStorage.removeItem(SESSION_KEY);
+      sessionStorage.removeItem(SESSION_KEY); try { localStorage.removeItem(SESSION_KEY); } catch (e) {}
       showLogin();
       throw new Error('Sessão expirada. Faça login novamente.');
     }
@@ -1106,7 +1108,7 @@
         loginError.classList.add('show');
         return;
       }
-      sessionStorage.setItem(SESSION_KEY, JSON.stringify({
+      salvarSessao(JSON.stringify({
         token: data.token, email: data.email, nome: data.nome, papel: data.papel, expira_em: data.expira_em
       }));
       passwordInput.value = '';
@@ -1120,7 +1122,7 @@
   });
   // Enter no e-mail pula para a senha; Enter na senha envia o formulário (que clica em "Entrar")
   emailInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); passwordInput.focus(); } });
-  logoutBtn.addEventListener('click', () => { sessionStorage.removeItem(SESSION_KEY); showLogin(); });
+  logoutBtn.addEventListener('click', () => { sessionStorage.removeItem(SESSION_KEY); try { localStorage.removeItem(SESSION_KEY); } catch (e) {} showLogin(); });
 
   // ---------------------------------------------------------
   // Painel: configuração, dados, abas e filtros
