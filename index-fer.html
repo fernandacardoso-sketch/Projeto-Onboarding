@@ -1907,6 +1907,7 @@
         document.getElementById('alertTitulo').textContent = 'Sugestão enviada ao coordenador';
         alertMsg.textContent = (data.mensagem || 'No N6+ a atribuição é feita pelo coordenador.') +
           (data.sem_sugestao ? ' Hoje não há onboarder N6+ disponível, então a mensagem avisa isso.' : '') +
+          (data.chat_enviado === false && data.chat_diag ? ' [detalhe técnico: ' + data.chat_diag + ']' : '') +
           (data.sem_sugestao || data.chat_enviado === false ? '' : ' Quando ele aceitar a sugestão, a Oportunidade fica disponível aqui no funil para você continuar (agendamento e Closed Won).');
         assignFormWrap.style.display = 'none';
         alertWrap.style.display = 'block';
