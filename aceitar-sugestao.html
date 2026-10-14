@@ -35,6 +35,7 @@
     --ink:#0D0D0D; --on-ink:#FFFFFF; --hover-ink:#262626;
     --danger-text:#3E0F1D; --focus:#0D0D0D; --field-border:#8A857C;
     --ok-bg:rgba(30,122,61,.12); --ok-text:#17632F; --destaque:#C23100;
+    --sg1:#1F2D4A; --sg2:#4A638F; --sg3:#6A83AB; --hatch:rgba(255,255,255,.75);
     --font-sans:"DM Sans","Arial",sans-serif; --font-mono:"DM Mono",ui-monospace,monospace;
     --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:24px; --sp-6:32px; --sp-7:48px; --sp-8:64px;
     --r-sm:6px; --r-md:10px; --r-lg:16px; --r-pill:999px;
@@ -45,6 +46,7 @@
     --text:#F5F3EF; --text-muted:rgba(245,243,239,.68); --accent-weak:rgba(255,64,0,.18);
     --ink:#F5F3EF; --on-ink:#0D0D0D; --hover-ink:#FFFFFF; --danger-text:#FFB4A8; --focus:#FFFFFF; --field-border:#8A857C;
     --ok-bg:rgba(111,208,140,.16); --ok-text:#6FD08C; --destaque:#FF8A5C;
+    --sg1:#D3DFF5; --sg2:#97ADD6; --sg3:#6F89B8; --hatch:rgba(13,13,13,.6);
   }
   *{ box-sizing:border-box; }
   body{ margin:0; min-height:100vh; background:var(--bg); color:var(--text); font-family:var(--font-sans); line-height:1.5; -webkit-font-smoothing:antialiased; }
@@ -165,10 +167,35 @@
   .msg::before{ content:""; position:absolute; left:0; top:12px; bottom:12px; width:4px; background:var(--yellow); border-radius:0 3px 3px 0; }
   .msg.ok::before{ background:var(--ok-text); }
   .msg.aviso::before{ background:var(--border-strong); }
-  .opcoes{ margin-top:var(--sp-3); padding:var(--sp-3) var(--sp-4); background:var(--surface-sunken); border-radius:var(--r-md); }
-  .opcoes label{ margin-bottom:6px; }
-  .opcoes select{ width:100%; font-size:14px; font-weight:600; padding:10px 12px; }
-  .opcoes .dica{ margin-top:6px; font-size:12px; color:var(--text-muted); line-height:1.45; }
+  /* ---- comparativo dos onboarders N6+ ---- */
+  .comparar{ margin-top:var(--sp-5); padding-top:var(--sp-5); border-top:1px solid var(--border); }
+  .comparar h2{ margin:0 0 4px; font-size:16px; font-weight:700; }
+  .comparar .dica{ margin:0 0 var(--sp-3); font-size:12.5px; color:var(--text-muted); line-height:1.5; }
+  .legenda{ display:flex; flex-wrap:wrap; gap:6px 16px; align-items:center; margin-bottom:var(--sp-3); font-size:12.5px; color:var(--text-muted); }
+  .legenda .lg{ display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
+  .sw{ display:inline-block; width:14px; height:10px; border-radius:3px; }
+  .sw.cor-sg1{ background:var(--sg1); } .sw.cor-sg2{ background:var(--sg2); } .sw.cor-sg3{ background:var(--sg3); }
+  .sw-pre{ background:repeating-linear-gradient(45deg, var(--hatch) 0 2px, transparent 2px 5px), var(--sg2); }
+  .sw-lim{ display:inline-block; width:2px; height:14px; background:var(--text); border-radius:1px; }
+  .sw-foco{ background:transparent; box-shadow:inset 0 0 0 2px var(--orange); }
+  .cmp-lista{ display:flex; flex-direction:column; gap:var(--sp-2); }
+  .cmp-linha{ display:block; width:100%; text-align:left; background:var(--surface); color:var(--text); border:1.5px solid var(--border-strong); border-radius:var(--r-md); padding:var(--sp-3) var(--sp-4); transition:border-color .15s, background .15s; }
+  .cmp-linha:hover{ border-color:var(--text-muted); }
+  .cmp-linha[aria-checked="true"]{ border-color:var(--orange); background:var(--accent-weak); box-shadow:inset 4px 0 0 var(--orange); }
+  .cmp-topo{ display:flex; align-items:center; justify-content:space-between; gap:var(--sp-2); margin-bottom:6px; }
+  .cmp-nome{ display:flex; align-items:center; flex-wrap:wrap; gap:8px; font-size:15px; font-weight:700; overflow-wrap:anywhere; }
+  .cmp-tag{ font-size:11.5px; font-weight:700; padding:2px 8px; border-radius:var(--r-pill); background:var(--surface-sunken); border:1px solid var(--border-strong); white-space:nowrap; }
+  .cmp-meta{ font-size:12px; color:var(--text-muted); white-space:nowrap; }
+  .pilha-wrap{ position:relative; padding:4px 0; }
+  .pilha{ display:flex; height:12px; border-radius:var(--r-pill); background:var(--surface-sunken); overflow:hidden; box-shadow:inset 0 0 0 1px var(--border-strong); }
+  .fatia{ position:relative; display:block; height:100%; flex:none; border-right:1.5px solid var(--surface); }
+  .fatia.cor-sg1{ background:var(--sg1); } .fatia.cor-sg2{ background:var(--sg2); } .fatia.cor-sg3{ background:var(--sg3); }
+  .fatia.foco{ box-shadow:inset 0 0 0 2px var(--orange); }
+  .fatia .pre{ position:absolute; right:0; top:0; bottom:0; background:repeating-linear-gradient(45deg, var(--hatch) 0 2px, transparent 2px 5px); }
+  .lim{ position:absolute; top:0; bottom:0; width:2px; margin-left:-1px; background:var(--text); border-radius:1px; }
+  .cmp-nums{ display:flex; flex-wrap:wrap; gap:2px 14px; margin-top:6px; font-size:12.5px; color:var(--text-muted); font-variant-numeric:tabular-nums; }
+  .cmp-nums .foco{ color:var(--destaque); font-weight:700; }
+  .cmp-nums b{ color:var(--text); }
   .esq{ display:block; height:14px; border-radius:6px; background:linear-gradient(90deg, var(--surface-sunken) 25%, var(--border) 50%, var(--surface-sunken) 75%); background-size:200% 100%; animation:esq 1.3s linear infinite; }
   @keyframes esq{ to{ background-position:-200% 0; } }
 
@@ -241,7 +268,7 @@
         <p class="login-lead">Entre com seu e-mail @hotmart.com e sua senha para ver e aceitar as sugestões de onboarder do N6+.</p>
         <ul class="login-bullets">
           <li>Ver as pendências</li>
-          <li>Aceitar ou escolher outro onboarder</li>
+          <li>Avaliar, aceitar ou escolher outro onboarder</li>
           <li>O Closer segue o processo no app</li>
         </ul>
       </div>
@@ -300,8 +327,8 @@
     <!-- SUGESTÃO -->
     <main id="painelSugestao" role="tabpanel" aria-labelledby="tabSugestao" hidden>
       <div class="eyebrow">Sugestão do N6+</div>
-      <h1>Aceitar sugestão</h1>
-      <p class="sub" id="sub">Confirme para definir o onboarder na Oportunidade.</p>
+      <h1>Avaliar sugestão</h1>
+      <p class="sub" id="sub">Compare os onboarders N6+ e confirme quem recebe a Oportunidade.</p>
       <button type="button" class="voltar" id="voltarBtn">← Voltar para pendências</button>
       <div id="aviso" class="msg erro" hidden></div>
       <div class="card" id="cartao">
@@ -331,10 +358,14 @@
               <div class="num"><span id="tAntes">0</span><span class="arrow">→</span><span class="depois" id="tDepois">0</span></div>
             </div>
           </div>
-          <div class="opcoes" id="opcoes" hidden></div>
+          <section class="comparar" id="comparar" aria-labelledby="hComparar" hidden>
+            <h2 id="hComparar">Ocupação da carteira dos onboarders N6+</h2>
+            <p class="dica" id="cmpDica"></p>
+            <div class="legenda" id="cmpLegenda" aria-label="Legenda do gráfico"></div>
+            <div class="cmp-lista" id="cmpLista" role="radiogroup" aria-labelledby="hComparar"></div>
+          </section>
           <button class="btn-primary" id="aceitarBtn" type="button"><span class="spinner" id="aceitarSpin"></span><span id="aceitarTxt">Aceitar sugestão</span></button>
           <div class="linha-botoes">
-            <button type="button" class="btn-ghost" id="trocarBtn" aria-expanded="false">Escolher outro</button>
             <a class="btn-ghost" id="sfLink2" href="#" target="_blank" rel="noopener noreferrer">Abrir no Salesforce ↗</a>
           </div>
         </section>
@@ -524,10 +555,11 @@
     var sf = /^https:\/\/hotmart\.my\.salesforce\.com\//.test(e.link_sf || ''); [$('sfLink'), $('sfLink2')].forEach(function (a) { if (sf) { a.href = e.link_sf; a.hidden = false; } else a.hidden = true; });
     pintarCriterio(e); pintarOnboarder();
     $('criterio').hidden = true; $('verCriterio').setAttribute('aria-expanded', 'false'); $('verCriterio').textContent = 'Ver critério';
-    $('opcoes').hidden = true; $('trocarBtn').setAttribute('aria-expanded', 'false'); $('trocarBtn').textContent = 'Escolher outro';
-    aceitarBtn.hidden = aceita; $('trocarBtn').hidden = aceita; aceitarBtn.disabled = false; $('aceitarSpin').classList.remove('show'); $('aceitarTxt').textContent = 'Aceitar sugestão';
-    $('sub').textContent = aceita ? 'O onboarder já foi definido nesta Oportunidade.' : 'Confirme para definir o onboarder na Oportunidade.';
+    $('comparar').hidden = true; $('cmpLista').innerHTML = '';
+    aceitarBtn.hidden = aceita; aceitarBtn.disabled = false; $('aceitarSpin').classList.remove('show'); $('aceitarTxt').textContent = 'Aceitar sugestão';
+    $('sub').textContent = aceita ? 'O onboarder já foi definido nesta Oportunidade.' : 'Compare os onboarders N6+ e confirme quem recebe a Oportunidade.';
     $('carregando').hidden = true; $('detalhe').hidden = false; $('cartao').hidden = false;
+    if (!aceita) carregarComparativo();
   }
   $('verCriterio').addEventListener('click', function () { var abre = $('criterio').hidden; $('criterio').hidden = !abre; this.setAttribute('aria-expanded', String(abre)); this.textContent = abre ? 'Ocultar critério' : 'Ver critério'; });
 
@@ -541,35 +573,60 @@
     } catch (e) { if (e.message !== 'login') { $('carregando').hidden = true; $('cartao').hidden = true; msg('Falha de conexão. Tente de novo.'); } }
   }
 
-  // escolher outro onboarder
-  $('trocarBtn').addEventListener('click', async function () {
-    var box = $('opcoes');
-    if (!box.hidden) { box.hidden = true; this.setAttribute('aria-expanded', 'false'); this.textContent = escolhido ? 'Escolher outro' : 'Escolher outro'; return; }
-    this.setAttribute('aria-expanded', 'true'); this.textContent = 'Fechar opções'; box.hidden = false; box.innerHTML = ''; box.appendChild(el('div', 'dica', 'Carregando os onboarders N6+...'));
-    try {
-      if (!opcoes) { var r = await chamar(Object.assign({ acao: 'opcoes' }, refSug())); if (!r.ok) { box.innerHTML = ''; box.appendChild(el('div', 'dica', (r.dados && r.dados.mensagem) || 'Não foi possível carregar as opções.')); return; } opcoes = r.dados.opcoes || []; }
-      desenharOpcoes();
-    } catch (e) { if (e.message !== 'login') { box.innerHTML = ''; box.appendChild(el('div', 'dica', 'Falha de conexão.')); } }
-  });
-  function desenharOpcoes() {
-    var box = $('opcoes'); box.innerHTML = '';
-    var sg = String(atual.subgrupo || '').toUpperCase();
-    var lb = el('label', '', 'Onboarders N6+'); lb.setAttribute('for', 'selOnb');
-    var sel = document.createElement('select'); sel.id = 'selOnb';
-    var o0 = document.createElement('option'); o0.value = ''; o0.textContent = 'Manter a sugestão (' + nome(atual.onboarder) + ')'; sel.appendChild(o0);
+  // ── comparativo: todos os onboarders N6+ na tela, com a carteira por subgrupo; clicar escolhe ──
+  function nsvg(tag, cls) { return el(tag, cls); }
+  function barra(o, sgFoco) {
+    var soma = o.sg1 + o.sg2 + o.sg3, esc = Math.max(o.limite || 0, o.total, soma, 1) * 1.12;
+    var wrap = el('div', 'pilha-wrap'), pilha = el('div', 'pilha');
+    [['sg1', o.sg1, o.pre1], ['sg2', o.sg2, o.pre2], ['sg3', o.sg3, o.pre3]].forEach(function (p) {
+      if (!p[1]) return;
+      var s = el('span', 'fatia cor-' + p[0] + (p[0] === sgFoco ? ' foco' : '')); s.style.width = (p[1] / esc * 100) + '%';
+      s.title = p[0].toUpperCase() + ': ' + p[1] + (p[1] === 1 ? ' cliente' : ' clientes') + ' (' + p[2] + ' em pré-onboarding)';
+      if (p[2]) { var q = el('i', 'pre'); q.style.width = Math.min(p[2] / p[1] * 100, 100) + '%'; s.appendChild(q); }
+      pilha.appendChild(s);
+    });
+    wrap.appendChild(pilha);
+    if (o.limite) { var m = el('span', 'lim'); m.style.left = (o.limite / esc * 100) + '%'; m.title = 'Limite do nível: ' + o.limite + ' clientes'; wrap.appendChild(m); }
+    return wrap;
+  }
+  function desenharComparativo() {
+    var sec = $('comparar'), lista = $('cmpLista'); lista.innerHTML = '';
+    var sg = String(atual.subgrupo || ''), SG = sg.toUpperCase();
+    $('cmpDica').textContent = opcoes.length ? 'Clique em um onboarder para escolhê-lo no lugar do sugerido. A ordem segue a regra: menos clientes no ' + SG + ' (o subgrupo desta Oportunidade, destacado), menor carteira e menor pré-onboarding.' : 'Não há onboarders N6+ disponíveis para comparar.';
+    var lg = $('cmpLegenda'); lg.innerHTML = '';
+    [['cor-sg1', 'SG1'], ['cor-sg2', 'SG2'], ['cor-sg3', 'SG3'], ['sw-pre', 'Pré-onboarding'], ['sw-lim', 'Limite do nível'], ['sw-foco', SG + ' desta Oportunidade']].forEach(function (x) {
+      var it = el('span', 'lg'); it.appendChild(el('i', x[0] === 'sw-lim' ? 'sw-lim' : 'sw ' + (x[0] === 'sw-pre' || x[0] === 'sw-foco' ? x[0] : x[0]))); it.appendChild(document.createTextNode(x[1])); lg.appendChild(it);
+    });
     opcoes.forEach(function (o) {
-      var op = document.createElement('option'); op.value = o.email;
-      op.textContent = nome(o.email) + (o.sugerido ? ' (sugerido)' : '') + ' · POD ' + o.pod + ' · ' + sg + ': ' + o.sg + ' · carteira ' + o.total + ' · pré-onb. ' + o.pre;
-      sel.appendChild(op);
+      var ativo = escolhido ? escolhido.email === o.email : o.sugerido;
+      var b = el('button', 'cmp-linha'); b.type = 'button'; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', String(!!ativo)); b.dataset.email = o.email;
+      var topo = el('div', 'cmp-topo'), nm = el('span', 'cmp-nome'); nm.appendChild(document.createTextNode(nome(o.email)));
+      if (o.sugerido) nm.appendChild(el('span', 'cmp-tag', 'Sugerido pelo sistema'));
+      topo.appendChild(nm); topo.appendChild(el('span', 'cmp-meta', 'POD ' + o.pod + ' · ' + o.level)); b.appendChild(topo);
+      var graf = barra(o, sg); graf.setAttribute('role', 'img'); graf.setAttribute('aria-label', nome(o.email) + ': ' + o.total + (o.limite ? ' de ' + o.limite : '') + ' clientes; SG1 ' + o.sg1 + ', SG2 ' + o.sg2 + ', SG3 ' + o.sg3 + '; ' + o.pre_total + ' em pré-onboarding.'); b.appendChild(graf);
+      var nums = el('div', 'cmp-nums');
+      [['sg1', o.sg1], ['sg2', o.sg2], ['sg3', o.sg3]].forEach(function (p) { nums.appendChild(el('span', p[0] === sg ? 'foco' : '', p[0].toUpperCase() + ' ' + p[1])); });
+      var c = el('span', '', 'Carteira '); c.appendChild(el('b', '', String(o.total) + (o.limite ? ' / ' + o.limite : ''))); nums.appendChild(c);
+      nums.appendChild(el('span', '', 'Pré-onboarding ' + o.pre_total));
+      b.appendChild(nums);
+      b.addEventListener('click', function () {
+        escolhido = o.sugerido ? null : o; pintarOnboarder();
+        $('aceitarTxt').textContent = escolhido ? 'Aceitar com ' + nome(escolhido.email) : 'Aceitar sugestão';
+        lista.querySelectorAll('.cmp-linha').forEach(function (x) { x.setAttribute('aria-checked', String(x === b)); });
+      });
+      lista.appendChild(b);
     });
-    sel.value = escolhido ? escolhido.email : '';
-    var dica = el('div', 'dica', opcoes.length ? 'Onboarders N6+ na ordem da regra: menos clientes no ' + sg + ', menor carteira, menor pré-onboarding.' : 'Não há onboarders N6+ disponíveis para escolher.');
-    sel.addEventListener('change', function () {
-      var o = opcoes.filter(function (x) { return x.email === sel.value; })[0];
-      escolhido = o && !o.sugerido ? o : null; pintarOnboarder();
-      $('aceitarTxt').textContent = escolhido ? 'Aceitar com ' + nome(escolhido.email) : 'Aceitar sugestão';
-    });
-    box.appendChild(lb); box.appendChild(sel); box.appendChild(dica);
+    sec.hidden = false;
+  }
+  async function carregarComparativo() {
+    var opp = atual && atual.opp_id; if (!opp) return;
+    $('comparar').hidden = false; $('cmpLista').innerHTML = ''; $('cmpDica').textContent = 'Carregando os onboarders N6+...'; $('cmpLegenda').innerHTML = '';
+    try {
+      var r = await chamar(Object.assign({ acao: 'opcoes' }, refSug()));
+      if (!atual || atual.opp_id !== opp) return;   // o usuário já abriu outra sugestão
+      if (!r.ok) { $('cmpDica').textContent = (r.dados && r.dados.mensagem) || 'Não foi possível carregar os onboarders.'; return; }
+      opcoes = r.dados.opcoes || []; desenharComparativo();
+    } catch (e) { if (e.message !== 'login') $('cmpDica').textContent = 'Falha de conexão ao carregar os onboarders.'; }
   }
 
   // ── login / sessão ──
