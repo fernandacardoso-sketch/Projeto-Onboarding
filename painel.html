@@ -601,6 +601,20 @@
   @media (max-width:1000px){ .fluxo{ grid-template-columns:repeat(2,1fr); } }
   @media (max-width:560px){ .fluxo{ grid-template-columns:1fr; } }
 
+  /* ---- tabelas: primeira coluna à esquerda, demais centralizadas (Atribuições: o detalhe e a data ficam à esquerda) ---- */
+  .mini th:not(:first-child), .mini td:not(:first-child),
+  #tabelaCarteira th:not(:first-child), #tabelaCarteira td:not(:first-child),
+  #tabelaAtrib th:nth-child(n+3), #tabelaAtrib td:nth-child(n+3),
+  .sgtab th:not(:first-child), .sgtab td:not(:first-child),
+  .tab-regra th:not(:first-child), .tab-regra td:not(:first-child){ text-align:center; }
+  .mini th:not(:first-child) > .ord, #tabelaCarteira th:not(:first-child) > .ord, #tabelaAtrib th:nth-child(n+3) > .ord{ justify-content:center; text-align:center; }
+  .mini th:first-child > .ord, #tabelaCarteira th:first-child > .ord, #tabelaAtrib th:nth-child(-n+2) > .ord{ justify-content:flex-start; text-align:left; }
+  .mini td:first-child, #tabelaCarteira tr.lin td:first-child, #tabelaAtrib tr.lin td:nth-child(-n+2), .sgtab td:first-child, .tab-regra td:first-child{ text-align:left; }
+  .mini .ocup{ justify-content:center; }
+  #tabelaCarteira .meter{ margin:0 auto; max-width:320px; }
+  .sgtab td:first-child small{ margin-left:8px; }
+  .sgtab th.num, .sgtab td.num, .sgtab th:not(:first-child), .sgtab td:not(:first-child){ padding-right:14px; }
+
   .regra ul.notas{ margin:10px 0 0; padding-left:18px; font-size:12.5px; line-height:1.55; color:var(--text-muted); }
   .regra ul.notas li{ margin-bottom:5px; }
   .regra ul.notas b{ color:var(--text); font-weight:600; }
