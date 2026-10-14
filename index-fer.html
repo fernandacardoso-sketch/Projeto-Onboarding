@@ -90,6 +90,9 @@
   input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus{ border-color:var(--orange); box-shadow:0 0 0 3px var(--accent-weak); }
   input::placeholder{ color:var(--text-muted); }
   .hint{ font-size:12px; color:var(--text-muted); margin-top:6px; line-height:1.4; }
+  .amount-previa{ font-weight:600; color:var(--text); }
+  .amount-previa:empty{ display:none; }
+  .amount-previa.alto{ color:var(--danger-text); }
   .error-msg{ font-size:13px; color:var(--danger-text); font-weight:500; margin-top:10px; display:none; line-height:1.45; }
   .error-msg.show{ display:block; }
 
@@ -690,6 +693,7 @@
               <div class="amount-box" id="amountBox" style="display:none;">
                 <label for="amountInput">Amount 12 months (R$)</label>
                 <input type="number" id="amountInput" min="0" step="any" placeholder="Ex: 180000" />
+                <div class="hint amount-previa" id="amountPrevia" aria-live="polite"></div>
                 <div class="hint">Obrigatório: define o subgrupo do onboarder.</div>
               </div>
 
@@ -1563,11 +1567,21 @@
   const amountBox   = document.getElementById('amountBox');
   const amountInput = document.getElementById('amountInput');
   let precisaAmount = false;
+  const AMOUNT_ALERTA = 1e8, AMOUNT_MAXIMO = 1e9;   // acima de R$ 1 bilhão quase sempre é zero a mais; o Salesforce também recusa
+  const lerAmount = () => Number(String(amountInput.value).replace(',', '.'));
+  function atualizarPreviaAmount(){
+    const v = lerAmount(), el = document.getElementById('amountPrevia');
+    if (!(v > 0)) { el.textContent = ''; el.classList.remove('alto'); return; }
+    const alto = v >= AMOUNT_ALERTA;   // a partir de R$ 100 milhões a prévia pede para conferir os zeros
+    el.textContent = fmtBRL(v) + (alto ? ' · confira os zeros: para R$ 6 milhões digite 6000000' : '');
+    el.classList.toggle('alto', alto);
+  }
+  amountInput.addEventListener('input', atualizarPreviaAmount);
 
   function mostrarAmount(sim){
     precisaAmount = !!sim;
     amountBox.style.display = sim ? 'block' : 'none';
-    if (!sim) amountInput.value = '';
+    if (!sim) { amountInput.value = ''; atualizarPreviaAmount(); }
   }
 
   // lê a mensagem que o servidor mandou (403 "não é sua", 422 "falta Amount"...) em vez de só "status 4xx"
@@ -1594,7 +1608,10 @@
     });
     if (!r2.ok) throw await erroDoServidor(r2);
     const d2 = await r2.json();
-    if (d2.status === 'erro_salesforce') throw new Error('O Salesforce recusou o Amount: ' + (d2.mensagem || 'regra de validação.'));
+    if (d2.status === 'erro_salesforce') {
+      const m = String(d2.mensagem || '');
+      throw new Error(/bad request/i.test(m) ? 'O Salesforce recusou o Amount ' + fmtBRL(valor) + '. Confira o valor (zeros a mais?). Para R$ 6 milhões, digite 6000000.' : 'O Salesforce recusou o Amount: ' + (m || 'regra de validação.'));
+    }
     if (d2.status !== 'salvo') throw new Error('Resposta inesperada ao salvar o Amount.');
     const o = oportunidades.find(x => x.opp_id === oppId);
     if (o) { o.amount_12m = Number(valor); if (oppEscolhida && oppEscolhida.opp_id === oppId) oppEscolhida = o; renderSelecao(); renderBoard(); }
@@ -1833,6 +1850,7 @@
       if (precisaAmount) {
         const valor = Number(String(amountInput.value).replace(',', '.'));
         if (!(valor > 0)) throw new Error('Informe o Amount 12 months (maior que zero) antes de atribuir.');
+        if (valor >= AMOUNT_MAXIMO) throw new Error('Confira o Amount: ' + fmtBRL(valor) + ' parece ter zeros a mais. Para R$ 6 milhões, digite 6000000.');
         assignBtnText.textContent = 'Salvando o Amount...';
         await salvarAmount(oppId, valor);
         mostrarAmount(false);
