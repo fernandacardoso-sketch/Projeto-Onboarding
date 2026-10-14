@@ -713,6 +713,7 @@
                 <span class="spinner" id="assignSpinner"></span>
                 <span id="assignBtnText">Atribuir onboarder</span>
               </button>
+              <button type="button" class="btn-ghost" id="novaSugBtn" hidden>Enviar nova sugestão ao coordenador</button>
               <div class="error-msg" id="assignError"></div>
             </div>
 
@@ -828,18 +829,20 @@
   const WEBHOOK_CLOSEDWON_URL = "https://hotmart.app.n8n.cloud/webhook/closed-won-onboarding";
   const WEBHOOK_LOGIN_URL = "https://hotmart.app.n8n.cloud/webhook/carteira-login";
   const WEBHOOK_SUGESTAO_URL = "https://hotmart.app.n8n.cloud/webhook/sugestao-n6";   // N6+: sugestão enviada ao coordenador, aceite e retomada
-  // Sessão fica só na aba (sessionStorage) e expira em 8h; o token é validado pelo n8n em toda chamada.
+  // Sessão fica na aba (sessionStorage) e também no localStorage, compartilhada entre as páginas; expira em 8h; o token é validado pelo n8n em toda chamada.
   const SESSION_KEY = "carteira_sessao";
+  // a sessão também fica no localStorage (até expirar) para o link do Chat, aberto em outra aba, não pedir login de novo
+  function salvarSessao(s) { sessionStorage.setItem(SESSION_KEY, s); try { localStorage.setItem(SESSION_KEY, s); } catch (e) {} }
 
   // ?demo=1 → demonstração completa com dados fictícios, sem login e sem nenhuma chamada ao n8n/Salesforce
   const MODO_DEMO = /[?&]demo=1(&|$)/.test(location.search);
   function getSession(){
     if (MODO_DEMO) return { token: 'demo', email: 'demo@hotmart.com', nome: 'Fernanda Demo', papel: 'usuario', expira_em: new Date(Date.now() + 8 * 3600e3).toISOString() };
     try {
-      const s = JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null');
+      const s = JSON.parse(sessionStorage.getItem(SESSION_KEY) || localStorage.getItem(SESSION_KEY) || 'null');
       if (s && s.token && new Date(s.expira_em) > new Date()) return s;
     } catch (e) {}
-    sessionStorage.removeItem(SESSION_KEY);
+    sessionStorage.removeItem(SESSION_KEY); try { localStorage.removeItem(SESSION_KEY); } catch (e) {}
     return null;
   }
 
@@ -850,7 +853,7 @@
     if (!s) { showLogin(); throw new Error('Sessão expirada. Faça login novamente.'); }
     const res = await fetch(url, { ...opts, headers: { ...(opts.headers || {}), 'Authorization': 'Bearer ' + s.token } });
     if (res.status === 401) {
-      sessionStorage.removeItem(SESSION_KEY);
+      sessionStorage.removeItem(SESSION_KEY); try { localStorage.removeItem(SESSION_KEY); } catch (e) {}
       showLogin();
       throw new Error('Sessão expirada. Faça login novamente.');
     }
@@ -879,6 +882,7 @@
   const oppIdInput      = document.getElementById('oppIdInput');
   const clienteEmailInput = document.getElementById('clienteEmailInput');
   const assignBtn       = document.getElementById('assignBtn');
+  const novaSugBtn      = document.getElementById('novaSugBtn');
   const assignBtnText   = document.getElementById('assignBtnText');
   const assignSpinner   = document.getElementById('assignSpinner');
   const assignError     = document.getElementById('assignError');
@@ -1055,7 +1059,7 @@
         loginError.classList.add('show');
         return;
       }
-      sessionStorage.setItem(SESSION_KEY, JSON.stringify({
+      salvarSessao(JSON.stringify({
         token: data.token, email: data.email, nome: data.nome, papel: data.papel, expira_em: data.expira_em
       }));
       passwordInput.value = '';
@@ -1069,7 +1073,7 @@
   });
   // Enter no e-mail pula para a senha; Enter na senha envia o formulário (que clica em "Entrar")
   emailInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); passwordInput.focus(); } });
-  logoutBtn.addEventListener('click', () => { if (MODO_DEMO) { location.href = location.pathname; return; } sessionStorage.removeItem(SESSION_KEY); showLogin(); });
+  logoutBtn.addEventListener('click', () => { if (MODO_DEMO) { location.href = location.pathname; return; } sessionStorage.removeItem(SESSION_KEY); try { localStorage.removeItem(SESSION_KEY); } catch (e) {} showLogin(); });
   // "atribuir outro" / "tentar outro": fecha o painel e atualiza o funil
   function reiniciarFluxo(){
     drawer.classList.remove('open'); drawerOverlay.classList.remove('open'); drawer.setAttribute('aria-hidden', 'true');
@@ -1561,6 +1565,7 @@
       drawerTitle.textContent = manualDetails.open ? 'Atribuir por ID' : 'Atribuir onboarder';
     }
     if (!assignBtn.disabled) assignBtnText.textContent = rotuloAtribuir();
+    novaSugBtn.hidden = !(oppEscolhida && statusSugestao(oppEscolhida) === 'aceita');   // N6+ aceita: ainda dá para pedir outra sugestão
   }
   function rotuloAtribuir(){ return oppEscolhida && statusSugestao(oppEscolhida) === 'aceita' ? 'Continuar com o onboarder aceito' : 'Atribuir onboarder'; }
 
@@ -1741,7 +1746,11 @@
       if (!res.ok) return;
       const d = await res.json();
       const mapa = new Map((Array.isArray(d.sugestoes) ? d.sugestoes : []).map(s => [s.opp_id, s]));
-      oportunidades.forEach(o => { o.sugestao = mapa.get(o.opp_id) || null; });
+      oportunidades.forEach(o => {
+        const s = mapa.get(o.opp_id) || null;
+        // aceita, mas o onboarder foi apagado na Oportunidade (Onboarding_Owner__c vazio): a sugestão não vale mais e ela volta a poder ser sugerida
+        o.sugestao = s && s.status === 'aceita' && !o.ja_atribuida ? null : s;
+      });
     } catch (e) { /* sem sugestões: o funil funciona normalmente */ }
   }
 
@@ -1818,7 +1827,7 @@
     renderBoard();
   });
 
-  async function atribuir(){
+  async function atribuir(novaSugestao){   // novaSugestao === true: ignora o aceite e envia uma nova sugestão ao coordenador
     const closerEmail = (getSession() || {}).email;
     if (!closerEmail) { showLogin(); return; }
 
@@ -1830,7 +1839,7 @@
     }
 
     const clienteEmail = clienteEmailInput.value.trim();
-    if (!clienteEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clienteEmail)) {
+    if (novaSugestao !== true && (!clienteEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clienteEmail))) {
       assignError.textContent = 'Informe um e-mail do cliente válido antes de atribuir.';
       assignError.classList.add('show');
       return;
@@ -1839,7 +1848,7 @@
     flow.oppId = oppId;
     flow.clienteEmail = clienteEmail;
 
-    assignBtn.disabled = true;
+    assignBtn.disabled = true; novaSugBtn.disabled = true;
     assignSpinner.classList.add('show');
     assignBtnText.textContent = 'Atribuindo...';
     assignError.classList.remove('show');
@@ -1856,7 +1865,7 @@
         mostrarAmount(false);
         assignBtnText.textContent = 'Atribuindo...';
       }
-      const retomar = !!(oppEscolhida && oppEscolhida.opp_id === oppId && statusSugestao(oppEscolhida) === 'aceita');   // N6+ aceita pelo coordenador: o onboarder já está definido
+      const retomar = novaSugestao !== true && !!(oppEscolhida && oppEscolhida.opp_id === oppId && statusSugestao(oppEscolhida) === 'aceita');   // N6+ aceita pelo coordenador: o onboarder já está definido
       const res = await apiFetch(retomar ? WEBHOOK_SUGESTAO_URL : WEBHOOK_ASSIGN_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1932,12 +1941,13 @@
       assignError.textContent = 'Não foi possível atribuir a Oportunidade. ' + err.message;
       assignError.classList.add('show');
     } finally {
-      assignBtn.disabled = false;
+      assignBtn.disabled = false; novaSugBtn.disabled = false;
       assignSpinner.classList.remove('show');
       assignBtnText.textContent = rotuloAtribuir();
     }
   }
-  assignBtn.addEventListener('click', atribuir);
+  assignBtn.addEventListener('click', () => atribuir());
+  novaSugBtn.addEventListener('click', () => atribuir(true));
 
   // ---------------------------------------------------------
   // STEP 2 — Escolher horário e confirmar reunião
