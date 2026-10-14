@@ -1743,7 +1743,7 @@
   function detAtrib(a, si){
     const wrap = h('div', 'casc');
     const racional = String(a.racional || '').trim();
-    const alerta = /^ALERTA DISPARADO/i.test(racional), sugestao = /^\[Sugest[ãa]o/i.test(racional), antigo = /^\[Guardi[ãa]o\]/i.test(racional), aceitaPeloCoord = sugestao && /aceitou a sugest[ãa]o/i.test(racional);
+    const alerta = /^ALERTA DISPARADO/i.test(racional), sugestao = /^\[Sugest[ãa]o/i.test(racional), antigo = /^\[Guardi[ãa]o\]/i.test(racional), aceitaPeloCoord = sugestao && /aceitou a sugest[ãa]o|escolheu outro onboarder/i.test(racional);
     const topo = h('div', 'casc-topo'); topo.appendChild(h('b', '', aceitaPeloCoord ? 'Como o onboarder foi definido' : sugestao ? 'Como o onboarder foi sugerido' : 'Como o onboarder foi escolhido'));
     if (a.hotmart_id) {
       const id = h('span', 'casc-id'); id.appendChild(h('span', 'mut', 'Hotmart ID')); id.appendChild(h('code', '', String(a.hotmart_id)));
@@ -1787,7 +1787,7 @@
       criterios.forEach((t, i) => { const li = h('li', i + 1 === crit ? 'decidiu' : (crit && i + 1 < crit ? 'empatou' : ''), t); if (i + 1 === crit) li.appendChild(h('span', 'estado', 'Decidiu')); else if (crit && i + 1 < crit) li.appendChild(h('span', 'estado', 'Empate')); ul.appendChild(li); });
       cr.appendChild(ul); wrap.appendChild(cr);
     }
-    if (sugestao) wrap.appendChild(h('p', 'casc-txt mut', aceitaPeloCoord ? 'N6+: o sistema sugeriu e o coordenador aceitou. O Onboarding Owner foi definido na Oportunidade e o Closer seguiu o processo no app.' : 'N6+: nada foi atribuído pelo sistema. O coordenador decide e define o Onboarding Owner na Oportunidade.'));
+    if (sugestao) wrap.appendChild(h('p', 'casc-txt mut', aceitaPeloCoord ? 'N6+: o sistema sugeriu e o coordenador aceitou. O Onboarding Owner foi definido na Oportunidade e o Closer seguiu o processo no app. Se a coordenação escolheu outro onboarder, o racional abaixo diz quem foi escolhido e quem era o sugerido.' : 'N6+: nada foi atribuído pelo sistema. O coordenador decide e define o Onboarding Owner na Oportunidade.'));
     wrap.appendChild(h('p', 'casc-txt', racional ? SEM_TRAVESSAO(racional) : 'Sem racional registrado.'));
     return wrap;
   }
