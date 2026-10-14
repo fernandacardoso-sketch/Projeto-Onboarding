@@ -264,13 +264,34 @@
   @media (max-width:560px){ .opp-row{ grid-template-columns:1fr auto; } .opp-hid{ grid-column:1 / -1; } .opp-note{ grid-column:1 / -1; } }
 
   /* ---------- Formulário dos campos obrigatórios (passo 3) ---------- */
-  .campos-box{ margin:var(--sp-4) 0; }
-  .campos-title{ font-size:13px; font-weight:700; margin-bottom:var(--sp-1); }
-  .campo{ margin-bottom:var(--sp-3); }
-  .campo select, .campo input[type="number"], .campo input[type="date"]{
-    width:100%; font-family:inherit; font-size:15px; color:var(--text);
+  .campos-box{ margin:var(--sp-5) 0 var(--sp-6); }
+  .campos-title{ font-size:16px; font-weight:700; margin-bottom:var(--sp-1); }
+  .campos-box .hint{ margin-bottom:var(--sp-2); line-height:1.5; }
+  .campo{ margin-bottom:var(--sp-5); }
+  .campo > label{ display:flex; align-items:center; flex-wrap:wrap; gap:4px 6px; margin-bottom:8px; font-size:13.5px; }
+  .cw-sec{ margin:var(--sp-5) 0 var(--sp-3); font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--danger-text); }
+  .cw-destaque{ margin:var(--sp-5) 0; padding:var(--sp-5); background:var(--surface); border:1px solid var(--border-strong); border-radius:var(--r-lg); }
+  .cw-destaque-t{ margin:0 0 var(--sp-4); font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text-muted); }
+  .cw-grid{ display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-5); align-items:start; }
+  .cw-kv .rot{ display:block; margin-bottom:8px; font-size:13.5px; font-weight:600; }
+  .cw-hid{ display:flex; align-items:center; gap:var(--sp-2); min-height:48px; font-family:var(--font-mono); font-size:22px; font-weight:700; letter-spacing:.01em; overflow-wrap:anywhere; }
+  .cw-hid.vazio-v{ font-family:var(--font-sans); font-size:14px; font-weight:600; color:var(--danger-text); }
+  .cw-copy{ flex:none; width:36px; height:36px; display:grid; place-items:center; color:var(--text-muted); background:transparent; border:1.5px solid var(--border-strong); border-radius:var(--r-sm); cursor:pointer; }
+  .cw-copy:hover{ color:var(--text); border-color:var(--ink); }
+  .cw-copy svg{ width:16px; height:16px; }
+  .cw-destaque .campo{ margin:0; }
+  .cw-destaque .campo input[type="number"]{ font-size:22px; font-weight:700; padding:10px 12px; min-height:48px; }
+  .cw-info{ margin-top:var(--sp-5); padding-top:var(--sp-5); border-top:1px solid var(--border); }
+  .cw-info .rot{ display:block; margin-bottom:8px; font-size:13.5px; font-weight:600; }
+  .cw-info-txt{ font-size:13.5px; line-height:1.6; white-space:pre-wrap; overflow-wrap:anywhere; max-height:9.6em; overflow:hidden; }
+  .cw-info-txt.aberto{ max-height:none; }
+  .cw-info-vazio{ font-size:13.5px; color:var(--text-muted); }
+  .cw-info .link-btn{ display:inline-block; margin-top:var(--sp-2); min-height:32px; }
+  @media (max-width:480px){ .cw-grid{ grid-template-columns:1fr; gap:var(--sp-4); } .cw-hid{ font-size:20px; } }
+  .campo select, .campo input[type="number"], .campo input[type="date"], .campo input[type="text"]{
+    width:100%; font-family:inherit; font-size:15px; color:var(--text); min-height:46px;
     background:var(--surface); border:1.5px solid var(--border-strong);
-    border-radius:var(--r-sm); padding:10px 12px; outline:none;
+    border-radius:var(--r-sm); padding:11px 14px; outline:none;
     transition:border-color .15s, box-shadow .15s;
   }
   .campo select:focus, .campo input:focus{ border-color:var(--orange); box-shadow:0 0 0 3px var(--accent-weak); }
@@ -284,7 +305,7 @@
     background:var(--surface); border:1.5px solid var(--border-strong);
     border-radius:var(--r-sm); padding:10px 12px; outline:none;
   }
-  .conta-box{ margin-bottom:var(--sp-3); }
+  .conta-box{ margin:var(--sp-5) 0 var(--sp-4); padding:var(--sp-4); background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); }
   .conta-atual{ font-size:13px; margin-bottom:var(--sp-2); line-height:1.5; }
   .conta-atual .ok{ font-weight:700; }
   .conta-atual .alerta{ color:var(--danger-text); font-weight:700; }
@@ -538,7 +559,7 @@
   /* painel lateral (drawer) com o fluxo de atribuição */
   .drawer-overlay{ position:fixed; inset:0; z-index:40; background:var(--overlay); opacity:0; visibility:hidden; transition:opacity .2s; }
   .drawer-overlay.open{ opacity:1; visibility:visible; }
-  .drawer{ position:fixed; top:0; right:0; bottom:0; z-index:50; width:min(440px,100vw); display:flex; flex-direction:column; background:var(--bg); border-left:1px solid var(--border-strong); transform:translateX(100%); visibility:hidden; transition:transform .22s ease, visibility 0s linear .22s; }
+  .drawer{ position:fixed; top:0; right:0; bottom:0; z-index:50; width:min(500px,100vw); display:flex; flex-direction:column; background:var(--bg); border-left:1px solid var(--border-strong); transform:translateX(100%); visibility:hidden; transition:transform .22s ease, visibility 0s linear .22s; }
   .drawer.open{ transform:translateX(0); visibility:visible; transition:transform .22s ease; }
   .drawer-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:var(--sp-3); padding:var(--sp-5) var(--sp-5) var(--sp-3); border-bottom:1px solid var(--border); }
   .drawer-eyebrow{ font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--text-muted); }
@@ -582,9 +603,10 @@
   .rico-bar button{ padding:5px 10px; font-size:13px; font-weight:600; color:var(--text); background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--r-pill); cursor:pointer; }
   .rico-bar button:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
   .rico-msg{ margin-top:4px; font-size:12px; color:var(--maroon); }
-  .campos-outros{ margin:var(--sp-3) 0; font-size:13px; }
-  .campos-outros summary{ cursor:pointer; color:var(--text-muted); }
-  .campos-outros .campo{ margin-top:var(--sp-3); }
+  .campos-outros{ margin:var(--sp-5) 0; font-size:13.5px; border:1px solid var(--border); border-radius:var(--r-md); padding:0 var(--sp-4); background:var(--surface); }
+  .campos-outros summary{ cursor:pointer; min-height:48px; display:flex; align-items:center; font-weight:600; color:var(--text); }
+  .campos-outros[open] summary{ border-bottom:1px solid var(--border); margin-bottom:var(--sp-4); }
+  .campos-outros .campo{ margin-top:0; }
   @media (max-width:1023px){ #appScreen{ padding:12px 16px 8px; } .app-head{ padding-right:112px; } }
   @media (prefers-reduced-motion:reduce){ .drawer, .drawer-overlay{ transition:none; } .skel, .icon-btn.girando svg{ animation:none; } }
 </style>
@@ -1206,7 +1228,7 @@
     });
     if (d.o.outra_plataforma) { const v = d.e.v.Other_platform__c ?? ''; campos.push({ api: 'Other_platform__c', label: 'Other Platform', tipo: 'texto', valor: v, opcoes: [], vazio: demoVazio(v) }); }
     const c = d.e.conta;
-    return { opp_id: d.o.opp_id, nome: d.o.nome, campos, onboarding_owner_definido: !!d.e.onboarder,
+    return { opp_id: d.o.opp_id, nome: d.o.nome, campos, hotmart_id: d.o.hotmart_id || '', info_adicional: 'Contexto: reunião conduzida pelo time de novos negócios com o cliente.\nObjetivo: migrar a operação para a Hotmart.\nPróximos passos: alinhar a migração dos produtos e a data de início.', onboarding_owner_definido: !!d.e.onboarder,
       conta: c ? { id: c.id, nome: c.nome, user_id: c.user_id, user_email: '', vazio: !c.user_id } : { id: null, nome: '', user_id: '', user_email: '', vazio: true }, faltando: demoFaltando(d) };
   }
   function demoHorarios(){
@@ -2275,6 +2297,44 @@
     controlesCampos[c.api] = el;
   }
 
+  // Hotmart ID e Amount 12 meses ficam no topo (mesmo preenchidos), junto com as informações adicionais do Closer
+  const ICONE_COPIAR_HID = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>';
+  function montarDestaque(data, amount){
+    const box = mkEl('section', 'cw-destaque');
+    box.setAttribute('aria-label', 'Dados principais');
+    box.appendChild(mkEl('h3', 'cw-destaque-t', 'Dados principais'));
+    const grid = mkEl('div', 'cw-grid');
+    const hid = String(data.hotmart_id || (oppEscolhida && oppEscolhida.opp_id === flow.oppId && oppEscolhida.hotmart_id) || '').trim();
+    const kv = mkEl('div', 'cw-kv');
+    kv.appendChild(mkEl('span', 'rot', 'Hotmart ID'));
+    const v = mkEl('div', 'cw-hid' + (hid ? '' : ' vazio-v'));
+    v.id = 'cwHotmartId';
+    v.appendChild(mkEl('span', '', hid || 'Não informado no Salesforce'));
+    if (hid) {
+      const cp = mkEl('button', 'cw-copy'); cp.type = 'button'; cp.innerHTML = ICONE_COPIAR_HID; cp.setAttribute('aria-label', 'Copiar o Hotmart ID'); cp.title = 'Copiar';
+      cp.addEventListener('click', () => { try { navigator.clipboard.writeText(hid); } catch (e) {} cp.title = 'Copiado'; setTimeout(() => { cp.title = 'Copiar'; }, 1500); });
+      v.appendChild(cp);
+    }
+    kv.appendChild(v);
+    grid.appendChild(kv);
+    if (amount) addCampo(amount, grid);
+    box.appendChild(grid);
+    const info = mkEl('div', 'cw-info');
+    info.appendChild(mkEl('span', 'rot', 'Informações adicionais do Closer'));
+    const txt = String(data.info_adicional || '').trim();
+    if (txt) {
+      const p = mkEl('div', 'cw-info-txt', txt); p.id = 'cwInfoTxt';
+      info.appendChild(p);
+      if (txt.length > 360 || txt.split('\n').length > 6) {
+        const b = mkEl('button', 'link-btn', 'Ver tudo'); b.type = 'button'; b.setAttribute('aria-expanded', 'false'); b.setAttribute('aria-controls', 'cwInfoTxt');
+        b.addEventListener('click', () => { const abre = !p.classList.contains('aberto'); p.classList.toggle('aberto', abre); b.textContent = abre ? 'Recolher' : 'Ver tudo'; b.setAttribute('aria-expanded', String(abre)); });
+        info.appendChild(b);
+      }
+    } else info.appendChild(mkEl('div', 'cw-info-vazio', 'O Closer não preencheu este campo.'));
+    box.appendChild(info);
+    camposForm.appendChild(box);
+  }
+
   function descreverConta(c, prefixo){
     contaAtual.innerHTML = '';
     if (!c || (!c.id && !c.nome)) {
@@ -2353,8 +2413,10 @@
       if (!res.ok) throw new Error(data.mensagem || ('status ' + res.status));
       // o que falta aparece primeiro; o que já está preenchido fica recolhido
       const lista = data.campos || [];
-      lista.filter(c => c.vazio).forEach(c => addCampo(c));
-      const cheios = lista.filter(c => !c.vazio);
+      montarDestaque(data, lista.find(c => c.api === 'Amount_12_months__c'));
+      const pendentes = lista.filter(c => c.vazio && c.api !== 'Amount_12_months__c');
+      if (pendentes.length) { camposForm.appendChild(mkEl('div', 'cw-sec', 'Falta preencher (' + pendentes.length + ')')); pendentes.forEach(c => addCampo(c)); }
+      const cheios = lista.filter(c => !c.vazio && c.api !== 'Amount_12_months__c');
       if (cheios.length) {
         const det = mkEl('details', 'campos-outros');
         det.appendChild(mkEl('summary', '', 'Campos preenchidos (' + cheios.length + ')'));
