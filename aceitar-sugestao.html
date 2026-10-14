@@ -375,6 +375,8 @@
   var $ = function (id) { return document.getElementById(id); };
   var aviso = $('aviso'), aceitarBtn = $('aceitarBtn');
   var todas = [], carregouLista = false, atual = null, opcoes = null, escolhido = null, aba = 'pendencias';
+  var tokenAtual = '';   // token do link do Chat da sugestão aberta (vale 7 dias); quando existe, é ele que identifica a sugestão
+  var refSug = function () { return tokenAtual ? { t: tokenAtual } : { opp_id: atual.opp_id }; };
 
   // ── tema ──
   function tema() { return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'; }
@@ -422,7 +424,7 @@
     var sug = qual === 'sugestao';
     $('tabSugestao').setAttribute('aria-selected', String(sug)); $('tabPendencias').setAttribute('aria-selected', String(!sug));
     $('painelSugestao').hidden = !sug; $('painelPendencias').hidden = sug;
-    try { var u = new URL(location.href); u.searchParams.delete('t'); if (sug && atual) u.searchParams.set('opp', atual.opp_id); else u.searchParams.delete('opp'); history.replaceState(null, '', u.pathname + (u.search || '')); } catch (e) {}
+    try { var u = new URL(location.href); u.searchParams.delete('t'); u.searchParams.delete('opp'); if (sug && atual) { if (tokenAtual) u.searchParams.set('t', tokenAtual); else u.searchParams.set('opp', atual.opp_id); } history.replaceState(null, '', u.pathname + (u.search || '')); } catch (e) {}
   }
   $('tabSugestao').addEventListener('click', function () { if (atual) irPara('sugestao'); });
   $('tabPendencias').addEventListener('click', function () { irPara('pendencias'); });
@@ -529,18 +531,18 @@
     $('opcoes').hidden = true; $('trocarBtn').setAttribute('aria-expanded', 'false'); $('trocarBtn').textContent = 'Escolher outro';
     aceitarBtn.hidden = aceita; $('trocarBtn').hidden = aceita; aceitarBtn.disabled = false; $('aceitarSpin').classList.remove('show'); $('aceitarTxt').textContent = 'Aceitar sugestão';
     $('sub').textContent = aceita ? 'O onboarder já foi definido nesta Oportunidade.' : 'Confirme para definir o onboarder na Oportunidade.';
-    $('carregando').hidden = true; $('detalhe').hidden = false;
+    $('carregando').hidden = true; $('detalhe').hidden = false; $('cartao').hidden = false;
   }
   $('verCriterio').addEventListener('click', function () { var abre = $('criterio').hidden; $('criterio').hidden = !abre; this.setAttribute('aria-expanded', String(abre)); this.textContent = abre ? 'Ocultar critério' : 'Ver critério'; });
 
   async function abrirSugestao(ref) {
-    msg(''); irPara('sugestao'); atual = null; habilitarSugestao(); $('detalhe').hidden = true; $('carregando').hidden = false;
+    msg(''); tokenAtual = ref.t || ''; irPara('sugestao'); atual = null; habilitarSugestao(); $('detalhe').hidden = true; $('carregando').hidden = false; $('cartao').hidden = false;
     try {
       var corpo = { acao: 'detalhe' }; if (ref.t) corpo.t = ref.t; else corpo.opp_id = ref.opp_id;
       var r = await chamar(corpo);
-      if (!r.ok) { $('carregando').hidden = true; msg((r.dados && r.dados.mensagem) || 'Não foi possível abrir a sugestão.'); return; }
+      if (!r.ok) { $('carregando').hidden = true; $('cartao').hidden = true; msg((r.dados && r.dados.mensagem) || 'Não foi possível abrir a sugestão.'); return; }
       preencher(r.dados.sugestao); irPara('sugestao');
-    } catch (e) { if (e.message !== 'login') { $('carregando').hidden = true; msg('Falha de conexão. Tente de novo.'); } }
+    } catch (e) { if (e.message !== 'login') { $('carregando').hidden = true; $('cartao').hidden = true; msg('Falha de conexão. Tente de novo.'); } }
   }
 
   // escolher outro onboarder
@@ -549,7 +551,7 @@
     if (!box.hidden) { box.hidden = true; this.setAttribute('aria-expanded', 'false'); this.textContent = escolhido ? 'Escolher outro' : 'Escolher outro'; return; }
     this.setAttribute('aria-expanded', 'true'); this.textContent = 'Fechar opções'; box.hidden = false; box.innerHTML = ''; box.appendChild(el('div', 'vazio', 'Carregando opções...'));
     try {
-      if (!opcoes) { var r = await chamar({ acao: 'opcoes', opp_id: atual.opp_id }); if (!r.ok) { box.innerHTML = ''; box.appendChild(el('div', 'vazio', (r.dados && r.dados.mensagem) || 'Não foi possível carregar as opções.')); return; } opcoes = r.dados.opcoes || []; }
+      if (!opcoes) { var r = await chamar(Object.assign({ acao: 'opcoes' }, refSug())); if (!r.ok) { box.innerHTML = ''; box.appendChild(el('div', 'vazio', (r.dados && r.dados.mensagem) || 'Não foi possível carregar as opções.')); return; } opcoes = r.dados.opcoes || []; }
       desenharOpcoes();
     } catch (e) { if (e.message !== 'login') { box.innerHTML = ''; box.appendChild(el('div', 'vazio', 'Falha de conexão.')); } }
   });
@@ -579,10 +581,10 @@
     tela('app'); $('avatarIni').textContent = iniciais(s); $('loggedEmail').textContent = s.email;
     irPara('pendencias'); habilitarSugestao(); renderLista();
     var lista = carregarLista();
-    if (TOKEN || OPP_URL) { if (/^[a-f0-9]{48}$/.test(TOKEN) || /^[A-Za-z0-9]{15,18}$/.test(OPP_URL)) await abrirSugestao(TOKEN ? { t: TOKEN } : { opp_id: OPP_URL }); else { irPara('sugestao'); $('detalhe').hidden = true; msg('Link inválido. Use o botão "Aceitar sugestão" da mensagem no Google Chat ou abra a sugestão pela lista de pendências.'); } TOKEN = ''; OPP_URL = ''; }
+    if (TOKEN || OPP_URL) { if (/^[a-f0-9]{48}$/.test(TOKEN) || /^[A-Za-z0-9]{15,18}$/.test(OPP_URL)) await abrirSugestao(TOKEN ? { t: TOKEN } : { opp_id: OPP_URL }); else { irPara('sugestao'); $('detalhe').hidden = true; $('cartao').hidden = true; msg('Link inválido. Use o botão "Aceitar sugestão" da mensagem no Google Chat ou abra a sugestão pela lista de pendências.'); } TOKEN = ''; OPP_URL = ''; }
     await lista;
   }
-  $('refreshBtn').addEventListener('click', async function () { await carregarLista(); if (aba === 'sugestao' && atual) { var o = atual.opp_id; var r = await chamar({ acao: 'detalhe', opp_id: o }).catch(function () { return null; }); if (r && r.ok) preencher(r.dados.sugestao); } });
+  $('refreshBtn').addEventListener('click', async function () { await carregarLista(); if (aba === 'sugestao' && atual) { var r = await chamar(Object.assign({ acao: 'detalhe' }, refSug())).catch(function () { return null; }); if (r && r.ok) preencher(r.dados.sugestao); else if (r) msg((r.dados && r.dados.mensagem) || 'Não foi possível atualizar a sugestão.'); } });
   var avatarBtn = $('avatarBtn'), userPop = $('userPop');
   function fecharMenu(devolver) { if (userPop.hidden) return; userPop.hidden = true; avatarBtn.setAttribute('aria-expanded', 'false'); if (devolver) avatarBtn.focus(); }
   avatarBtn.addEventListener('click', function (ev) { ev.stopPropagation(); var abre = userPop.hidden; userPop.hidden = !abre; avatarBtn.setAttribute('aria-expanded', String(abre)); if (abre) $('logoutBtn').focus(); });
@@ -609,7 +611,7 @@
   // ── aceitar ──
   aceitarBtn.addEventListener('click', async function () {
     aceitarBtn.disabled = true; $('aceitarSpin').classList.add('show'); $('aceitarTxt').textContent = 'Aceitando...'; msg('');
-    var corpo = { acao: 'aceitar', opp_id: atual.opp_id }; if (escolhido) corpo.onboarder = escolhido.email;
+    var corpo = Object.assign({ acao: 'aceitar' }, refSug()); if (escolhido) corpo.onboarder = escolhido.email;
     function reativar() { aceitarBtn.disabled = false; $('aceitarSpin').classList.remove('show'); $('aceitarTxt').textContent = escolhido ? 'Aceitar com ' + nome(escolhido.email) : 'Aceitar sugestão'; }
     try {
       var r = await chamar(corpo);
