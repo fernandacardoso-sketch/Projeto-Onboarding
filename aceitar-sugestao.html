@@ -83,6 +83,7 @@
   .btn-quiet{ font-size:13px; font-weight:600; color:var(--text); background:none; padding:6px 10px; border-radius:var(--r-sm); border:1.5px solid var(--border-strong); }
   .btn-quiet:hover{ border-color:var(--ink); }
   .linha-botoes{ display:flex; gap:10px; }
+  .btn-ghost.perigo{ color:var(--destaque); }
   .spinner{ width:16px; height:16px; border-radius:50%; border:2px solid rgba(13,13,13,.25); border-top-color:var(--black); animation:spin .7s linear infinite; display:none; }
   .spinner.show{ display:inline-block; }
   @keyframes spin{ to{ transform:rotate(360deg); } }
@@ -382,6 +383,7 @@
           </section>
           <button class="btn-primary" id="aceitarBtn" type="button"><span class="spinner" id="aceitarSpin"></span><span id="aceitarTxt">Aceitar sugestão</span></button>
           <div class="linha-botoes">
+            <button type="button" class="btn-ghost perigo" id="apagarBtn">Apagar sugestão</button>
             <a class="btn-ghost" id="sfLink2" href="#" target="_blank" rel="noopener noreferrer">Abrir no Salesforce ↗</a>
           </div>
         </section>
@@ -625,6 +627,7 @@
     pintarCriterio(e); pintarOnboarder();
     $('criterio').hidden = true; $('verCriterio').setAttribute('aria-expanded', 'false'); $('verCriterio').textContent = 'Ver critério';
     $('comparar').hidden = true; $('cmpLista').innerHTML = '';
+    $('apagarBtn').hidden = aceita; $('apagarBtn').disabled = false; $('apagarBtn').textContent = 'Apagar sugestão'; delete $('apagarBtn').dataset.confirma;
     aceitarBtn.hidden = aceita; aceitarBtn.disabled = false; $('aceitarSpin').classList.remove('show'); $('aceitarTxt').textContent = 'Aceitar sugestão';
     $('sub').textContent = aceita ? 'O onboarder já foi definido nesta Oportunidade.' : 'Compare os onboarders N6+ e confirme quem recebe a Oportunidade.';
     $('carregando').hidden = true; $('detalhe').hidden = false; $('cartao').hidden = false;
@@ -755,6 +758,17 @@
   });
 
   // ── aceitar ──
+  $('apagarBtn').addEventListener('click', async function () {
+    var b = this;
+    if (!b.dataset.confirma) { b.dataset.confirma = '1'; b.textContent = 'Confirmar: apagar esta sugestão'; setTimeout(function () { if (b.dataset.confirma && !b.disabled) { delete b.dataset.confirma; b.textContent = 'Apagar sugestão'; } }, 5000); return; }
+    b.disabled = true; b.textContent = 'Apagando...'; msg('');
+    try {
+      var r = await chamar({ acao: 'cancelar', opp_id: atual.opp_id, closer: atual.closer });
+      if (!r.ok && r.status !== 404) { msg((r.dados && r.dados.mensagem) || 'Não foi possível apagar a sugestão.'); b.disabled = false; delete b.dataset.confirma; b.textContent = 'Apagar sugestão'; return; }
+      var opp = atual.opp_id; todas = todas.filter(function (x) { return x.opp_id !== opp; });
+      atual = null; tokenAtual = ''; habilitarSugestao(); irPara('pendencias'); renderLista(); renderHistorico(); carregarLista();
+    } catch (e) { if (e.message !== 'login') { msg('Falha de conexão. Tente de novo.'); b.disabled = false; delete b.dataset.confirma; b.textContent = 'Apagar sugestão'; } }
+  });
   aceitarBtn.addEventListener('click', async function () {
     aceitarBtn.disabled = true; $('aceitarSpin').classList.add('show'); $('aceitarTxt').textContent = 'Aceitando...'; msg('');
     var corpo = Object.assign({ acao: 'aceitar' }, refSug()); if (escolhido) corpo.onboarder = escolhido.email;
