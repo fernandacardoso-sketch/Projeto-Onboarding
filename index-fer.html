@@ -497,6 +497,9 @@
   .opp-acao{ position:relative; z-index:2; padding:5px 12px; font-size:12.5px; font-weight:700; line-height:1.2; color:var(--black); background:var(--orange); border-radius:var(--r-sm); }
   .opp-acao:hover{ background:var(--orange-hover); }
   .opp-acao.sec{ color:var(--text); background:transparent; border:1.5px solid var(--field-border); padding:4px 10px; }
+  .opp-cancelar{ position:relative; z-index:2; padding:4px 10px; font-size:12.5px; font-weight:700; line-height:1.2; color:var(--text); background:transparent; border:1.5px solid var(--field-border); border-radius:var(--r-sm); }
+  .opp-cancelar:hover{ border-color:var(--text); }
+  .opp-cancelar:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
   .opp-acao:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
   .opp-alerta, .opp-estado{ position:relative; z-index:2; display:grid; place-items:center; }
   .opp-alerta{ color:var(--warn); }
@@ -1450,6 +1453,15 @@
     if (!elegivel && !andamento && statusSugestao(o) === 'pendente') {
       const rodape = mk('div', 'opp-rodape');
       rodape.appendChild(mk('span', 'badge-sit badge-espera', 'Aguardando coordenador'));
+      const cancelar = mk('button', 'opp-cancelar', 'Cancelar sugestão');   // dois cliques: o primeiro pede a confirmação
+      cancelar.type = 'button';
+      cancelar.setAttribute('aria-label', 'Cancelar a sugestão enviada ao coordenador para ' + titulo);
+      cancelar.addEventListener('click', ev => {
+        ev.stopPropagation();
+        if (!cancelar.dataset.confirma) { cancelar.dataset.confirma = '1'; cancelar.textContent = 'Confirmar cancelamento'; setTimeout(() => { if (cancelar.isConnected) { delete cancelar.dataset.confirma; cancelar.textContent = 'Cancelar sugestão'; } }, 5000); return; }
+        cancelarSugestao(o, cancelar);
+      });
+      rodape.appendChild(cancelar);
       card.appendChild(rodape);
     }
     if (elegivel || andamento) {
@@ -1752,6 +1764,17 @@
         o.sugestao = s && s.status === 'aceita' && !o.ja_atribuida ? null : s;
       });
     } catch (e) { /* sem sugestões: o funil funciona normalmente */ }
+  }
+
+  // apaga a sugestão pendente: a Oportunidade volta a ficar disponível para atribuir
+  async function cancelarSugestao(o, btn){
+    btn.disabled = true; btn.textContent = 'Cancelando...';
+    try {
+      const res = await apiFetch(WEBHOOK_SUGESTAO_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ acao: 'cancelar', opp_id: o.opp_id }) });
+      if (!res.ok && res.status !== 404) throw await erroDoServidor(res);
+      o.sugestao = null;
+      renderBoard();
+    } catch (e) { btn.disabled = false; btn.textContent = 'Não foi possível cancelar. Tentar de novo'; }
   }
 
   async function carregarOportunidades(){
