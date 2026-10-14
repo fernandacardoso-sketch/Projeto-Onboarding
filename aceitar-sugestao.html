@@ -36,6 +36,7 @@
     --danger-text:#3E0F1D; --focus:#0D0D0D; --field-border:#8A857C;
     --ok-bg:rgba(30,122,61,.12); --ok-text:#17632F; --destaque:#C23100;
     --sg1:#1F2D4A; --sg2:#4A638F; --sg3:#6A83AB; --hatch:rgba(255,255,255,.75);
+    --occ-ok:#1E7A3D; --occ-warn:#B7791F; --occ-warn-t:#8A5A10; --occ-bad:#B42318; --erro-bg:#FBE4E1;
     --font-sans:"DM Sans","Arial",sans-serif; --font-mono:"DM Mono",ui-monospace,monospace;
     --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:24px; --sp-6:32px; --sp-7:48px; --sp-8:64px;
     --r-sm:6px; --r-md:10px; --r-lg:16px; --r-pill:999px;
@@ -47,6 +48,7 @@
     --ink:#F5F3EF; --on-ink:#0D0D0D; --hover-ink:#FFFFFF; --danger-text:#FFB4A8; --focus:#FFFFFF; --field-border:#8A857C;
     --ok-bg:rgba(111,208,140,.16); --ok-text:#6FD08C; --destaque:#FF8A5C;
     --sg1:#D3DFF5; --sg2:#97ADD6; --sg3:#6F89B8; --hatch:rgba(13,13,13,.6);
+    --occ-ok:#6FD08C; --occ-warn:#E0A63A; --occ-warn-t:#E8B960; --occ-bad:#FF8A7A; --erro-bg:rgba(255,138,122,.14);
   }
   *{ box-sizing:border-box; }
   body{ margin:0; min-height:100vh; background:var(--bg); color:var(--text); font-family:var(--font-sans); line-height:1.5; -webkit-font-smoothing:antialiased; }
@@ -126,92 +128,139 @@
   .voltar{ display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:600; color:var(--text-muted); background:none; padding:0; margin-bottom:var(--sp-3); }
   .voltar:hover{ color:var(--orange); }
 
-  /* ---- card da sugestão ---- */
-  .card{ position:relative; overflow:hidden; background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); padding:var(--sp-5); }
-  .card::before{ content:""; position:absolute; top:0; left:0; right:0; height:4px; background:var(--orange); }
-  .card > :first-child{ margin-top:var(--sp-1); }
+  /* ---- tela de avaliar: oportunidade, onboarders e resumo ---- */
+  main.amplo{ max-width:1120px; }
+  .crumb{ display:inline-flex; align-items:center; gap:4px; min-height:44px; margin:0 0 var(--sp-1) -6px; padding:0 10px 0 4px; font-size:13px; font-weight:600; color:var(--text-muted); background:none; border-radius:var(--r-sm); }
+  .crumb:hover{ color:var(--orange); }
+  .crumb svg{ width:18px; height:18px; }
+  .sug-h1{ font-size:clamp(26px,3.4vw,32px); font-weight:700; line-height:1.12; letter-spacing:-.015em; text-align:left; margin:0 0 var(--sp-1); }
+  .sug-sub{ color:var(--text-muted); font-size:14px; margin:0 0 var(--sp-5); }
+  .sug-grid{ display:grid; grid-template-columns:minmax(0,1fr) 360px; gap:var(--sp-5); align-items:start; }
+  .sug-col{ display:flex; flex-direction:column; gap:var(--sp-4); min-width:0; }
+  .card-opp, .resumo, .estado-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:var(--sp-5); }
+  .resumo{ position:sticky; top:24px; }
+  .estado-card{ max-width:520px; margin:var(--sp-6) auto 0; text-align:center; }
+  .estado-card h2{ margin:0 0 var(--sp-2); font-size:20px; }
+  .estado-card p{ margin:0 0 var(--sp-3); color:var(--text-muted); font-size:14px; }
   .topo-card{ display:flex; align-items:center; justify-content:space-between; gap:var(--sp-3); margin-bottom:var(--sp-4); }
   .badges{ display:flex; flex-wrap:wrap; gap:var(--sp-2); }
   .pod-badge{ display:inline-flex; align-items:center; font-size:12px; font-weight:600; background:var(--accent-weak); color:var(--destaque); padding:4px 10px; border-radius:var(--r-pill); line-height:1; }
-  .badge-estado{ display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; padding:4px 10px; border-radius:var(--r-pill); line-height:1; background:var(--yellow); color:var(--black); white-space:nowrap; }
-  .badge-estado::before{ content:""; width:6px; height:6px; border-radius:50%; background:currentColor; }
+  .badge-estado{ display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; padding:4px 10px; border-radius:var(--r-pill); line-height:1.2; background:var(--yellow); color:var(--black); }
+  .badge-estado::before{ content:""; flex:none; width:6px; height:6px; border-radius:50%; background:currentColor; }
   .badge-estado.aceita{ background:var(--ok-bg); color:var(--ok-text); }
-  .titulo-opp{ display:flex; align-items:baseline; justify-content:space-between; gap:var(--sp-3); margin-bottom:var(--sp-3); }
-  .titulo-opp b{ font-size:18px; font-weight:700; overflow-wrap:anywhere; }
-  .link-sf{ font-size:12.5px; font-weight:600; color:var(--text); text-decoration:underline; text-underline-offset:3px; white-space:nowrap; }
-  .link-sf:hover{ color:var(--orange); }
-  .tiles{ display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-3); margin-bottom:var(--sp-4); }
-  .tile{ background:var(--surface-sunken); border-radius:var(--r-md); padding:var(--sp-3) var(--sp-4); min-width:0; }
-  .tile small{ display:block; font-size:12px; color:var(--text-muted); }
-  .tile b{ display:block; font-size:17px; font-weight:700; overflow-wrap:anywhere; }
-  .tile span{ display:block; font-size:12px; color:var(--text-muted); }
-
-  .onb-box{ border:1.5px solid var(--ink); border-radius:var(--r-md); padding:var(--sp-4); }
   .rotulo{ font-size:11.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text-muted); }
-  .onb-nome{ margin:6px 0 2px; font-size:22px; font-weight:700; letter-spacing:-.01em; overflow-wrap:anywhere; }
-  .onb-email{ font-family:var(--font-mono); font-size:12.5px; color:var(--text-muted); overflow-wrap:anywhere; }
-  .onb-motivo{ display:flex; flex-wrap:wrap; align-items:center; gap:6px 10px; margin-top:var(--sp-3); font-size:13px; }
-  .onb-motivo svg{ width:14px; height:14px; flex:none; color:var(--text-muted); }
-  .ver-criterio{ font-size:13px; font-weight:600; color:var(--text); background:none; padding:0; text-decoration:underline; text-underline-offset:3px; }
-  .ver-criterio:hover{ color:var(--orange); }
-  .criterio{ margin-top:var(--sp-3); padding:var(--sp-3); background:var(--surface-sunken); border-radius:var(--r-sm); font-size:13px; line-height:1.55; }
-  .criterio ol{ margin:6px 0 0; padding-left:18px; color:var(--text-muted); }
-  .criterio li.decidiu{ color:var(--text); font-weight:700; }
-  .carteira{ display:flex; align-items:center; justify-content:space-between; gap:var(--sp-3); margin-top:var(--sp-4); padding-top:var(--sp-4); border-top:1px solid var(--border); }
-  .carteira b{ font-size:14px; font-weight:700; display:block; }
-  .carteira span{ font-size:12px; color:var(--text-muted); }
-  .carteira .num{ display:flex; align-items:baseline; gap:8px; font-weight:700; color:var(--text-muted); font-size:22px; }
-  .carteira .num .arrow{ font-size:16px; font-weight:400; }
-  .carteira .num .depois{ font-size:34px; line-height:1; color:var(--text); letter-spacing:-.02em; }
+  .opp-linha{ display:flex; align-items:flex-end; justify-content:space-between; gap:var(--sp-5); }
+  .opp-info{ min-width:0; }
+  .opp-nome{ margin:6px 0 4px; font-size:24px; font-weight:700; letter-spacing:-.01em; line-height:1.15; overflow-wrap:anywhere; }
+  .opp-closer{ font-size:14px; color:var(--text-muted); margin-bottom:var(--sp-2); }
+  .opp-closer b{ color:var(--text); font-weight:600; }
+  .link-sf{ display:inline-flex; align-items:center; gap:5px; min-height:32px; font-size:13px; font-weight:600; color:var(--text-muted); text-decoration:underline; text-underline-offset:3px; }
+  .link-sf svg{ width:14px; height:14px; }
+  .link-sf:hover{ color:var(--orange); }
+  .opp-valor{ text-align:right; flex:none; }
+  .opp-valor .valor{ font-size:44px; font-weight:700; line-height:1.05; letter-spacing:-.02em; font-variant-numeric:tabular-nums; }
 
-  .msg{ position:relative; background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); padding:var(--sp-4) var(--sp-5); font-size:14px; line-height:1.55; margin-bottom:var(--sp-4); }
-  .msg::before{ content:""; position:absolute; left:0; top:12px; bottom:12px; width:4px; background:var(--yellow); border-radius:0 3px 3px 0; }
-  .msg.ok::before{ background:var(--ok-text); }
-  .msg.aviso::before{ background:var(--border-strong); }
-  /* ---- comparativo dos onboarders N6+ ---- */
-  .comparar{ margin-top:var(--sp-5); padding-top:var(--sp-5); border-top:1px solid var(--border); }
-  .comparar h2{ margin:0 0 4px; font-size:16px; font-weight:700; }
-  .comparar .dica{ margin:0 0 var(--sp-3); font-size:12.5px; color:var(--text-muted); line-height:1.5; }
+  .comparar h2{ margin:0 0 2px; font-size:18px; font-weight:700; }
+  .comparar .dica{ margin:0 0 var(--sp-3); font-size:13px; color:var(--text-muted); }
+  .cmp-lista{ display:flex; flex-direction:column; gap:var(--sp-2); }
+  .cmp-item{ background:var(--surface); border:2px solid var(--border); border-radius:var(--r-md); overflow:hidden; transition:border-color .15s; }
+  .cmp-item:hover{ border-color:var(--border-strong); }
+  .cmp-item.sel{ border-color:var(--orange); }
+  .cmp-fila{ display:flex; align-items:stretch; }
+  .cmp-linha{ flex:1; min-width:0; min-height:64px; display:grid; grid-template-columns:18px 38px minmax(0,1fr) minmax(130px,200px); align-items:center; gap:12px; text-align:left; background:transparent; color:var(--text); border:0; padding:10px 6px 10px 14px; cursor:pointer; }
+  .radio{ width:18px; height:18px; border-radius:50%; border:2px solid var(--field-border); background:var(--surface); display:inline-block; }
+  .cmp-item.sel .radio{ border-color:var(--orange); background:var(--orange); box-shadow:inset 0 0 0 3px var(--surface); }
+  .avatar{ width:38px; height:38px; border-radius:50%; display:grid; place-items:center; font-size:13px; font-weight:700; background:var(--surface-sunken); border:1px solid var(--border-strong); color:var(--text); flex:none; }
+  .cmp-item.sel .avatar, #dAvatar{ background:var(--orange); border-color:var(--orange); color:var(--black); }
+  .cmp-nome{ display:flex; align-items:center; flex-wrap:wrap; gap:4px 8px; font-size:15px; font-weight:700; }
+  .cmp-sub{ display:block; font-size:12.5px; color:var(--text-muted); }
+  .cmp-tag{ font-size:11px; font-weight:700; padding:2px 8px; border-radius:var(--r-pill); background:var(--ok-bg); color:var(--ok-text); white-space:nowrap; }
+  .cmp-tag.fora{ background:#FBEFD5; color:#7A4B06; }
+  :root[data-theme="dark"] .cmp-tag.fora{ background:rgba(224,166,58,.18); color:#E8B960; }
+  .ocup{ display:flex; flex-direction:column; gap:3px; min-width:0; }
+  .ocup-num{ display:flex; align-items:baseline; justify-content:space-between; gap:8px; font-size:13px; font-variant-numeric:tabular-nums; }
+  .ocup-num b{ font-size:15px; } .ocup-num span{ color:var(--text-muted); }
+  .occ{ height:8px; border-radius:var(--r-pill); background:var(--surface-sunken); box-shadow:inset 0 0 0 1px var(--border); overflow:hidden; }
+  .occ i{ display:block; height:100%; border-radius:var(--r-pill); }
+  .occ .ok{ background:var(--occ-ok); } .occ .warn{ background:var(--occ-warn); } .occ .bad{ background:var(--occ-bad); }
+  .ocup-sub{ font-size:11.5px; color:var(--text-muted); }
+  .ocup-sub .alerta{ font-weight:700; } .ocup-sub .alerta.warn{ color:var(--occ-warn-t); } .ocup-sub .alerta.bad{ color:var(--occ-bad); }
+  .cmp-exp{ width:48px; flex:none; background:transparent; border:0; border-left:1px solid var(--border); color:var(--text-muted); cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .cmp-exp:hover{ color:var(--text); background:var(--surface-sunken); }
+  .cmp-exp svg{ width:18px; height:18px; transition:transform .15s; }
+  .cmp-exp[aria-expanded="true"] svg{ transform:rotate(180deg); }
+  .cmp-det{ padding:var(--sp-3) var(--sp-4) var(--sp-4); background:var(--surface-sunken); border-top:1px solid var(--border); }
   .legenda{ display:flex; flex-wrap:wrap; gap:4px 14px; align-items:center; margin-bottom:var(--sp-2); font-size:12px; color:var(--text-muted); }
   .legenda .lg{ display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
   .sw{ display:inline-block; width:12px; height:8px; border-radius:2px; }
   .sw.cor-sg1{ background:var(--sg1); } .sw.cor-sg2{ background:var(--sg2); } .sw.cor-sg3{ background:var(--sg3); }
   .sw-pre{ background:repeating-linear-gradient(45deg, var(--hatch) 0 2px, transparent 2px 5px), var(--sg2); }
   .sw-lim{ display:inline-block; width:2px; height:12px; background:var(--text); border-radius:1px; }
-  .cmp-lista{ display:flex; flex-direction:column; border:1px solid var(--border-strong); border-radius:var(--r-md); overflow:hidden; background:var(--surface); }
-  .cmp-item{ border-top:1px solid var(--border); }
-  .cmp-item:first-child{ border-top:0; }
-  .cmp-item.sel{ background:var(--accent-weak); box-shadow:inset 3px 0 0 var(--orange); }
-  .cmp-fila{ display:flex; align-items:stretch; }
-  .cmp-linha{ flex:1; min-width:0; display:grid; grid-template-columns:18px minmax(0,1fr) auto; align-items:center; gap:10px; text-align:left; background:transparent; color:var(--text); border:0; padding:10px 4px 10px 14px; cursor:pointer; }
-  .cmp-linha:hover .cmp-nome{ text-decoration:underline; }
-  .radio{ width:16px; height:16px; border-radius:50%; border:1.5px solid var(--border-strong); background:var(--surface); display:inline-block; }
-  .cmp-item.sel .radio{ border-color:var(--orange); box-shadow:inset 0 0 0 3px var(--surface); background:var(--orange); }
-  .cmp-nome{ display:block; font-size:14px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .cmp-sub{ display:block; font-size:12px; color:var(--text-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .cmp-tag{ margin-left:6px; font-size:10.5px; font-weight:700; padding:1px 7px; border-radius:var(--r-pill); background:var(--surface-sunken); border:1px solid var(--border-strong); vertical-align:1px; }
-  .cmp-graf{ display:flex; align-items:center; gap:8px; }
-  .pilha-wrap{ position:relative; width:96px; padding:3px 0; }
-  .pilha{ display:flex; height:10px; border-radius:var(--r-pill); background:var(--surface-sunken); overflow:hidden; box-shadow:inset 0 0 0 1px var(--border-strong); }
+  .pilha-wrap{ position:relative; width:100%; padding:3px 0; }
+  .pilha{ display:flex; height:12px; border-radius:var(--r-pill); background:var(--surface); overflow:hidden; box-shadow:inset 0 0 0 1px var(--border-strong); }
   .fatia{ position:relative; display:block; height:100%; flex:none; border-right:1.5px solid var(--surface); }
   .fatia.cor-sg1{ background:var(--sg1); } .fatia.cor-sg2{ background:var(--sg2); } .fatia.cor-sg3{ background:var(--sg3); }
   .fatia .pre{ position:absolute; right:0; top:0; bottom:0; background:repeating-linear-gradient(45deg, var(--hatch) 0 2px, transparent 2px 5px); }
   .lim{ position:absolute; top:0; bottom:0; width:2px; margin-left:-1px; background:var(--text); border-radius:1px; }
-  .cmp-total{ font-size:13px; font-variant-numeric:tabular-nums; white-space:nowrap; min-width:46px; text-align:right; }
-  .cmp-total b{ color:var(--text); } .cmp-total span{ color:var(--text-muted); }
-  .cmp-exp{ width:40px; flex:none; background:transparent; border:0; border-left:1px solid var(--border); color:var(--text-muted); cursor:pointer; display:flex; align-items:center; justify-content:center; }
-  .cmp-exp:hover{ color:var(--text); background:var(--surface-sunken); }
-  .cmp-exp svg{ width:16px; height:16px; transition:transform .15s; }
-  .cmp-exp[aria-expanded="true"] svg{ transform:rotate(180deg); }
-  .cmp-det{ padding:4px 14px 12px 42px; background:var(--surface-sunken); border-top:1px solid var(--border); }
-  .cmp-det table{ width:100%; border-collapse:collapse; font-size:12.5px; font-variant-numeric:tabular-nums; }
+  .cmp-det table{ width:100%; border-collapse:collapse; margin-top:var(--sp-2); font-size:12.5px; font-variant-numeric:tabular-nums; }
   .cmp-det th{ font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--text-muted); font-weight:600; padding:8px 4px 4px; text-align:center; }
   .cmp-det td{ padding:5px 4px; text-align:center; border-top:1px solid var(--border); }
   .cmp-det th:first-child, .cmp-det td:first-child{ text-align:left; }
   .cmp-det tr.foco td{ color:var(--destaque); font-weight:700; }
   .cmp-det tr.tot td{ font-weight:700; }
   .cmp-det .faixa{ color:var(--text-muted); font-weight:400; margin-left:6px; }
-  @media (max-width:420px){ .pilha-wrap{ width:64px; } .cmp-det{ padding-left:14px; } }
+  .cmp-det .dica{ margin:var(--sp-2) 0 0; }
+
+  .resumo-t{ margin:0 0 var(--sp-4); font-size:17px; font-weight:700; }
+  .resumo-onb{ display:flex; align-items:center; gap:12px; margin:var(--sp-2) 0 var(--sp-4); }
+  .resumo-quem{ min-width:0; }
+  .onb-nome{ font-size:20px; font-weight:700; letter-spacing:-.01em; line-height:1.2; overflow-wrap:anywhere; }
+  .onb-email{ font-family:var(--font-mono); font-size:12px; color:var(--text-muted); overflow-wrap:anywhere; }
+  .resumo-cart{ display:flex; align-items:baseline; justify-content:space-between; gap:var(--sp-3); padding:var(--sp-3) 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); font-size:14px; color:var(--text-muted); }
+  .resumo-cart .num{ display:inline-flex; align-items:baseline; gap:8px; font-variant-numeric:tabular-nums; }
+  .resumo-cart .seta{ font-size:14px; }
+  .resumo-cart b{ font-size:26px; line-height:1; color:var(--text); letter-spacing:-.02em; }
+  .lim-t{ font-size:13px; }
+  .contexto{ margin-top:var(--sp-3); padding:var(--sp-3); background:var(--surface-sunken); border-radius:var(--r-md); font-size:13px; line-height:1.55; }
+  .ver-criterio{ display:inline; min-height:32px; font-size:13px; font-weight:600; color:var(--text); background:none; padding:0; text-decoration:underline; text-underline-offset:3px; }
+  .ver-criterio:hover{ color:var(--orange); }
+  .criterio{ margin-top:var(--sp-2); padding:var(--sp-3); background:var(--surface-sunken); border-radius:var(--r-md); font-size:13px; line-height:1.55; }
+  .criterio ol{ margin:6px 0 0; padding-left:18px; color:var(--text-muted); }
+  .criterio li.decidiu{ color:var(--text); font-weight:700; }
+  .efeito{ margin:var(--sp-3) 0 0; font-size:12.5px; color:var(--text-muted); line-height:1.5; }
+  .resumo-acao .btn-primary{ min-height:48px; margin-top:var(--sp-4); }
+  .link-quieto{ display:block; width:100%; min-height:44px; margin-top:var(--sp-1); font-size:13px; font-weight:600; color:var(--text-muted); background:none; text-decoration:underline; text-underline-offset:3px; }
+  .link-quieto:hover{ color:var(--text); }
+  .link-perigo{ display:block; margin:var(--sp-1) auto 0; min-height:44px; padding:0 12px; font-size:12.5px; font-weight:600; color:var(--destaque); background:none; text-decoration:underline; text-underline-offset:3px; }
+  .erro-atrib{ margin-top:var(--sp-3); padding:var(--sp-3) var(--sp-4); background:var(--erro-bg); border-radius:var(--r-md); font-size:13px; color:var(--danger-text); }
+  .erro-atrib p{ margin:2px 0 var(--sp-2); }
+  .erro-botoes{ display:flex; flex-wrap:wrap; gap:var(--sp-2); }
+  .erro-botoes .btn-quiet{ display:inline-flex; align-items:center; min-height:44px; text-decoration:none; color:var(--text); background:var(--surface); }
+  .fim-icone{ width:48px; height:48px; border-radius:50%; display:grid; place-items:center; margin-bottom:var(--sp-3); background:var(--ok-bg); color:var(--ok-text); }
+  .fim-icone svg{ width:26px; height:26px; }
+  .fim-icone.info{ background:var(--surface-sunken); color:var(--text-muted); }
+  .fim-txt{ margin:0 0 var(--sp-3); font-size:14px; line-height:1.55; color:var(--text-muted); }
+  .fim-botoes{ display:flex; flex-direction:column; }
+  .fim-botoes .btn-primary{ min-height:48px; margin-top:0; }
+  .fim-botoes .btn-ghost{ min-height:44px; flex:none; }
+  .msg{ position:relative; background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); padding:var(--sp-4) var(--sp-5); font-size:14px; line-height:1.55; margin-bottom:var(--sp-4); }
+  .msg::before{ content:""; position:absolute; left:0; top:12px; bottom:12px; width:4px; background:var(--yellow); border-radius:0 3px 3px 0; }
+  .msg.ok::before{ background:var(--ok-text); }
+  .msg.aviso::before{ background:var(--border-strong); }
+  @media (max-width:900px){
+    .sug-grid{ grid-template-columns:1fr; }
+    .resumo{ position:static; }
+  }
+  @media (max-width:640px){
+    .opp-linha{ flex-direction:column; align-items:flex-start; gap:var(--sp-3); }
+    .opp-valor{ text-align:left; } .opp-valor .valor{ font-size:36px; }
+    .cmp-linha{ grid-template-columns:18px 38px minmax(0,1fr); }
+    .cmp-linha .ocup{ grid-column:2 / -1; }
+    .card-opp, .resumo{ padding:var(--sp-4); }
+    #painelSugestao{ padding-bottom:140px; }
+    #resumoAtrib .resumo-acao{ position:fixed; left:0; right:0; bottom:0; z-index:35; padding:var(--sp-3) var(--sp-4) var(--sp-2); background:var(--surface); border-top:1px solid var(--border-strong); box-shadow:0 -6px 20px rgba(0,0,0,.12); }
+    #resumoAtrib .resumo-acao .btn-primary{ margin-top:0; }
+  }
   .esq{ display:block; height:14px; border-radius:6px; background:linear-gradient(90deg, var(--surface-sunken) 25%, var(--border) 50%, var(--surface-sunken) 75%); background-size:200% 100%; animation:esq 1.3s linear infinite; }
   @keyframes esq{ to{ background-position:-200% 0; } }
 
@@ -342,51 +391,79 @@
     </header>
 
     <!-- SUGESTÃO -->
-    <main id="painelSugestao" role="tabpanel" aria-labelledby="tabSugestao" hidden>
-      <div class="eyebrow">Sugestão do N6+</div>
-      <h1>Avaliar sugestão</h1>
-      <p class="sub" id="sub">Compare os onboarders N6+ e confirme quem recebe a Oportunidade.</p>
-      <button type="button" class="voltar" id="voltarBtn">← Voltar para pendências</button>
+    <main id="painelSugestao" class="amplo" role="tabpanel" aria-labelledby="tabSugestao" hidden>
+      <button type="button" class="crumb" id="voltarBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Pendências</button>
+      <h1 class="sug-h1">Quem recebe esta oportunidade?</h1>
+      <p class="sug-sub" id="sub">Revise a sugestão do sistema e confirme, ou escolha outro onboarder.</p>
       <div id="aviso" class="msg erro" hidden></div>
-      <div class="card" id="cartao">
-        <div id="carregando" hidden aria-busy="true"><span class="esq" style="width:60%;margin-bottom:12px"></span><span class="esq" style="width:90%;margin-bottom:12px"></span><span class="esq" style="width:75%"></span></div>
-        <section id="detalhe" hidden>
-          <div class="topo-card">
-            <div class="badges" id="badges"></div>
-            <span class="badge-estado" id="estado">Pendente</span>
-          </div>
-          <div class="titulo-opp"><b id="dOpp"></b><a class="link-sf" id="sfLink" href="#" target="_blank" rel="noopener noreferrer">ID da oportunidade ↗</a></div>
-          <div class="tiles">
-            <div class="tile"><small>Valor 12m</small><b id="dValor"></b></div>
-            <div class="tile"><small>Closer</small><b id="dCloser"></b><span id="dCloserPod"></span></div>
-          </div>
-          <div class="onb-box">
+      <section class="estado-card" id="expirado" hidden>
+        <h2>O link expirou</h2>
+        <p>Esta sugestão não está mais disponível por este link. Se ela ainda não foi decidida, a oportunidade segue nas pendências.</p>
+        <button type="button" class="btn-primary" id="expiradoBtn">Abrir nas pendências</button>
+      </section>
+      <div id="carregando" hidden aria-busy="true" class="sug-grid">
+        <div class="sug-col"><div class="card-opp"><span class="esq" style="width:30%;margin-bottom:14px"></span><span class="esq" style="width:60%;height:22px;margin-bottom:14px"></span><span class="esq" style="width:45%"></span></div><div class="card-opp"><span class="esq" style="width:100%;height:56px;margin-bottom:10px"></span><span class="esq" style="width:100%;height:56px"></span></div></div>
+        <div class="resumo"><span class="esq" style="width:55%;margin-bottom:14px"></span><span class="esq" style="width:100%;height:56px;margin-bottom:14px"></span><span class="esq" style="width:100%;height:44px"></span></div>
+      </div>
+      <div class="sug-grid" id="detalhe" hidden>
+        <div class="sug-col">
+          <section class="card-opp" id="cartao" aria-label="Oportunidade">
+            <div class="topo-card">
+              <div class="badges" id="badges"></div>
+              <span class="badge-estado" id="estado">Pendente</span>
+            </div>
+            <div class="opp-linha">
+              <div class="opp-info">
+                <div class="rotulo">Oportunidade N6+</div>
+                <h2 class="opp-nome" id="dOpp"></h2>
+                <div class="opp-closer">Closer: <b id="dCloser"></b> · <span id="dCloserPod"></span></div>
+                <a class="link-sf" id="sfLink" href="#" target="_blank" rel="noopener noreferrer">Ver no Salesforce<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M10 14 21 3M18 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"/></svg></a>
+              </div>
+              <div class="opp-valor"><div class="rotulo">Valor em 12 meses</div><div class="valor" id="dValor"></div></div>
+            </div>
+          </section>
+          <section class="comparar" id="comparar" aria-labelledby="hComparar" hidden>
+            <h2 id="hComparar">Onboarders disponíveis</h2>
+            <p class="dica" id="cmpDica"></p>
+            <div class="cmp-lista" id="cmpLista" role="group" aria-labelledby="hComparar"></div>
+          </section>
+        </div>
+        <aside class="resumo" id="resumo" aria-label="Resumo da atribuição">
+          <div id="resumoAtrib">
+            <h2 class="resumo-t">Resumo da atribuição</h2>
             <div class="rotulo" id="rotuloOnb">Onboarder sugerido</div>
-            <div class="onb-nome" id="dOnbNome"></div>
-            <div class="onb-email" id="dOnbEmail"></div>
-            <div class="onb-motivo">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8"/></svg>
+            <div class="resumo-onb">
+              <span class="avatar" id="dAvatar" aria-hidden="true"></span>
+              <div class="resumo-quem"><div class="onb-nome" id="dOnbNome"></div><div class="onb-email" id="dOnbEmail"></div></div>
+            </div>
+            <div class="resumo-cart"><span>Carteira</span><span class="num"><span id="tAntes">0</span><span class="seta" aria-hidden="true">→</span><b id="tDepois">0</b><span class="lim-t" id="tLimite"></span></span></div>
+            <div class="contexto">
               <span id="dOnbInfo"></span>
-              <button type="button" class="ver-criterio" id="verCriterio" aria-expanded="false" aria-controls="criterio">Ver critério</button>
+              <button type="button" class="ver-criterio" id="verCriterio" aria-expanded="false" aria-controls="criterio">Ver critério completo</button>
             </div>
             <div class="criterio" id="criterio" hidden></div>
-            <div class="carteira">
-              <div><b>Carteira do onboarder</b><span>Oportunidades em onboarding</span></div>
-              <div class="num"><span id="tAntes">0</span><span class="arrow">→</span><span class="depois" id="tDepois">0</span></div>
+            <p class="efeito" id="efeito"></p>
+            <div class="erro-atrib" id="erroBox" role="alert" hidden>
+              <b>Não conseguimos atribuir no Salesforce</b>
+              <p id="erroTxt">Nada foi alterado na oportunidade.</p>
+              <div class="erro-botoes"><button type="button" class="btn-quiet" id="tentarBtn">Tentar de novo</button><a class="btn-quiet" id="sfDireto" href="#" target="_blank" rel="noopener noreferrer">Atribuir direto no Salesforce</a></div>
+            </div>
+            <div class="resumo-acao">
+              <button class="btn-primary" id="aceitarBtn" type="button"><span class="spinner" id="aceitarSpin"></span><span id="aceitarTxt">Atribuir</span></button>
+              <button type="button" class="link-quieto" id="depoisBtn">Decidir depois</button>
+            </div>
+            <button type="button" class="link-perigo" id="apagarBtn">Apagar sugestão</button>
+          </div>
+          <div id="resumoFim" hidden>
+            <div class="fim-icone" id="fimIcone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></div>
+            <h2 class="resumo-t" id="fimTitulo"></h2>
+            <p class="fim-txt" id="fimTexto"></p>
+            <div class="fim-botoes">
+              <button type="button" class="btn-primary" id="fimPrincipal"></button>
+              <a class="btn-ghost" id="fimSf" href="#" target="_blank" rel="noopener noreferrer">Ver no Salesforce</a>
             </div>
           </div>
-          <section class="comparar" id="comparar" aria-labelledby="hComparar" hidden>
-            <h2 id="hComparar">Ocupação da carteira dos onboarders N6+</h2>
-            <p class="dica" id="cmpDica"></p>
-            <div class="legenda" id="cmpLegenda" aria-label="Legenda do gráfico"></div>
-            <div class="cmp-lista" id="cmpLista" role="radiogroup" aria-labelledby="hComparar"></div>
-          </section>
-          <button class="btn-primary" id="aceitarBtn" type="button"><span class="spinner" id="aceitarSpin"></span><span id="aceitarTxt">Aceitar sugestão</span></button>
-          <div class="linha-botoes">
-            <button type="button" class="btn-ghost perigo" id="apagarBtn">Apagar sugestão</button>
-            <a class="btn-ghost" id="sfLink2" href="#" target="_blank" rel="noopener noreferrer">Abrir no Salesforce ↗</a>
-          </div>
-        </section>
+        </aside>
       </div>
     </main>
 
@@ -590,12 +667,20 @@
   // ── detalhe da sugestão ──
   var CRIT = ['Menos clientes no subgrupo da Oportunidade', 'Menor carteira total', 'Menos clientes em pré-onboarding no subgrupo', 'Atribuição mais antiga'];
   function critNivel(c) { c = String(c || ''); return /pr[ée]-onboarding/.test(c) ? 3 : /carteira/.test(c) ? 2 : /atribui/.test(c) ? 4 : 1; }
-  function motivoCurto(e) {
-    if (escolhido) return 'Escolha da coordenação (sugerido: ' + nome(e.onboarder) + ')';
-    if (e.origem === 'escolha_coordenador') return 'Escolha da coordenação';
-    var origem = e.origem === 'outro_pod' ? 'Outro POD do mesmo nível' : 'Mesmo POD do closer';
-    var c = String(e.criterio || ''), cur = /pr[ée]-onboarding/.test(c) ? 'menor pré-onboarding' : /carteira/.test(c) ? 'menor carteira' : /atribui/.test(c) ? 'atribuição mais antiga' : 'menos clientes no subgrupo';
-    return origem + ', ' + cur;
+  function iniciaisDe(email) { var p = nome(email).split(' '); return ((p[0] || '?').charAt(0) + ((p[1] || '').charAt(0) || '')).toUpperCase(); }
+  function primeiroNome(email) { return nome(email).split(' ')[0]; }
+  function daLista(email) { var l = opcoes || []; for (var i = 0; i < l.length; i++) if (l[i].email === email) return l[i]; return null; }
+  function rotuloAceitar() { return 'Atribuir a ' + nome(escolhido ? escolhido.email : atual.onboarder); }
+  // texto que explica a escolha (usa só dados que a página já tem)
+  function contexto(e) {
+    var o = escolhido, email = o ? o.email : e.onboarder, n = nome(email), podC = e.pod_closer || '-';
+    var dados = o || daLista(email), lv = dados && dados.level ? dados.level : '';
+    var pod = o ? o.pod : (dados && dados.pod != null ? dados.pod : e.pod);
+    var t = !lv ? n + ' é do POD ' + pod + '.' : lv === 'N6+' ? n + ' é N6+ do POD ' + pod + '.' : n + ' é ' + lv + ', fora do nível N6+.';
+    if (o) return t + ' Escolhido no lugar de ' + nome(e.onboarder) + ', sugerido pelo sistema. ' + (String(pod) === String(podC) ? 'Mesmo POD do closer.' : 'Outro POD que o do closer (POD ' + podC + ').');
+    if (e.origem === 'escolha_coordenador') return t + ' Escolha da coordenação.';
+    var c = String(e.criterio || ''), cur = /pr[ée]-onboarding/.test(c) ? 'ter menos clientes em pré-onboarding no subgrupo' : /carteira/.test(c) ? 'ter a menor carteira' : /atribui/.test(c) ? 'ter a atribuição mais antiga' : 'ter menos clientes no subgrupo';
+    return t + ' Foi sugerido ' + (e.origem === 'outro_pod' ? 'por ser de outro POD do mesmo nível que o do closer (POD ' + podC + ')' : 'por estar no mesmo POD do closer (POD ' + podC + ')') + ' e ' + cur + '.';
   }
   function pintarCriterio(e) {
     var box = $('criterio'); box.innerHTML = '';
@@ -606,15 +691,34 @@
   }
   function pintarOnboarder() {
     var e = atual, o = escolhido;
-    var email = o ? o.email : e.onboarder, pod = o ? o.pod : e.pod;
+    var email = o ? o.email : e.onboarder;
     $('rotuloOnb').textContent = o ? 'Onboarder escolhido' : (e.status === 'aceita' ? 'Onboarder definido' : 'Onboarder sugerido');
-    $('dOnbNome').textContent = nome(email); $('dOnbEmail').textContent = email;
-    $('dOnbInfo').textContent = motivoCurto(e);
+    $('dAvatar').textContent = iniciaisDe(email); $('dOnbNome').textContent = nome(email); $('dOnbEmail').textContent = email;
+    $('dOnbInfo').textContent = contexto(e);
     var antes = o ? o.total : e.total_antes, tem = antes !== undefined && antes !== null && !isNaN(Number(antes));
     $('tAntes').textContent = tem ? antes : '-'; $('tDepois').textContent = tem ? Number(antes) + 1 : '-';
     if (e.status === 'aceita' && !o) { $('tAntes').textContent = e.total_antes !== undefined ? e.total_antes : '-'; $('tDepois').textContent = e.total_depois !== undefined ? e.total_depois : '-'; }
+    var d = o || daLista(email); $('tLimite').textContent = d && d.limite ? ' de ' + d.limite : '';
+    $('efeito').textContent = 'Ao confirmar, ' + primeiroNome(email) + ' é definido como Onboarding Owner da oportunidade no Salesforce e o Closer segue o processo no Onboarding Assignment.';
+    if (e.status !== 'aceita' && !aceitarBtn.disabled) $('aceitarTxt').textContent = rotuloAceitar();
   }
-  function preencher(e) {
+  // estado final no lugar do resumo: acabou de atribuir, ou a sugestão já tinha sido decidida
+  function mostrarFim(e, nova) {
+    $('resumoAtrib').hidden = true; $('resumoFim').hidden = false;
+    var quem = e.aceito_nome || (e.aceito_por ? nome(e.aceito_por) : ''), trocou = e.sugerido_original && e.sugerido_original !== e.onboarder;
+    $('fimIcone').className = 'fim-icone' + (nova ? '' : ' info');
+    if (nova) {
+      $('fimTitulo').textContent = 'Oportunidade atribuída a ' + nome(e.onboarder);
+      $('fimTexto').textContent = 'A carteira de ' + primeiroNome(e.onboarder) + ' passou de ' + (e.total_antes != null ? e.total_antes : '-') + ' para ' + (e.total_depois != null ? e.total_depois : '-') + '. O Closer já pode seguir o processo no Onboarding Assignment.';
+      $('fimPrincipal').textContent = 'Voltar para pendências'; $('fimPrincipal').setAttribute('data-vai', 'pendencias');
+    } else {
+      $('fimTitulo').textContent = 'Esta sugestão já foi decidida';
+      $('fimTexto').textContent = (quem ? 'Aceita por ' + quem : 'Aceita') + (e.aceito_em ? ' em ' + dataBR(e.aceito_em) : '') + '. Onboarder: ' + nome(e.onboarder) + (trocou ? ' (o sistema havia sugerido ' + nome(e.sugerido_original) + ')' : '') + '.';
+      $('fimPrincipal').textContent = 'Ver no histórico'; $('fimPrincipal').setAttribute('data-vai', 'historico');
+    }
+    var sf = /^https:\/\/hotmart\.my\.salesforce\.com\//.test(e.link_sf || ''); $('fimSf').hidden = !sf; if (sf) $('fimSf').href = e.link_sf;
+  }
+  function preencher(e, nova) {
     atual = e; escolhido = null; opcoes = null; habilitarSugestao();
     $('badges').innerHTML = ''; [(e.level || 'N6+') + ' · ' + String(e.subgrupo || '').toUpperCase(), 'POD ' + (e.pod_closer || e.pod || '-')].forEach(function (t) { $('badges').appendChild(el('span', 'pod-badge', t)); });
     var aceita = e.status === 'aceita';
@@ -623,35 +727,56 @@
     $('dOpp').textContent = e.cliente || e.opp_id;
     $('dValor').textContent = compacto(e.amount); $('dValor').title = Number(e.amount) > 0 ? exato(e.amount) : '';
     $('dCloser').textContent = nome(e.closer); $('dCloserPod').textContent = 'POD ' + (e.pod_closer || '-');
-    var sf = /^https:\/\/hotmart\.my\.salesforce\.com\//.test(e.link_sf || ''); [$('sfLink'), $('sfLink2')].forEach(function (a) { if (sf) { a.href = e.link_sf; a.hidden = false; } else a.hidden = true; });
-    pintarCriterio(e); pintarOnboarder();
-    $('criterio').hidden = true; $('verCriterio').setAttribute('aria-expanded', 'false'); $('verCriterio').textContent = 'Ver critério';
+    var sf = /^https:\/\/hotmart\.my\.salesforce\.com\//.test(e.link_sf || ''); [$('sfLink'), $('sfDireto')].forEach(function (a) { if (sf) { a.href = e.link_sf; a.hidden = false; } else a.hidden = true; });
+    pintarCriterio(e);
+    $('criterio').hidden = true; $('verCriterio').setAttribute('aria-expanded', 'false'); $('verCriterio').textContent = 'Ver critério completo';
     $('comparar').hidden = true; $('cmpLista').innerHTML = '';
+    $('erroBox').hidden = true;
     $('apagarBtn').hidden = aceita; $('apagarBtn').disabled = false; $('apagarBtn').textContent = 'Apagar sugestão'; delete $('apagarBtn').dataset.confirma;
-    aceitarBtn.hidden = aceita; aceitarBtn.disabled = false; $('aceitarSpin').classList.remove('show'); $('aceitarTxt').textContent = 'Aceitar sugestão';
-    $('sub').textContent = aceita ? 'O onboarder já foi definido nesta Oportunidade.' : 'Compare os onboarders N6+ e confirme quem recebe a Oportunidade.';
-    $('carregando').hidden = true; $('detalhe').hidden = false; $('cartao').hidden = false;
-    if (!aceita) carregarComparativo();
+    aceitarBtn.disabled = false; $('aceitarSpin').classList.remove('show');
+    pintarOnboarder();
+    $('sub').textContent = aceita ? 'O onboarder já foi definido nesta Oportunidade.' : 'Revise a sugestão do sistema e confirme, ou escolha outro onboarder.';
+    $('carregando').hidden = true; $('expirado').hidden = true; $('detalhe').hidden = false;
+    if (aceita) { mostrarFim(e, !!nova); } else { $('resumoFim').hidden = true; $('resumoAtrib').hidden = false; carregarComparativo(); }
   }
-  $('verCriterio').addEventListener('click', function () { var abre = $('criterio').hidden; $('criterio').hidden = !abre; this.setAttribute('aria-expanded', String(abre)); this.textContent = abre ? 'Ocultar critério' : 'Ver critério'; });
+  $('verCriterio').addEventListener('click', function () { var abre = $('criterio').hidden; $('criterio').hidden = !abre; this.setAttribute('aria-expanded', String(abre)); this.textContent = abre ? 'Ocultar critério' : 'Ver critério completo'; });
+  $('fimPrincipal').addEventListener('click', function () { irPara(this.getAttribute('data-vai') === 'historico' ? 'historico' : 'pendencias'); });
+  $('depoisBtn').addEventListener('click', function () { irPara('pendencias'); });
+  $('expiradoBtn').addEventListener('click', function () { irPara('pendencias'); });
+  $('tentarBtn').addEventListener('click', function () { aceitarBtn.click(); });
 
+  function semSugestao() { $('carregando').hidden = true; $('detalhe').hidden = true; }
   async function abrirSugestao(ref) {
-    msg(''); tokenAtual = ref.t || ''; irPara('sugestao'); atual = null; habilitarSugestao(); $('detalhe').hidden = true; $('carregando').hidden = false; $('cartao').hidden = false;
+    msg(''); tokenAtual = ref.t || ''; irPara('sugestao'); atual = null; habilitarSugestao(); $('detalhe').hidden = true; $('expirado').hidden = true; $('carregando').hidden = false;
     try {
       var corpo = { acao: 'detalhe' }; if (ref.t) corpo.t = ref.t; else corpo.opp_id = ref.opp_id;
       var r = await chamar(corpo);
-      if (!r.ok) { $('carregando').hidden = true; $('cartao').hidden = true; msg((r.dados && r.dados.mensagem) || 'Não foi possível abrir a sugestão.'); return; }
+      if (!r.ok) {
+        semSugestao();
+        if (r.dados && r.dados.codigo === 'link_invalido') { $('expirado').hidden = false; return; }
+        msg((r.dados && r.dados.mensagem) || 'Não foi possível abrir a sugestão.'); return;
+      }
       preencher(r.dados.sugestao); irPara('sugestao');
-    } catch (e) { if (e.message !== 'login') { $('carregando').hidden = true; $('cartao').hidden = true; msg('Falha de conexão. Tente de novo.'); } }
+    } catch (e) { if (e.message !== 'login') { semSugestao(); msg('Falha de conexão. Tente de novo.'); } }
   }
 
-  // ── comparativo: todos os onboarders N6+ na tela, com a carteira por subgrupo; clicar escolhe ──
+  // ── onboarders disponíveis: ocupação da carteira contra o limite; a setinha abre o detalhe por subgrupo ──
   var FAIXAS = {
     'N2-N3': { sg1: 'R$120k a R$299k', sg2: 'R$300k a R$599k', sg3: 'R$600k a R$999k' },
     'N4-N5': { sg1: 'R$1M a R$1,9M', sg2: 'R$2M a R$2,9M', sg3: 'R$3M a R$4,9M' },
     'N6+': { sg1: 'R$5M a R$9,9M', sg2: 'R$10M a R$14,9M', sg3: 'a partir de R$15M' }
   };
   var SETA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+  function ocupacao(o) {
+    var box = el('span', 'ocup'), pct = o.limite ? o.total / o.limite : 0, faixa = pct >= 1 ? 'bad' : pct >= 0.8 ? 'warn' : 'ok';
+    var num = el('span', 'ocup-num'), t = el('span', ''); t.appendChild(el('b', '', String(o.total))); t.appendChild(el('span', '', o.limite ? ' / ' + o.limite : ' clientes')); num.appendChild(t);
+    num.appendChild(el('span', '', ' passa a ' + (o.total + 1))); box.appendChild(num);
+    if (o.limite) {
+      var occ = el('span', 'occ'), f = el('i', faixa); f.style.width = Math.min(pct, 1) * 100 + '%'; occ.appendChild(f); occ.setAttribute('role', 'img'); occ.setAttribute('aria-label', Math.round(pct * 100) + '% do limite de ' + o.limite + ' clientes'); box.appendChild(occ);
+      var sub = el('span', 'ocup-sub', Math.round(pct * 100) + '% do limite'); if (pct >= 0.8) sub.appendChild(el('span', 'alerta ' + faixa, ' · ' + (pct >= 1 ? 'No limite' : 'Perto do limite'))); box.appendChild(sub);
+    }
+    return box;
+  }
   function barra(o) {
     var soma = o.sg1 + o.sg2 + o.sg3, esc = Math.max(o.limite || 0, o.total, soma, 1) * 1.12;
     var wrap = el('div', 'pilha-wrap'), pilha = el('div', 'pilha');
@@ -664,11 +789,15 @@
     });
     wrap.appendChild(pilha);
     if (o.limite) { var m = el('span', 'lim'); m.style.left = (o.limite / esc * 100) + '%'; m.title = 'Limite do nível: ' + o.limite + ' clientes'; wrap.appendChild(m); }
+    wrap.setAttribute('role', 'img'); wrap.setAttribute('aria-label', 'SG1 ' + o.sg1 + ', SG2 ' + o.sg2 + ', SG3 ' + o.sg3 + '; ' + o.pre_total + ' em pré-onboarding.');
     return wrap;
   }
   function detalheSg(o, sg) {
-    var d = el('div', 'cmp-det'), tb = el('table'), faixas = FAIXAS[o.level] || {};
-    var cab = el('tr'); ['Subgrupo', 'Clientes', 'Pré-onboarding', '% do limite'].forEach(function (h) { cab.appendChild(el('th', '', h)); }); tb.appendChild(cab);
+    var d = el('div', 'cmp-det'), lg = el('div', 'legenda'), faixas = FAIXAS[o.level] || {};
+    lg.setAttribute('aria-label', 'Legenda do gráfico');
+    [['sw cor-sg1', 'SG1'], ['sw cor-sg2', 'SG2'], ['sw cor-sg3', 'SG3'], ['sw sw-pre', 'Pré-onboarding'], ['sw-lim', 'Limite do nível']].forEach(function (x) { var it = el('span', 'lg'); it.appendChild(el('i', x[0])); it.appendChild(document.createTextNode(x[1])); lg.appendChild(it); });
+    d.appendChild(lg); d.appendChild(barra(o));
+    var tb = el('table'), cab = el('tr'); ['Subgrupo', 'Clientes', 'Pré-onboarding', '% do limite'].forEach(function (h) { cab.appendChild(el('th', '', h)); }); tb.appendChild(cab);
     function pct(n) { return o.limite ? Math.round(n / o.limite * 100) + '%' : '-'; }
     [['sg1', o.sg1, o.pre1], ['sg2', o.sg2, o.pre2], ['sg3', o.sg3, o.pre3]].forEach(function (p) {
       var tr = el('tr', p[0] === sg ? 'foco' : ''), c0 = el('td', '', p[0].toUpperCase()); if (faixas[p[0]]) c0.appendChild(el('span', 'faixa', faixas[p[0]]));
@@ -682,29 +811,24 @@
   function desenharComparativo() {
     var sec = $('comparar'), lista = $('cmpLista'); lista.innerHTML = '';
     var sg = String(atual.subgrupo || '');
-    $('cmpDica').textContent = opcoes.length ? 'Clique em um onboarder para escolhê-lo no lugar do sugerido; a setinha abre os detalhes por subgrupo. Ordem da regra: menos clientes no ' + sg.toUpperCase() + ', menor carteira, menor pré-onboarding.' : 'Não há onboarders N6+ disponíveis para comparar.';
-    var lg = $('cmpLegenda'); lg.innerHTML = '';
-    [['sw cor-sg1', 'SG1'], ['sw cor-sg2', 'SG2'], ['sw cor-sg3', 'SG3'], ['sw sw-pre', 'Pré-onboarding'], ['sw-lim', 'Limite do nível']].forEach(function (x) {
-      var it = el('span', 'lg'); it.appendChild(el('i', x[0])); it.appendChild(document.createTextNode(x[1])); lg.appendChild(it);
-    });
+    $('cmpDica').textContent = opcoes.length ? 'Ordem da regra: menos clientes no ' + sg.toUpperCase() + ', menor carteira, menor pré-onboarding.' : 'Não há onboarders N6+ disponíveis para comparar.';
     opcoes.forEach(function (o, idx) {
       var ativo = escolhido ? escolhido.email === o.email : o.sugerido;
       var item = el('div', 'cmp-item' + (ativo ? ' sel' : '')), fila = el('div', 'cmp-fila');
-      var b = el('button', 'cmp-linha'); b.type = 'button'; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', String(!!ativo)); b.dataset.email = o.email;
-      b.appendChild(el('span', 'radio'));
-      var quem = el('span', ''), nm = el('span', 'cmp-nome', nome(o.email)); if (o.sugerido) nm.appendChild(el('span', 'cmp-tag', 'Sugerido'));
-      quem.appendChild(nm); quem.appendChild(el('span', 'cmp-sub', 'POD ' + o.pod + ' · ' + o.level)); b.title = o.email; b.appendChild(quem);
-      var g = el('span', 'cmp-graf'), barr = barra(o); barr.setAttribute('role', 'img'); barr.setAttribute('aria-label', nome(o.email) + ': ' + o.total + (o.limite ? ' de ' + o.limite : '') + ' clientes; SG1 ' + o.sg1 + ', SG2 ' + o.sg2 + ', SG3 ' + o.sg3 + '; ' + o.pre_total + ' em pré-onboarding.');
-      g.appendChild(barr); var tt = el('span', 'cmp-total'); tt.appendChild(el('b', '', String(o.total))); if (o.limite) tt.appendChild(el('span', '', ' / ' + o.limite)); g.appendChild(tt); b.appendChild(g);
+      var b = el('button', 'cmp-linha'); b.type = 'button'; b.setAttribute('aria-pressed', String(!!ativo)); b.dataset.email = o.email; b.title = o.email;
+      b.appendChild(el('span', 'radio')); b.appendChild(el('span', 'avatar', iniciaisDe(o.email)));
+      var quem = el('span', ''), nm = el('span', 'cmp-nome', nome(o.email)); if (o.sugerido) nm.appendChild(el('span', 'cmp-tag', 'Sugerido')); if (o.level !== 'N6+') nm.appendChild(el('span', 'cmp-tag fora', 'Fora do N6+'));
+      quem.appendChild(nm); quem.appendChild(el('span', 'cmp-sub', 'POD ' + o.pod + ' · ' + o.level)); b.appendChild(quem);
+      b.appendChild(ocupacao(o));
       fila.appendChild(b);
       var x = el('button', 'cmp-exp'); x.type = 'button'; x.setAttribute('aria-expanded', 'false'); x.setAttribute('aria-controls', 'cmpDet' + idx); x.setAttribute('aria-label', 'Detalhes de ' + nome(o.email) + ' por subgrupo'); x.innerHTML = SETA; fila.appendChild(x);
       item.appendChild(fila);
       var det = detalheSg(o, sg); det.id = 'cmpDet' + idx; det.hidden = true; item.appendChild(det);
       x.addEventListener('click', function () { var abre = det.hidden; det.hidden = !abre; x.setAttribute('aria-expanded', String(abre)); });
       b.addEventListener('click', function () {
-        escolhido = o.sugerido ? null : o; pintarOnboarder();
-        $('aceitarTxt').textContent = escolhido ? 'Aceitar com ' + nome(escolhido.email) : 'Aceitar sugestão';
-        lista.querySelectorAll('.cmp-item').forEach(function (it) { var s = it === item; it.classList.toggle('sel', s); it.querySelector('.cmp-linha').setAttribute('aria-checked', String(s)); });
+        escolhido = o.sugerido ? null : o; pintarOnboarder(); $('erroBox').hidden = true;
+        $('aceitarTxt').textContent = rotuloAceitar();
+        lista.querySelectorAll('.cmp-item').forEach(function (it) { var s = it === item; it.classList.toggle('sel', s); it.querySelector('.cmp-linha').setAttribute('aria-pressed', String(s)); });
       });
       lista.appendChild(item);
     });
@@ -712,12 +836,12 @@
   }
   async function carregarComparativo() {
     var opp = atual && atual.opp_id; if (!opp) return;
-    $('comparar').hidden = false; $('cmpLista').innerHTML = ''; $('cmpDica').textContent = 'Carregando os onboarders N6+...'; $('cmpLegenda').innerHTML = '';
+    $('comparar').hidden = false; $('cmpLista').innerHTML = ''; $('cmpDica').textContent = 'Carregando os onboarders N6+...';
     try {
       var r = await chamar(Object.assign({ acao: 'opcoes' }, refSug()));
       if (!atual || atual.opp_id !== opp) return;   // o usuário já abriu outra sugestão
       if (!r.ok) { $('cmpDica').textContent = (r.dados && r.dados.mensagem) || 'Não foi possível carregar os onboarders.'; return; }
-      opcoes = r.dados.opcoes || []; desenharComparativo();
+      opcoes = r.dados.opcoes || []; desenharComparativo(); pintarOnboarder();
     } catch (e) { if (e.message !== 'login') $('cmpDica').textContent = 'Falha de conexão ao carregar os onboarders.'; }
   }
 
@@ -730,7 +854,7 @@
     tela('app'); $('avatarIni').textContent = iniciais(s); $('loggedEmail').textContent = s.email;
     irPara('pendencias'); habilitarSugestao(); renderLista();
     var lista = carregarLista();
-    if (TOKEN || OPP_URL) { if (/^[a-f0-9]{48}$/.test(TOKEN) || /^[A-Za-z0-9]{15,18}$/.test(OPP_URL)) await abrirSugestao(TOKEN ? { t: TOKEN } : { opp_id: OPP_URL }); else { irPara('sugestao'); $('detalhe').hidden = true; $('cartao').hidden = true; msg('Link inválido. Use o botão "Aceitar sugestão" da mensagem no Google Chat ou abra a sugestão pela lista de pendências.'); } TOKEN = ''; OPP_URL = ''; }
+    if (TOKEN || OPP_URL) { if (/^[a-f0-9]{48}$/.test(TOKEN) || /^[A-Za-z0-9]{15,18}$/.test(OPP_URL)) await abrirSugestao(TOKEN ? { t: TOKEN } : { opp_id: OPP_URL }); else { irPara('sugestao'); $('detalhe').hidden = true; $('cartao').hidden = true; msg('Link inválido. Use o botão "Avaliar Sugestão" da mensagem no Google Chat ou abra a sugestão pela lista de pendências.'); } TOKEN = ''; OPP_URL = ''; }
     await lista;
   }
   $('refreshBtn').addEventListener('click', async function () { await carregarLista(); if (aba === 'sugestao' && atual) { var r = await chamar(Object.assign({ acao: 'detalhe' }, refSug())).catch(function () { return null; }); if (r && r.ok) preencher(r.dados.sugestao); else if (r) msg((r.dados && r.dados.mensagem) || 'Não foi possível atualizar a sugestão.'); } });
@@ -757,7 +881,7 @@
     finally { $('entrarBtn').disabled = false; $('entrarSpin').classList.remove('show'); }
   });
 
-  // ── aceitar ──
+  // ── atribuir ──
   $('apagarBtn').addEventListener('click', async function () {
     var b = this;
     if (!b.dataset.confirma) { b.dataset.confirma = '1'; b.textContent = 'Confirmar: apagar esta sugestão'; setTimeout(function () { if (b.dataset.confirma && !b.disabled) { delete b.dataset.confirma; b.textContent = 'Apagar sugestão'; } }, 5000); return; }
@@ -769,19 +893,19 @@
       atual = null; tokenAtual = ''; habilitarSugestao(); irPara('pendencias'); renderLista(); renderHistorico(); carregarLista();
     } catch (e) { if (e.message !== 'login') { msg('Falha de conexão. Tente de novo.'); b.disabled = false; delete b.dataset.confirma; b.textContent = 'Apagar sugestão'; } }
   });
+  function falhaAtribuir(texto) {
+    aceitarBtn.disabled = false; $('aceitarSpin').classList.remove('show'); $('aceitarTxt').textContent = rotuloAceitar();
+    $('erroTxt').textContent = (texto ? texto + ' ' : '') + 'Nada foi alterado na oportunidade.'; $('erroBox').hidden = false;
+  }
   aceitarBtn.addEventListener('click', async function () {
-    aceitarBtn.disabled = true; $('aceitarSpin').classList.add('show'); $('aceitarTxt').textContent = 'Aceitando...'; msg('');
+    aceitarBtn.disabled = true; $('aceitarSpin').classList.add('show'); $('aceitarTxt').textContent = 'Atribuindo...'; msg(''); $('erroBox').hidden = true;
     var corpo = Object.assign({ acao: 'aceitar' }, refSug()); if (escolhido) corpo.onboarder = escolhido.email;
-    function reativar() { aceitarBtn.disabled = false; $('aceitarSpin').classList.remove('show'); $('aceitarTxt').textContent = escolhido ? 'Aceitar com ' + nome(escolhido.email) : 'Aceitar sugestão'; }
     try {
       var r = await chamar(corpo);
-      if (r.ok) {
-        preencher(r.dados.sugestao);
-        msg('Sugestão aceita. O onboarder foi definido na Oportunidade e o Closer já pode seguir o processo no Onboarding Assignment.', 'ok');
-        carregarLista();
-      } else if (r.status === 409 && r.dados.sugestao) { preencher(r.dados.sugestao); msg(r.dados.mensagem || 'Esta sugestão já foi aceita.', 'aviso'); carregarLista(); }
-      else { reativar(); msg((r.dados && r.dados.mensagem) || 'Não foi possível aceitar.'); }
-    } catch (e) { if (e.message !== 'login') { reativar(); msg('Falha de conexão. Nada foi alterado. Tente de novo.'); } }
+      if (r.ok) { preencher(r.dados.sugestao, true); carregarLista(); }
+      else if (r.status === 409 && r.dados.sugestao) { preencher(r.dados.sugestao); carregarLista(); }
+      else falhaAtribuir((r.dados && r.dados.mensagem) || '');
+    } catch (e) { if (e.message !== 'login') falhaAtribuir('Falha de conexão.'); }
   });
 
   iniciar();
