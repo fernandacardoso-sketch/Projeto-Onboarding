@@ -171,31 +171,46 @@
   .comparar{ margin-top:var(--sp-5); padding-top:var(--sp-5); border-top:1px solid var(--border); }
   .comparar h2{ margin:0 0 4px; font-size:16px; font-weight:700; }
   .comparar .dica{ margin:0 0 var(--sp-3); font-size:12.5px; color:var(--text-muted); line-height:1.5; }
-  .legenda{ display:flex; flex-wrap:wrap; gap:6px 16px; align-items:center; margin-bottom:var(--sp-3); font-size:12.5px; color:var(--text-muted); }
+  .legenda{ display:flex; flex-wrap:wrap; gap:4px 14px; align-items:center; margin-bottom:var(--sp-2); font-size:12px; color:var(--text-muted); }
   .legenda .lg{ display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
-  .sw{ display:inline-block; width:14px; height:10px; border-radius:3px; }
+  .sw{ display:inline-block; width:12px; height:8px; border-radius:2px; }
   .sw.cor-sg1{ background:var(--sg1); } .sw.cor-sg2{ background:var(--sg2); } .sw.cor-sg3{ background:var(--sg3); }
   .sw-pre{ background:repeating-linear-gradient(45deg, var(--hatch) 0 2px, transparent 2px 5px), var(--sg2); }
-  .sw-lim{ display:inline-block; width:2px; height:14px; background:var(--text); border-radius:1px; }
-  .sw-foco{ background:transparent; box-shadow:inset 0 0 0 2px var(--orange); }
-  .cmp-lista{ display:flex; flex-direction:column; gap:var(--sp-2); }
-  .cmp-linha{ display:block; width:100%; text-align:left; background:var(--surface); color:var(--text); border:1.5px solid var(--border-strong); border-radius:var(--r-md); padding:var(--sp-3) var(--sp-4); transition:border-color .15s, background .15s; }
-  .cmp-linha:hover{ border-color:var(--text-muted); }
-  .cmp-linha[aria-checked="true"]{ border-color:var(--orange); background:var(--accent-weak); box-shadow:inset 4px 0 0 var(--orange); }
-  .cmp-topo{ display:flex; align-items:center; justify-content:space-between; gap:var(--sp-2); margin-bottom:6px; }
-  .cmp-nome{ display:flex; align-items:center; flex-wrap:wrap; gap:8px; font-size:15px; font-weight:700; overflow-wrap:anywhere; }
-  .cmp-tag{ font-size:11.5px; font-weight:700; padding:2px 8px; border-radius:var(--r-pill); background:var(--surface-sunken); border:1px solid var(--border-strong); white-space:nowrap; }
-  .cmp-meta{ font-size:12px; color:var(--text-muted); white-space:nowrap; }
-  .pilha-wrap{ position:relative; padding:4px 0; }
-  .pilha{ display:flex; height:12px; border-radius:var(--r-pill); background:var(--surface-sunken); overflow:hidden; box-shadow:inset 0 0 0 1px var(--border-strong); }
+  .sw-lim{ display:inline-block; width:2px; height:12px; background:var(--text); border-radius:1px; }
+  .cmp-lista{ display:flex; flex-direction:column; border:1px solid var(--border-strong); border-radius:var(--r-md); overflow:hidden; background:var(--surface); }
+  .cmp-item{ border-top:1px solid var(--border); }
+  .cmp-item:first-child{ border-top:0; }
+  .cmp-item.sel{ background:var(--accent-weak); box-shadow:inset 3px 0 0 var(--orange); }
+  .cmp-fila{ display:flex; align-items:stretch; }
+  .cmp-linha{ flex:1; min-width:0; display:grid; grid-template-columns:18px minmax(0,1fr) auto; align-items:center; gap:10px; text-align:left; background:transparent; color:var(--text); border:0; padding:10px 4px 10px 14px; cursor:pointer; }
+  .cmp-linha:hover .cmp-nome{ text-decoration:underline; }
+  .radio{ width:16px; height:16px; border-radius:50%; border:1.5px solid var(--border-strong); background:var(--surface); display:inline-block; }
+  .cmp-item.sel .radio{ border-color:var(--orange); box-shadow:inset 0 0 0 3px var(--surface); background:var(--orange); }
+  .cmp-nome{ display:block; font-size:14px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .cmp-sub{ display:block; font-size:12px; color:var(--text-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .cmp-tag{ margin-left:6px; font-size:10.5px; font-weight:700; padding:1px 7px; border-radius:var(--r-pill); background:var(--surface-sunken); border:1px solid var(--border-strong); vertical-align:1px; }
+  .cmp-graf{ display:flex; align-items:center; gap:8px; }
+  .pilha-wrap{ position:relative; width:96px; padding:3px 0; }
+  .pilha{ display:flex; height:10px; border-radius:var(--r-pill); background:var(--surface-sunken); overflow:hidden; box-shadow:inset 0 0 0 1px var(--border-strong); }
   .fatia{ position:relative; display:block; height:100%; flex:none; border-right:1.5px solid var(--surface); }
   .fatia.cor-sg1{ background:var(--sg1); } .fatia.cor-sg2{ background:var(--sg2); } .fatia.cor-sg3{ background:var(--sg3); }
-  .fatia.foco{ box-shadow:inset 0 0 0 2px var(--orange); }
   .fatia .pre{ position:absolute; right:0; top:0; bottom:0; background:repeating-linear-gradient(45deg, var(--hatch) 0 2px, transparent 2px 5px); }
   .lim{ position:absolute; top:0; bottom:0; width:2px; margin-left:-1px; background:var(--text); border-radius:1px; }
-  .cmp-nums{ display:flex; flex-wrap:wrap; gap:2px 14px; margin-top:6px; font-size:12.5px; color:var(--text-muted); font-variant-numeric:tabular-nums; }
-  .cmp-nums .foco{ color:var(--destaque); font-weight:700; }
-  .cmp-nums b{ color:var(--text); }
+  .cmp-total{ font-size:13px; font-variant-numeric:tabular-nums; white-space:nowrap; min-width:46px; text-align:right; }
+  .cmp-total b{ color:var(--text); } .cmp-total span{ color:var(--text-muted); }
+  .cmp-exp{ width:40px; flex:none; background:transparent; border:0; border-left:1px solid var(--border); color:var(--text-muted); cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .cmp-exp:hover{ color:var(--text); background:var(--surface-sunken); }
+  .cmp-exp svg{ width:16px; height:16px; transition:transform .15s; }
+  .cmp-exp[aria-expanded="true"] svg{ transform:rotate(180deg); }
+  .cmp-det{ padding:4px 14px 12px 42px; background:var(--surface-sunken); border-top:1px solid var(--border); }
+  .cmp-det table{ width:100%; border-collapse:collapse; font-size:12.5px; font-variant-numeric:tabular-nums; }
+  .cmp-det th{ font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--text-muted); font-weight:600; padding:8px 4px 4px; text-align:center; }
+  .cmp-det td{ padding:5px 4px; text-align:center; border-top:1px solid var(--border); }
+  .cmp-det th:first-child, .cmp-det td:first-child{ text-align:left; }
+  .cmp-det tr.foco td{ color:var(--destaque); font-weight:700; }
+  .cmp-det tr.tot td{ font-weight:700; }
+  .cmp-det .faixa{ color:var(--text-muted); font-weight:400; margin-left:6px; }
+  @media (max-width:420px){ .pilha-wrap{ width:64px; } .cmp-det{ padding-left:14px; } }
   .esq{ display:block; height:14px; border-radius:6px; background:linear-gradient(90deg, var(--surface-sunken) 25%, var(--border) 50%, var(--surface-sunken) 75%); background-size:200% 100%; animation:esq 1.3s linear infinite; }
   @keyframes esq{ to{ background-position:-200% 0; } }
 
@@ -628,13 +643,18 @@
   }
 
   // ── comparativo: todos os onboarders N6+ na tela, com a carteira por subgrupo; clicar escolhe ──
-  function nsvg(tag, cls) { return el(tag, cls); }
-  function barra(o, sgFoco) {
+  var FAIXAS = {
+    'N2-N3': { sg1: 'R$120k a R$299k', sg2: 'R$300k a R$599k', sg3: 'R$600k a R$999k' },
+    'N4-N5': { sg1: 'R$1M a R$1,9M', sg2: 'R$2M a R$2,9M', sg3: 'R$3M a R$4,9M' },
+    'N6+': { sg1: 'R$5M a R$9,9M', sg2: 'R$10M a R$14,9M', sg3: 'a partir de R$15M' }
+  };
+  var SETA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+  function barra(o) {
     var soma = o.sg1 + o.sg2 + o.sg3, esc = Math.max(o.limite || 0, o.total, soma, 1) * 1.12;
     var wrap = el('div', 'pilha-wrap'), pilha = el('div', 'pilha');
     [['sg1', o.sg1, o.pre1], ['sg2', o.sg2, o.pre2], ['sg3', o.sg3, o.pre3]].forEach(function (p) {
       if (!p[1]) return;
-      var s = el('span', 'fatia cor-' + p[0] + (p[0] === sgFoco ? ' foco' : '')); s.style.width = (p[1] / esc * 100) + '%';
+      var s = el('span', 'fatia cor-' + p[0]); s.style.width = (p[1] / esc * 100) + '%';
       s.title = p[0].toUpperCase() + ': ' + p[1] + (p[1] === 1 ? ' cliente' : ' clientes') + ' (' + p[2] + ' em pré-onboarding)';
       if (p[2]) { var q = el('i', 'pre'); q.style.width = Math.min(p[2] / p[1] * 100, 100) + '%'; s.appendChild(q); }
       pilha.appendChild(s);
@@ -643,32 +663,47 @@
     if (o.limite) { var m = el('span', 'lim'); m.style.left = (o.limite / esc * 100) + '%'; m.title = 'Limite do nível: ' + o.limite + ' clientes'; wrap.appendChild(m); }
     return wrap;
   }
+  function detalheSg(o, sg) {
+    var d = el('div', 'cmp-det'), tb = el('table'), faixas = FAIXAS[o.level] || {};
+    var cab = el('tr'); ['Subgrupo', 'Clientes', 'Pré-onboarding', '% do limite'].forEach(function (h) { cab.appendChild(el('th', '', h)); }); tb.appendChild(cab);
+    function pct(n) { return o.limite ? Math.round(n / o.limite * 100) + '%' : '-'; }
+    [['sg1', o.sg1, o.pre1], ['sg2', o.sg2, o.pre2], ['sg3', o.sg3, o.pre3]].forEach(function (p) {
+      var tr = el('tr', p[0] === sg ? 'foco' : ''), c0 = el('td', '', p[0].toUpperCase()); if (faixas[p[0]]) c0.appendChild(el('span', 'faixa', faixas[p[0]]));
+      tr.appendChild(c0); tr.appendChild(el('td', '', String(p[1]))); tr.appendChild(el('td', '', String(p[2]))); tr.appendChild(el('td', '', pct(p[1]))); tb.appendChild(tr);
+    });
+    var tot = el('tr', 'tot'); tot.appendChild(el('td', '', 'Total')); tot.appendChild(el('td', '', String(o.total))); tot.appendChild(el('td', '', String(o.pre_total))); tot.appendChild(el('td', '', pct(o.total))); tb.appendChild(tot);
+    d.appendChild(tb);
+    if (sg) d.appendChild(el('p', 'dica', 'Em destaque, o subgrupo desta Oportunidade (' + sg.toUpperCase() + ').'));
+    return d;
+  }
   function desenharComparativo() {
     var sec = $('comparar'), lista = $('cmpLista'); lista.innerHTML = '';
-    var sg = String(atual.subgrupo || ''), SG = sg.toUpperCase();
-    $('cmpDica').textContent = opcoes.length ? 'Clique em um onboarder para escolhê-lo no lugar do sugerido. A ordem segue a regra: menos clientes no ' + SG + ' (o subgrupo desta Oportunidade, destacado), menor carteira e menor pré-onboarding.' : 'Não há onboarders N6+ disponíveis para comparar.';
+    var sg = String(atual.subgrupo || '');
+    $('cmpDica').textContent = opcoes.length ? 'Clique em um onboarder para escolhê-lo no lugar do sugerido; a setinha abre os detalhes por subgrupo. Ordem da regra: menos clientes no ' + sg.toUpperCase() + ', menor carteira, menor pré-onboarding.' : 'Não há onboarders N6+ disponíveis para comparar.';
     var lg = $('cmpLegenda'); lg.innerHTML = '';
-    [['cor-sg1', 'SG1'], ['cor-sg2', 'SG2'], ['cor-sg3', 'SG3'], ['sw-pre', 'Pré-onboarding'], ['sw-lim', 'Limite do nível'], ['sw-foco', SG + ' desta Oportunidade']].forEach(function (x) {
-      var it = el('span', 'lg'); it.appendChild(el('i', x[0] === 'sw-lim' ? 'sw-lim' : 'sw ' + (x[0] === 'sw-pre' || x[0] === 'sw-foco' ? x[0] : x[0]))); it.appendChild(document.createTextNode(x[1])); lg.appendChild(it);
+    [['sw cor-sg1', 'SG1'], ['sw cor-sg2', 'SG2'], ['sw cor-sg3', 'SG3'], ['sw sw-pre', 'Pré-onboarding'], ['sw-lim', 'Limite do nível']].forEach(function (x) {
+      var it = el('span', 'lg'); it.appendChild(el('i', x[0])); it.appendChild(document.createTextNode(x[1])); lg.appendChild(it);
     });
-    opcoes.forEach(function (o) {
+    opcoes.forEach(function (o, idx) {
       var ativo = escolhido ? escolhido.email === o.email : o.sugerido;
+      var item = el('div', 'cmp-item' + (ativo ? ' sel' : '')), fila = el('div', 'cmp-fila');
       var b = el('button', 'cmp-linha'); b.type = 'button'; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', String(!!ativo)); b.dataset.email = o.email;
-      var topo = el('div', 'cmp-topo'), nm = el('span', 'cmp-nome'); nm.appendChild(document.createTextNode(nome(o.email)));
-      if (o.sugerido) nm.appendChild(el('span', 'cmp-tag', 'Sugerido pelo sistema'));
-      topo.appendChild(nm); topo.appendChild(el('span', 'cmp-meta', 'POD ' + o.pod + ' · ' + o.level)); b.appendChild(topo);
-      var graf = barra(o, sg); graf.setAttribute('role', 'img'); graf.setAttribute('aria-label', nome(o.email) + ': ' + o.total + (o.limite ? ' de ' + o.limite : '') + ' clientes; SG1 ' + o.sg1 + ', SG2 ' + o.sg2 + ', SG3 ' + o.sg3 + '; ' + o.pre_total + ' em pré-onboarding.'); b.appendChild(graf);
-      var nums = el('div', 'cmp-nums');
-      [['sg1', o.sg1], ['sg2', o.sg2], ['sg3', o.sg3]].forEach(function (p) { nums.appendChild(el('span', p[0] === sg ? 'foco' : '', p[0].toUpperCase() + ' ' + p[1])); });
-      var c = el('span', '', 'Carteira '); c.appendChild(el('b', '', String(o.total) + (o.limite ? ' / ' + o.limite : ''))); nums.appendChild(c);
-      nums.appendChild(el('span', '', 'Pré-onboarding ' + o.pre_total));
-      b.appendChild(nums);
+      b.appendChild(el('span', 'radio'));
+      var quem = el('span', ''), nm = el('span', 'cmp-nome', nome(o.email)); if (o.sugerido) nm.appendChild(el('span', 'cmp-tag', 'Sugerido'));
+      quem.appendChild(nm); quem.appendChild(el('span', 'cmp-sub', 'POD ' + o.pod + ' · ' + o.level)); b.title = o.email; b.appendChild(quem);
+      var g = el('span', 'cmp-graf'), barr = barra(o); barr.setAttribute('role', 'img'); barr.setAttribute('aria-label', nome(o.email) + ': ' + o.total + (o.limite ? ' de ' + o.limite : '') + ' clientes; SG1 ' + o.sg1 + ', SG2 ' + o.sg2 + ', SG3 ' + o.sg3 + '; ' + o.pre_total + ' em pré-onboarding.');
+      g.appendChild(barr); var tt = el('span', 'cmp-total'); tt.appendChild(el('b', '', String(o.total))); if (o.limite) tt.appendChild(el('span', '', ' / ' + o.limite)); g.appendChild(tt); b.appendChild(g);
+      fila.appendChild(b);
+      var x = el('button', 'cmp-exp'); x.type = 'button'; x.setAttribute('aria-expanded', 'false'); x.setAttribute('aria-controls', 'cmpDet' + idx); x.setAttribute('aria-label', 'Detalhes de ' + nome(o.email) + ' por subgrupo'); x.innerHTML = SETA; fila.appendChild(x);
+      item.appendChild(fila);
+      var det = detalheSg(o, sg); det.id = 'cmpDet' + idx; det.hidden = true; item.appendChild(det);
+      x.addEventListener('click', function () { var abre = det.hidden; det.hidden = !abre; x.setAttribute('aria-expanded', String(abre)); });
       b.addEventListener('click', function () {
         escolhido = o.sugerido ? null : o; pintarOnboarder();
         $('aceitarTxt').textContent = escolhido ? 'Aceitar com ' + nome(escolhido.email) : 'Aceitar sugestão';
-        lista.querySelectorAll('.cmp-linha').forEach(function (x) { x.setAttribute('aria-checked', String(x === b)); });
+        lista.querySelectorAll('.cmp-item').forEach(function (it) { var s = it === item; it.classList.toggle('sel', s); it.querySelector('.cmp-linha').setAttribute('aria-checked', String(s)); });
       });
-      lista.appendChild(b);
+      lista.appendChild(item);
     });
     sec.hidden = false;
   }
